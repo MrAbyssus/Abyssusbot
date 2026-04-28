@@ -13,12 +13,18 @@ Con más de 150 comandos únicos, transforma cualquier canal en un escenario don
 
 🧿 ¿Qué puede hacer?
 
-🔮 Leer tu carta astral y revelar secretos cósmicos  
+🔮 Leer tu carta astral y revelar secretos cósmicos
+
 ♈ Mostrar tu horóscopo diario con un toque de ironía  
-🃏 Interpretar el tarot como si fuera tu abuela mística  
-💸 Economía con tienda, productos y eventos temáticos  
-🛡 Moderación inteligente: baneos, kicks, warns  
-🎭 Juegos sociales como Loba, Mafia, Verdadero o Falso  
+
+🃏 Interpretar el tarot como si fuera tu abuela mística 
+
+💸 Economía con tienda, productos y eventos temáticos 
+
+🛡 Moderación inteligente: baneos, kicks, warns 
+
+🎭 Juegos sociales como Loba, Mafia, Verdadero o Falso 
+
 🧠 Consejos, retos y respuestas que oscilan entre lo sabio y lo absurdo  
 
 🧬 ¿Por qué invocarlo?
