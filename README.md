@@ -1,7 +1,7 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MrAbyssus/abyssus-dashboard/refs/heads/main/img/Banner%20Dashboard.png?raw=true" width="95%"/>
+  <img src="https://raw.githubusercontent.com/MrAbyssus/Abyssusbot/refs/heads/main/img/AbyssusBanner.png" width="95%"/>
 </p>
 
 
