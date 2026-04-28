@@ -1,7 +1,7 @@
 {
   "sistema": "Abyssus",
   "operador": "MrAbyssus",
-  "dominio": "abyssusbot.info",
+  "dominio": "https://mrabyssus.github.io/Abyssusbot/sitemap.xml",
   "verificado": true,
   "firma": "abyssus-verification=MrAbyssus",
   "version": "1.0",
