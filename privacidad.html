@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="utf-8">
+<title>Abyssus Bot - Aviso de Privacidad</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" href="img/favicon1.png">
+
+<!-- SEO -->
+<meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
+<link rel="canonical" href="https://abyssusbot.info/privacidad">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0d1117;
+  --card: rgba(22,27,34,0.65);
+  --accent: #58a6ff;
+  --accent2: #1f6feb;
+  --text: #e6edf3;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: radial-gradient(circle at top, #0d1117, #05080c);
+  color: var(--text);
+}
+
+/* NAV */
+nav {
+  background: rgba(22,27,34,0.7);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+nav a {
+  margin: 0 20px;
+  color: #9da5b4;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 70px 20px;
+  background: linear-gradient(120deg, #1f6feb, #58a6ff);
+  box-shadow: 0 0 40px rgba(31,111,235,0.4);
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8em;
+  margin-bottom: 10px;
+}
+
+header p {
+  opacity: 0.9;
+}
+
+/* MAIN */
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transition: all 0.25s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+.card h2 {
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* LISTAS */
+ul {
+  margin-left: 20px;
+}
+
+code {
+  background: #0d1117;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--accent);
+}
+
+/* BOTÓN */
+#backToTop {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #000;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  box-shadow: 0 0 15px rgba(88,166,255,0.5);
+}
+
+#backToTop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 40px;
+  background: #161b22;
+  color: #777;
+  margin-top: 40px;
+}
+
+/* Animación scroll */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: 0.8s ease;
+}
+</style>
+
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="commands.html">Comandos</a>
+  <a href="developers.html">Developers</a>
+  <a href="changelog.html">Changelog</a>
+</nav>
+
+<header>
+  <h1>🔐 Aviso de Privacidad</h1>
+  <p>Última actualización: 22 de septiembre de 2025</p>
+</header>
+
+<main>
+
+<section class="card fade-in">
+<h2>Identidad del Responsable</h2>
+<p>Abyssus Bot es operado por los administradores de los servidores donde se encuentra instalado.</p>
+</section>
+
+<section class="card fade-in">
+<h2>Finalidad del Tratamiento</h2>
+<p>Funciona dentro de Discord para economía, moderación y automatización.</p>
+</section>
+
+<section class="card fade-in">
+<h2>Datos Procesados</h2>
+<p>No recopila datos personales sensibles. Puede usar IDs técnicos de Discord.</p>
+</section>
+
+<section class="card fade-in">
+<h2>Almacenamiento</h2>
+<ul>
+<li><code>economia.json</code></li>
+<li><code>modlogs.json</code></li>
+</ul>
+</section>
+
+<section class="card fade-in">
+<h2>Privacidad y Seguridad</h2>
+<ul>
+<li>No se venden datos</li>
+<li>No rastrea fuera de Discord</li>
+<li>No perfiles de usuario</li>
+</ul>
+</section>
+
+<section class="card fade-in">
+<h2>Derechos del Usuario</h2>
+<p>Se puede solicitar eliminación mediante comandos o admins.</p>
+</section>
+
+</main>
+
+<footer>
+© 2021–2025 Abyssus. Todos los derechos reservados.
+</footer>
+
+<button id="backToTop">↑</button>
+
+<script>
+// botón subir
+const btn = document.getElementById("backToTop");
+window.addEventListener("scroll", () => {
+  btn.classList.toggle("show", window.scrollY > 300);
+});
+btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+
+// animación scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+    }
+  });
+});
+document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
