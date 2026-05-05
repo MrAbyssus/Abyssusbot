@@ -1,323 +1,279 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="utf-8">
+    <title>Abyssus Bot - Aviso de Privacidad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
 
-<meta charset="utf-8">
-<title>Abyssus Bot - Aviso de Privacidad</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="img/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
+    
+    <!-- Fonts & Icons -->
+    <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap)" rel="stylesheet">
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
 
-<!-- SEO -->
-<meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
-<link rel="canonical" href="https://abyssusbot.info/privacidad">
+    <style>
+        :root {
+            --bg: #05070a;
+            --card: rgba(22, 27, 34, 0.7);
+            --accent: #58a6ff;
+            --accent-glow: rgba(88, 166, 255, 0.2);
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --border: rgba(255, 255, 255, 0.08);
+        }
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-:root {
-  --bg: #0d1117;
-  --card: rgba(22,27,34,0.65);
-  --accent: #58a6ff;
-  --accent2: #1f6feb;
-  --text: #e6edf3;
-}
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% -20%, #161b22, transparent),
+                radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+        /* NAV */
+        nav {
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            border-bottom: 1px solid var(--border);
+        }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: radial-gradient(circle at top, #0d1117, #05080c);
-  color: var(--text);
-}
+        nav a {
+            margin: 0 20px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-/* NAV */
-nav {
-  background: rgba(22,27,34,0.7);
-  backdrop-filter: blur(10px);
-  padding: 15px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
+        nav a:hover { color: var(--accent); }
 
-nav a {
-  margin: 0 20px;
-  color: #9da5b4;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
-}
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 90px 20px;
+            background: linear-gradient(180deg, rgba(31, 111, 235, 0.15) 0%, transparent 100%);
+        }
 
-nav a:hover {
-  color: var(--accent);
-}
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            background: linear-gradient(to bottom, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
 
-/* HEADER */
-header {
-  text-align: center;
-  padding: 70px 20px;
-  background: linear-gradient(120deg, #1f6feb, #58a6ff);
-  box-shadow: 0 0 40px rgba(31,111,235,0.4);
-}
+        header p { color: var(--text-dim); font-weight: 500; }
 
-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.8em;
-  margin-bottom: 10px;
-}
+        /* MAIN */
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px 20px 100px 20px;
+        }
 
-header p {
-  opacity: 0.9;
-}
+        /* CARDS */
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-/* MAIN */
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 40px 20px;
-}
+        .card.visible { opacity: 1; transform: translateY(0); }
 
-/* CARD */
-.card {
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
-  padding: 25px;
-  margin-bottom: 25px;
-  border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  transition: all 0.25s ease;
-  opacity: 0;
-  transform: translateY(20px);
-}
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
 
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+        .card h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.card:hover {
-  transform: translateY(-5px) scale(1.01);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-}
+        .card p, .card li { color: #ced4da; margin-bottom: 12px; }
 
-.card h2 {
-  color: var(--accent);
-  margin-bottom: 12px;
-}
+        ul { list-style: none; padding-left: 5px; }
+        ul li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            display: inline-block; 
+            width: 1em;
+        }
 
-/* LISTAS */
-ul {
-  margin-left: 20px;
-}
+        code {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+        }
 
-code {
-  background: #0d1117;
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: var(--accent);
-}
+        .contact-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            margin-top: 10px;
+        }
 
-/* BOTÓN */
-#backToTop {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #000;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 50px;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s;
-  box-shadow: 0 0 15px rgba(88,166,255,0.5);
-}
+        /* BACK TO TOP */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            cursor: pointer;
+            opacity: 0;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
 
-#backToTop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+        #backToTop.show { opacity: 1; }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 40px;
-  background: #161b22;
-  color: #777;
-  margin-top: 40px;
-}
-
-/* Animación scroll */
-.fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition: 0.8s ease;
-}
-</style>
-
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+        }
+    </style>
 </head>
 
 <body>
 
 <nav>
-  <a href="index.html">Inicio</a>
-  <a href="commands.html">Comandos</a> 
+    <a href="index.html">Inicio</a>
+    <a href="commands.html">Comandos</a>
 </nav>
 
 <header>
-  <h1>🔐 Aviso de Privacidad</h1>
-  <p>Última actualización: 27 de Abril de 2026</p>
+    <h1>🔐 Privacidad y Datos</h1>
+    <p>Comprometidos con la transparencia • Versión 2.1</p>
 </header>
 
 <main>
 
-<section class="card fade-in">
-<h2>Identidad del Responsable</h2>
-<p>
-Abyssus Bot es un sistema desarrollado y mantenido por <strong>Mr.Abyssus</strong>.  
-Los administradores de cada servidor donde el bot se encuentra instalado son responsables del uso que le den dentro de sus comunidades.
-</p>
-</section>
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
+        <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa< como co-responsable del manejo de los registros (logs) dentro de su comunidad.</p>
+    </section>
 
-<section class="card fade-in">
-<h2>Finalidad del Tratamiento</h2>
-<p>
-Abyssus Bot opera dentro de la plataforma de <strong>Discord</strong> con el objetivo de proporcionar funcionalidades de economía, moderación, automatización, niveles y entretenimiento.
-</p>
-</section>
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
+        <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
+        <ul>
+            <li><strong>Identificadores:</strong> ID único de Discord de usuarios, servidores y canales.</li>
+            <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (solo para visualización de tablas de niveles/economía).</li>
+            <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo <code>modlogs</code> está activo por un administrador).</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Base Legal</h2>
-<p>
-El uso del bot implica la aceptación de esta política de privacidad y el consentimiento para el procesamiento de los datos técnicos necesarios para su funcionamiento.
-</p>
-</section>
+    section class="card fade-in" style="border-left: 4px solid var(--accent);">
+        <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
+        <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p</>
+        <ul>
+            <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña.</li>
+            <li><strong>Cookies:</strong> Usamos cookies técnicas para mantener tu sesión iniciada de forma segura.</li>
+            <li><strong>Servidores:</strong> Leemos la lista de servidores donde tienes permisos para mostrarte cuáles puedes configurar.</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Datos Procesados</h2>
-<p>El bot puede procesar los siguientes datos técnicos:</p>
-<ul>
-<li>ID de usuario de Discord</li>
-<li>ID de servidor (guild)</li>
-<li>ID de canal</li>
-<li>Nombre de usuario (solo para visualización dentro del sistema)</li>
-</ul>
-<p>No se recopilan datos personales sensibles.</p>
-</section>
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-shield-halved"></i> Seguridad del Almacenamiento</h2>
+        <p>Los datos se guardan en bases de datos protegidas y archivos de configuración estructurados:</p>
+        <ul>
+            <li><code>economia.json</code> - Registra saldos y transacciones virtuales.</li>
+            <li><code>levels.json</code> - Almacena experiencia y rangos ganados.</li>
+            <li><code>config.json</code> - Guarda los ajustes personalizados de cada servidor.</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Autenticación con Discord</h2>
-<p>
-Abyssus Bot puede utilizar autenticación mediante Discord (OAuth2) para identificar usuarios dentro de su sistema.  
-No se almacenan contraseñas ni credenciales de acceso.
-</p>
-</section>
+    <section class="card fade-in">
+        <h2>```
 
-<section class="card fade-in">
-<h2>Almacenamiento de Datos</h2>
-<p>Los datos pueden almacenarse en archivos internos del sistema, tales como:</p>
-<ul>
-<li><code>economia.json</code></li>
-<li><code>modlogs.json</code></li>
-</ul>
-<p>
-Estos archivos contienen únicamente información necesaria para el funcionamiento del bot.
-</p>
-</section>
+### ¿Qué se agregó<i class="fa-solid fa-user-check"></i> Tus Derechos</h2>
+        <p>Como usuario, tienes derecho a la transparencia y eliminación de tu que era importante?
+1.  **Derechos ARCO**: Es un estándar legal que permite a los usuarios saber que pueden **Acceder, Rectificar, información:</p>
+        <ul>
+            <li>Puedes solicitar el borrado de tus datos de economía/niveles mediante comandos.</li>
+            <li>Si el bot es expulsado de Cancelar u Oponerse** al uso de sus datos. He añadido cómo pueden hacerlo (comandos o correo).
+2.  **Transparencia de Mensajes**: un servidor, los datos específicos de ese servidor pueden ser eliminados en nuestra próxima purga de mantenimiento.</li>
+            <li>No vendemos tu información a terceros ni la usamos para publicidad externa.</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Retención de Datos</h2>
-<p>
-Los datos se conservan mientras el bot permanezca en el servidor o hasta que sean eliminados manualmente por administradores o mediante comandos disponibles dentro del sistema.
-</p>
-</section>
-
-<section class="card fade-in">
-<h2>Privacidad y Seguridad</h2>
-<ul>
-<li>No se venden ni comparten datos personales con terceros</li>
-<li>No se realiza rastreo fuera de Discord</li>
-<li>No se crean perfiles de usuario con fines comerciales</li>
-<li>Se aplican medidas técnicas razonables para proteger la información</li>
-</ul>
-</section>
-
-<section class="card fade-in">
-<h2>Terceros</h2>
-<p>
-El bot utiliza servicios externos para su funcionamiento, incluyendo pero no limitado a:
-</p>
-<ul>
-<li>Discord (plataforma principal)</li>
-<li>GitHub (hosting del sitio web)</li>
-<li>Render (servicios backend y autenticación)</li>
-</ul>
-<p>
-Estos servicios pueden procesar datos de acuerdo con sus propias políticas de privacidad.
-</p>
-</section>
-
-<section class="card fade-in">
-<h2>Derechos del Usuario</h2>
-<p>
-Los usuarios pueden solicitar la eliminación de sus datos mediante comandos del bot o a través de los administradores del servidor.
-</p>
-</section>
-
-<section class="card fade-in">
-<h2>Contacto</h2>
-<p>
-Para cualquier consulta relacionada con privacidad o solicitudes de eliminación de datos, puedes contactar a:  
-<strong>soporte@abyssusbot.info</strong>
-</p>
-</section>
-
-<section class="card fade-in">
-<h2>Cambios en la Política</h2>
-<p>
-Abyssus Bot se reserva el derecho de modificar esta política de privacidad en cualquier momento para adaptarse a cambios técnicos o legales.  
-Se recomienda revisar esta sección periódicamente.
-</p>
-</section>
+    <section class="card fade-in">
+        <h2><i class Discord es muy estricto con esto. Si tu bot lee mensajes para moderar (borrar insultos, por ejemplo), debes declarar que "procesas="fa-solid fa-envelope-open-text"></i> Contacto Legal</h2>
+        <p>Para solicitudes de acceso, rectificación o eliminación total de el contenido" pero que no lo guardas para siempre.
+3.  **Seguridad Dashboard**: Se especifica que la comunicación entre la Web y el Bot está cif datos en nuestra base de datos central:</p>
+        <a href="mailto:soporte@abyssusbot.info" class="contact-rada.
+4.  **Limpieza de Datos**: Se aclara que si sacan al bot del servidor, dejas de procesar datos, lo cual da tranquilidad a los dueños de comunidades.badge">soporte@abyssusbot.info</a>
+    </section>
 
 </main>
+
 <footer>
-© 2021–2025 Abyssus. Todos los derechos reservados.
+    <p>© 2021–2026 Abyssus Bot System. Todos los derechos reservados.</p>
 </footer>
 
-<button id="backToTop">↑</button>
+<button id="backToTop"><i class="fa-solid fa-arrow-up"></i></button>
 
 <script>
-// botón subir
-const btn = document.getElementById("backToTop");
-window.addEventListener("scroll", () => {
-  btn.classList.toggle("show", window.scrollY > 300);
-});
-btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+    const btn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+        btn.classList.toggle("show", window.scrollY > 300);
+    });
+    btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
 
-// animación scroll
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){
-      e.target.classList.add("visible");
-    }
-  });
-});
-document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if(e.isIntersecting){
+                e.target.classList.add("visible");
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 </script>
 
 </body>
