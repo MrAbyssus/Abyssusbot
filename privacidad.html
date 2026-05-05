@@ -10,8 +10,9 @@
     <meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
     
     <!-- Fonts & Icons -->
-    <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap)" rel="stylesheet">
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- FontAwesome corregido -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -24,7 +25,11 @@
             --border: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -34,9 +39,10 @@
                 radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* NAV */
+        /* NAVEGACIÓN */
         nav {
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(15px);
@@ -61,7 +67,7 @@
 
         nav a:hover { color: var(--accent); }
 
-        /* HEADER */
+        /* CABECERA */
         header {
             text-align: center;
             padding: 90px 20px;
@@ -79,14 +85,13 @@
 
         header p { color: var(--text-dim); font-weight: 500; }
 
-        /* MAIN */
+        /* CONTENIDO PRINCIPAL */
         main {
             max-width: 900px;
             margin: auto;
             padding: 20px 20px 100px 20px;
         }
 
-        /* CARDS */
         .card {
             background: var(--card);
             backdrop-filter: blur(16px);
@@ -97,14 +102,18 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .card.visible { opacity: 1; transform: translateY(0); }
+        .card.visible { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
 
         .card:hover {
             border-color: var(--accent);
             box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-5px);
         }
 
         .card h2 {
@@ -117,7 +126,10 @@
             gap: 12px;
         }
 
-        .card p, .card li { color: #ced4da; margin-bottom: 12px; }
+        .card p, .card li { 
+            color: #ced4da; 
+            margin-bottom: 12px; 
+        }
 
         ul { list-style: none; padding-left: 5px; }
         ul li::before {
@@ -140,41 +152,54 @@
         .contact-badge {
             display: inline-block;
             background: var(--accent);
-            color: #000;
-            padding: 5px 15px;
+            color: #05070a;
+            padding: 10px 24px;
             border-radius: 50px;
             font-weight: 800;
             text-decoration: none;
             margin-top: 10px;
+            transition: 0.3s ease;
         }
 
-        /* BACK TO TOP */
+        .contact-badge:hover {
+            transform: scale(1.05);
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* BOTÓN SUBIR */
         #backToTop {
             position: fixed;
             bottom: 30px;
             right: 30px;
             background: var(--accent);
-            color: #000;
+            color: #05070a;
             border: none;
             width: 50px;
             height: 50px;
             border-radius: 15px;
             cursor: pointer;
             opacity: 0;
+            visibility: hidden;
             transition: 0.4s;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
-        #backToTop.show { opacity: 1; }
+        #backToTop.show { 
+            opacity: 1; 
+            visibility: visible; 
+        }
 
         footer {
             text-align: center;
             padding: 60px 20px;
             color: var(--text-dim);
             border-top: 1px solid var(--border);
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -193,61 +218,61 @@
 
 <main>
 
+    <!-- Responsable -->
     <section class="card fade-in">
         <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-        <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa< como responsable del manejo de los registros (logs) dentro de su comunidad.</p>
+        <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa como co-responsable del manejo de los registros (logs) dentro de su comunidad.</p>
     </section>
 
+    <!-- Datos Recolectados -->
     <section class="card fade-in">
         <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
         <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
         <ul>
             <li><strong>Identificadores:</strong> ID único de Discord de usuarios, servidores y canales.</li>
-            <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (solo para visualización de tablas de niveles/economía).</li>
-            <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo <code>modlogs</code> está activo por un administrador).</li>
+            <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (usado en tablas de niveles y economía).</li>
+            <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo de <code>modlogs</code> es activado por un administrador).</li>
         </ul>
     </section>
 
-    section class="card fade-in" style="border-left: 4px solid var(--accent);">
+    <!-- Dashboard -->
+    <section class="card fade-in" style="border-left: 4px solid var(--accent);">
         <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-        <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p</>
+        <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p>
         <ul>
-            <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña.</li>
-            <li><strong>Cookies:</strong> Usamos cookies técnicas para mantener tu sesión iniciada de forma segura.</li>
+            <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña de Discord.</li>
+            <li><strong>Cookies:</strong> Usamos cookies técnicas estrictamente necesarias para mantener tu sesión iniciada de forma segura.</li>
             <li><strong>Servidores:</strong> Leemos la lista de servidores donde tienes permisos para mostrarte cuáles puedes configurar.</li>
         </ul>
     </section>
 
+    <!-- Seguridad -->
     <section class="card fade-in">
         <h2><i class="fa-solid fa-shield-halved"></i> Seguridad del Almacenamiento</h2>
         <p>Los datos se guardan en bases de datos protegidas y archivos de configuración estructurados:</p>
         <ul>
-            <li><code>economia.json</code> - Registra saldos y transacciones virtuales.</li>
-            <li><code>levels.json</code> - Almacena experiencia y rangos ganados.</li>
+            <li><code>economia.json</code> - Registra saldos y transacciones virtuales del juego.</li>
+            <li><code>levels.json</code> - Almacena experiencia y rangos ganados por actividad.</li>
             <li><code>config.json</code> - Guarda los ajustes personalizados de cada servidor.</li>
         </ul>
     </section>
 
+    <!-- Derechos -->
     <section class="card fade-in">
-        <h2>```
-
-### ¿Qué se agregó<i class="fa-solid fa-user-check"></i> Tus Derechos</h2>
-        <p>Como usuario, tienes derecho a la transparencia y eliminación de tu que era importante?
-1.  **Derechos ARCO**: Es un estándar legal que permite a los usuarios saber que pueden **Acceder, Rectificar, información:</p>
+        <h2><i class="fa-solid fa-user-check"></i> Tus Derechos</h2>
+        <p>Como usuario, tienes derecho a la transparencia y al control de tu información:</p>
         <ul>
-            <li>Puedes solicitar el borrado de tus datos de economía/niveles mediante comandos.</li>
-            <li>Si el bot es expulsado de Cancelar u Oponerse** al uso de sus datos. He añadido cómo pueden hacerlo (comandos o correo).
-2.  **Transparencia de Mensajes**: un servidor, los datos específicos de ese servidor pueden ser eliminados en nuestra próxima purga de mantenimiento.</li>
-            <li>No vendemos tu información a terceros ni la usamos para publicidad externa.</li>
+            <li>Puedes solicitar el borrado de tus datos de economía o niveles mediante comandos específicos del bot.</li>
+            <li>Si el bot es expulsado de un servidor, los datos locales pueden ser eliminados en nuestra próxima ventana de mantenimiento.</li>
+            <li>Garantizamos que <strong>no vendemos</strong> tu información a terceros ni la usamos para fines publicitarios.</li>
         </ul>
     </section>
 
+    <!-- Contacto -->
     <section class="card fade-in">
-        <h2><i class Discord es muy estricto con esto. Si tu bot lee mensajes para moderar (borrar insultos, por ejemplo), debes declarar que "procesas="fa-solid fa-envelope-open-text"></i> Contacto Legal</h2>
-        <p>Para solicitudes de acceso, rectificación o eliminación total de el contenido" pero que no lo guardas para siempre.
-3.  **Seguridad Dashboard**: Se especifica que la comunicación entre la Web y el Bot está cif datos en nuestra base de datos central:</p>
-        <a href="mailto:soporte@abyssusbot.info" class="contact-rada.
-4.  **Limpieza de Datos**: Se aclara que si sacan al bot del servidor, dejas de procesar datos, lo cual da tranquilidad a los dueños de comunidades.badge">soporte@abyssusbot.info</a>
+        <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto Legal</h2>
+        <p>Para consultas sobre privacidad, rectificación o eliminación total de tus datos en nuestra base central:</p>
+        <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
     </section>
 
 </main>
@@ -256,22 +281,39 @@
     <p>© 2021–2026 Abyssus Bot System. Todos los derechos reservados.</p>
 </footer>
 
-<button id="backToTop"><i class="fa-solid fa-arrow-up"></i></button>
+<button id="backToTop" title="Subir"><i class="fa-solid fa-arrow-up"></i></button>
 
 <script>
+    // Script para el botón volver arriba
     const btn = document.getElementById("backToTop");
     window.addEventListener("scroll", () => {
-        btn.classList.toggle("show", window.scrollY > 300);
+        if (window.scrollY > 300) {
+            btn.classList.add("show");
+        } else {
+            btn.classList.remove("show");
+        }
     });
-    btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+    
+    btn.onclick = () => {
+        window.scrollTo({
+            top: 0, 
+            behavior: "smooth"
+        });
+    };
 
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if(e.isIntersecting){
-                e.target.classList.add("visible");
+    // Script para animaciones de entrada (Scroll Reveal)
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
             }
         });
-    }, { threshold: 0.1 });
+    }, observerOptions);
 
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 </script>
