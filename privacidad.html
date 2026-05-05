@@ -11,7 +11,6 @@
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- FontAwesome corregido -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -42,7 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* NAVEGACIÓN */
         nav {
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(15px);
@@ -67,7 +65,6 @@
 
         nav a:hover { color: var(--accent); }
 
-        /* CABECERA */
         header {
             text-align: center;
             padding: 90px 20px;
@@ -85,7 +82,6 @@
 
         header p { color: var(--text-dim); font-weight: 500; }
 
-        /* CONTENIDO PRINCIPAL */
         main {
             max-width: 900px;
             margin: auto;
@@ -167,7 +163,6 @@
             box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        /* BOTÓN SUBIR */
         #backToTop {
             position: fixed;
             bottom: 30px;
@@ -257,15 +252,15 @@
         </ul>
     </section>
 
-   <!-- Derechos ARCO -->
+    <!-- Control de Registros y Purga -->
     <section class="card fade-in">
-        <h2><i class="fa-solid fa-user-shield"></i> Control y Derechos del Usuario</h2>
-        <p>En cumplimiento con estándares internacionales de privacidad, garantizamos tu derecho al control total sobre tu información:</p>
+        <h2><i class="fa-solid fa-erasing-lines"></i> Control de Registros y Purga</h2>
+        <p>Abyssus Bot incluye herramientas de gestión de datos de nivel administrativo para garantizar la privacidad institucional:</p>
         <ul>
-            <li><strong>Derecho de Supresión:</strong> Puedes eliminar todos tus datos de economía, niveles y perfil de forma inmediata mediante el comando <code>/borrar-mi-data</code> o equivalente dentro del bot.</li>
-            <li><strong>Portabilidad y Acceso:</strong> Tienes derecho a conocer qué datos almacenamos. Puedes consultar tu información pública en cualquier momento usando los comandos de perfil (<code>/profile</code>, <code>/money</code>).</li>
-            <li><strong>Eliminación por Inactividad:</strong> Los datos de servidores que expulsen al bot o que permanezcan inactivos por más de 90 días son eliminados definitivamente de nuestros registros durante las purgas de mantenimiento.</li>
-            <li><strong>Restricción de Uso:</strong> Tus datos son procesados exclusivamente para las funciones del bot. <strong>Bajo ninguna circunstancia</strong> vendemos, alquilamos o compartimos información con terceros para publicidad o rastreo.</li>
+            <li><strong>Eliminación Bajo Demanda (Purga):</strong> Mediante el comando <code>/modlogs borrar</code>, los administradores pueden ejecutar una purga que elimina <strong>todos</strong> los registros de moderación del servidor de manera definitiva.</li>
+            <li><strong>Destrucción de Datos:</strong> Una vez ejecutado el borrado, la información es eliminada del objeto raíz en nuestra base de datos (<code>modlogs.json</code>), haciendo que la recuperación sea imposible.</li>
+            <li><strong>Transparencia:</strong> Los usuarios pueden consultar su propio historial mediante <code>/modlogs usuario</code> antes de cualquier proceso de limpieza institucional.</li>
+            <li><strong>Derecho al Olvido:</strong> Garantizamos la eliminación de datos de servidores que expulsen al bot o permanezcan inactivos por más de 90 días durante nuestras ventanas de mantenimiento.</li>
         </ul>
     </section>
 
@@ -285,7 +280,6 @@
 <button id="backToTop" title="Subir"><i class="fa-solid fa-arrow-up"></i></button>
 
 <script>
-    // Script para el botón volver arriba
     const btn = document.getElementById("backToTop");
     window.addEventListener("scroll", () => {
         if (window.scrollY > 300) {
@@ -302,7 +296,6 @@
         });
     };
 
-    // Script para animaciones de entrada (Scroll Reveal)
     const observerOptions = {
         threshold: 0.1,
         rootMargin: "0px 0px -50px 0px"
