@@ -1,291 +1,397 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="utf-8">
+    <title>Abyssus Bot - Términos y Condiciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
 
-<meta charset="utf-8">
-<title>Abyssus Bot - Términos y Condiciones</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="img/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <meta name="description" content="Términos y condiciones de uso de Abyssus Bot dentro de Discord.">
 
-<meta name="description" content="Términos y condiciones de uso de Abyssus Bot dentro de Discord.">
+    <!-- Fuentes e Iconos -->
+    <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap)" rel="stylesheet">
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05070a;
+            --card: rgba(22, 27, 34, 0.7);
+            --accent: #58a6ff;
+            --accent2: #1f6feb;
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(31, 111, 235, 0.3);
+        }
 
-<style>
-:root {
-  --bg: #0d1117;
-  --card: rgba(22,27,34,0.65);
-  --accent: #58a6ff;
-  --accent2: #1f6feb;
-  --text: #e6edf3;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% -20%, #161b22, transparent),
+                radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.1), transparent);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: radial-gradient(circle at top, #0d1117, #05080c);
-  color: var(--text);
-}
+        /* NAV */
+        nav {
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            border-bottom: 1px solid var(--border);
+        }
 
-/* NAV */
-nav {
-  background: rgba(22,27,34,0.7);
-  backdrop-filter: blur(10px);
-  padding: 15px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
+        nav a {
+            margin: 0 20px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-nav a {
-  margin: 0 20px;
-  color: #9da5b4;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
-}
+        nav a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--glow);
+        }
 
-nav a:hover {
-  color: var(--accent);
-}
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(180deg, rgba(31, 111, 235, 0.2) 0%, transparent 100%);
+        }
 
-/* HEADER */
-header {
-  text-align: center;
-  padding: 70px 20px;
-  background: linear-gradient(120deg, #1f6feb, #58a6ff);
-  box-shadow: 0 0 40px rgba(31,111,235,0.4);
-}
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            margin-bottom: 15px;
+            background: linear-gradient(to bottom, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.8em;
-  margin-bottom: 10px;
-}
+        header p {
+            color: var(--text-dim);
+            font-weight: 600;
+        }
 
-/* MAIN */
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 40px 20px;
-}
+        /* MAIN */
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px 20px 80px 20px;
+        }
 
-/* CARD */
-.card {
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
-  padding: 25px;
-  margin-bottom: 25px;
-  border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  transition: all 0.25s ease;
-  opacity: 0;
-  transform: translateY(20px);
-}
+        /* CARDS */
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(30px);
+        }
 
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.card:hover {
-  transform: translateY(-5px) scale(1.01);
-}
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(31, 111, 235, 0.15);
+        }
 
-.card h2 {
-  color: var(--accent);
-  margin-bottom: 12px;
-}
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
 
-ul {
-  margin-left: 20px;
-}
+        .card h2 i {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
 
-code {
-  background: #0d1117;
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: var(--accent);
-}
+        .card p {
+            color: #ced4da;
+        }
 
-/* BOTÓN */
-#backToTop {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #000;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 50px;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s;
-}
+        ul {
+            list-style: none;
+            margin-top: 10px;
+        }
 
-#backToTop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+        ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: #ced4da;
+        }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 40px;
-  background: #161b22;
-  color: #777;
-  margin-top: 40px;
-}
-</style>
+        ul li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            <color: var(--accent);
+            font-weight: bold;
+        }
 
+        /* DASHBOARD HIGHLIGHT SECTION */
+        .dashboard-exclusive {
+            border-left: 4px solid var(--accent);
+            background: linear-gradient(90deg, rgba(31, 111, 235, 0.1), transparent);
+        }
+
+        code {
+            background: #0d1117;
+            padding: 3px 7px;
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0<.9em;
+            border: 1px solid var(--border);
+        }
+
+        /* BOTÓN VOLVER ARRIBA */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            cursor: pointer;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.4s;
+            z-index: 1000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        #backToTop.show {
+            opacity: 1;
+        }
+
+        #backToTop:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: #0d1117;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .card { padding: 20px; }
+        }
+    </style>
 </head>
 
 <body>
 
 <nav>
-  <a href="index.html">Inicio</a>
-  <a href="commands.html">Comandos</a>
+    <a href="index.html">Inicio</a>
+    <a href="commands.html">Comandos</a>
 </nav>
 
 <header>
-  <h1>📜 Términos y Condiciones</h1>
-  <p>Última actualización: 28 de Abril de 2026</p>
+    <h1>📜 Términos y Condiciones</h1>
+    <p>Última actualización: 5 de Mayo de 2026</p>
 </header>
 
 <main>
 
-<section class="card fade-in">
-<h2>Uso del Bot</h2>
-<p>
-Abyssus Bot es una herramienta diseñada para mejorar la experiencia en servidores de Discord.
-Al utilizar el bot, aceptas estos términos y te comprometes a usarlo de forma responsable.
-</p>
-</section>
+    <!-- SECCIÓN: USO DEL BOT -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-robot"></i> Uso del Bot</h2>
+        <p>
+            Abyssus Bot es una herramienta diseñada para mejorar la experiencia en servidores de Discord.
+            Al utilizar el bot, aceptas estos términos y te comprometes a usarlo de forma responsable.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Edad Mínima</h2>
-<p>
-El uso del bot está destinado a usuarios que cumplen con la edad mínima requerida por Discord (13 años o más).
-</p>
-</section>
+    <!-- SECCIÓN: NUEVA - GESTIÓN DEL DASHBOARD -->
+    <section class="card fade-in dashboard-exclusive">
+        <h2><i class="fa-solid fa-gauge-high"></i> Uso del Dashboard y Datos</h2>
+        <p>Al hacer uso del Panel de Control (Dashboard) de Abyssus, el usuario reconoce y acepta lo siguiente:</p>
+        <ul>
+            <li><strong>OAuth2:</strong> El inicio de sesión se realiza a través de Discord. Abyssus <code>no conoce ni almacena</code> tu contraseña.</li>
+            <li><strong>Gestión de Servidores:</strong> El bot accede a la lista de servidores donde posees permisos de administrador para permitir la configuración remota.</li>
+            <li><strong>Sincronización:</strong> Los cambios realizados en el Dashboard (YouTube, Welcome, etc.) se guardan en tiempo real en nuestra base de datos sincronizada.</li>
+            <li><strong>Tokens de Sesión:</strong> Se generan tokens temporales para mantener tu sesión segura. Estos expiran automáticamente tras un periodo de inactividad.</li>
+        </ul>
+    section>
 
-<section class="card fade-in">
-<h2>Responsabilidad del Usuario</h2>
-<ul>
-<li>El uso del bot es responsabilidad del administrador del servidor</li>
-<li>No debe utilizarse para actividades abusivas o ilegales</li>
-<li>El mal uso puede resultar en la restricción del servicio</li>
-</ul>
-</section>
+    <!-- SECCIÓN: EDAD MÍNIMA -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-user-shield"></i> Edad Mínima</h2>
+        <p>
+            El uso del bot está destinado a usuarios que cumplen con la edad mínima requerida por Discord (13 años o más).
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Restricciones de Uso</h2>
-<ul>
-<li>No utilizar el bot para spam o abuso</li>
-<li>No intentar explotar errores o vulnerabilidades</li>
-<li>No interferir con el funcionamiento del sistema</li>
-<li>No utilizar el bot con fines ilegales</li>
-</ul>
-</section>
+    <!-- SECCIÓN: RESPONSABILIDAD -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-handshake-angle"></i> Responsabilidad del Usuario</h2>
+        <ul>
+            <li>El uso del bot es responsabilidad del administrador del servidor.</li>
+            <li>No debe utilizarse para actividades abusivas o ilegales.</li>
+            <li>El mal uso puede resultar en la restricción del servicio.</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Disponibilidad</h2>
-<p>
-El bot puede experimentar interrupciones, mantenimiento o cambios sin previo aviso.
-No se garantiza disponibilidad continua del servicio.
-</p>
-</section>
+    <!-- SECCIÓN: RESTRICCIONES -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-shield-slash"></i> Restricciones de Uso</h2>
+        <ul>
+            <li>No utilizar el bot para spam o abuso.</li>
+            <li>No intentar explotar errores o vulnerabilidades.</li>
+            <li>No interferir con el funcionamiento del sistema.</li>
+            <li>No utilizar el bot con fines ilegales.</li>
+        </ul>
+    </section>
 
-<section class="card fade-in">
-<h2>Dependencia de Terceros</h2>
-<p>
-El funcionamiento depende de servicios externos como Discord, por lo que pueden existir fallos fuera del control del desarrollador.
-</p>
-</section>
+    <!-- SECCIÓN: DISPONIBILIDAD --><
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-server"></i> Disponibilidad</h2>
+        <p>
+            El bot puede experimentar interrupciones, mantenimiento o cambios sin previo aviso.
+            No se garantiza disponibilidad continua del servicio.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Limitación de Responsabilidad</h2>
-<p>
-El desarrollador no se hace responsable de daños, pérdidas o conflictos derivados del uso del bot.
-El uso es bajo tu propio riesgo.
-</p>
-</section>
+    <!-- SECCIÓN: TERCEROS -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-link"></i> Dependencia de Terceros</h2>
+        <p>
+            El funcionamiento depende de servicios externos como Discord, por lo que pueden existir fallos fuera del control del desarrollador.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Funciones Premium</h2>
-<p>
-Algunas funciones pueden requerir acceso premium. Estas características pueden cambiar, actualizarse o eliminarse en cualquier momento.
-</p>
-</section>
+    <!-- SECCIÓN: LIMITACIÓN -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-scale-balanced"></i> Limitación de Responsabilidad</h2>
+        <p>
+            El desarrollador no se hace responsable de daños```
 
-<section class="card fade-in">
-<h2>Pagos y Reembolsos</h2>
-<p>
-Los pagos por funciones premium son opcionales. No se garantizan reembolsos salvo que la ley aplicable lo requiera.
-</p>
-</section>
+### ¿Qué se agregó exactamente sobre el Dashboard?
+1.  **OAuth2 y Tokens, pérdidas o conflictos derivados del uso del bot.
+            El uso es bajo tu propio riesgo.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Suspensión del Servicio</h2>
-<p>
-El acceso al bot puede ser restringido o bloqueado en caso de incumplimiento de estos términos.
-</p>
-</section>
+    <!-- SECCIÓN: PREMIUM -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-gem"></i> Funciones Premium</h2>
+        <p>**: Aclara que el bot usa el sistema oficial de Discord y que **no** guarda contraseñas, solo tokens efímeros.
+2.  **Ver
+            Algunas funciones pueden requerir acceso premium. Estas características pueden cambiar, actualizarse o eliminarse en cualquier momento.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Privacidad</h2>
-<p>
-El uso del bot también está sujeto a la Política de Privacidad disponible en este sitio.
-</p>
-</section>
+    <!-- SECCIÓN: PAGOS -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-credit-card"></i>ificación de Servidores**: Explica que el Dashboard lee los servidores donde el usuario es Administrador para permitirle configurarlos.
+3.  **Persistencia de Datos Pagos y Reembolsos</h2>
+        <p>
+            Los pagos por funciones premium son opcionales. No se garantizan reembolsos salvo que la ley aplicable**: Menciona que los ajustes hechos en el panel se guardan encriptados para que el bot pueda ejecutarlos (ej. el canal de logs que elijas).
+4. lo requiera.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Modificaciones</h2>
-<p>
-Estos términos pueden actualizarse en cualquier momento. Se recomienda revisarlos periódicamente.
-</p>
-</section>
+    <!-- SECCIÓN: SUSPENSIÓN -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-user-slash"></i> Suspensión del Servicio</h2>
+        <p>
+            El acceso al bot puede ser  **Identidad**: Detalla que solo se toma el ID y avatar para el perfil visual del Dashboard. restringido o bloqueado en caso de incumplimiento de estos términos.
+        </p>
+    </section>
 
-<section class="card fade-in">
-<h2>Contacto</h2>
-<p>
-Para dudas o soporte puedes contactar mediante el servidor oficial o los canales disponibles.
-</p>
-</section>
+    <!-- SECCIÓN: PRIVACIDAD -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-lock"></i> Privacidad</h2>
+        <p>
+            El uso del bot también está sujeto a la Política de Privacidad disponible en este sitio.
+        </p>
+    </section>
+
+    <!-- SECCIÓN: MODIFICACIONES -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-pen-to-square"></i> Modificaciones</h2>
+        <p>
+            Estos términos pueden actualizarse en cualquier momento. Se recomienda revisarlos periódicamente.
+        </p>
+    </section>
+
+    <!-- SECCIÓN: CONTACTO -->
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-headset"></i> Contacto</h2>
+        <p>
+            Para dudas o soporte puedes contactar mediante el servidor oficial o los canales disponibles.
+        </p>
+    </section>
 
 </main>
 
 <footer>
-© 2021–2025 Abyssus. Todos los derechos reservados.
+    <p>© 2021–2026 Abyssus System. Todos los derechos reservados.</p>
 </footer>
 
-<button id="backToTop">↑</button>
+<button id="backToTop"><i class="fa-solid fa-chevron-up"></i></button>
 
 <script>
-const btn = document.getElementById("backToTop");
-window.addEventListener("scroll", () => {
-  btn.classList.toggle("show", window.scrollY > 300);
-});
-btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+    const btn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+        btn.classList.toggle("show", window.scrollY > 300);
+    });
+    btn.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
 
-// animación scroll
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){
-      e.target.classList.add("visible");
-    }
-  });
-});
-document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+    // Animación de aparición (Scroll Observer)
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if(e.isIntersecting){
+                e.target.classList.add("visible");
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 </script>
 
 </body>
