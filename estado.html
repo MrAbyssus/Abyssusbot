@@ -1,3 +1,70 @@
+<style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(15, 16, 18, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid #2f3136;
+        padding: 15px 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-content {
+        width: 90%;
+        max-width: 1000px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-logo {
+        color: #00ffcc;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-decoration: none;
+        font-size: 1.1rem;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 25px;
+    }
+
+    .nav-links a {
+        color: #949ba4;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+        color: #00ffcc;
+    }
+
+    /* Ajuste para que el contenido no quede debajo de la navbar */
+    body {
+        padding-top: 100px !important;
+    }
+</style>
+
+<nav class="navbar">
+    <div class="nav-content">
+        <a href="index.html" class="nav-logo">Abyssus Sentinel</a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="estado.html" class="active">Estado de Red</a>
+            <a href="https://discord.com/invite/tu-invitacion" target="_blank">Soporte</a>
+        </div>
+    </div>
+</nav>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
