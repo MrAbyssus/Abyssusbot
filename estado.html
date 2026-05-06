@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Sentinel - Estado</title>
+    <title>Abyssus Sentinel - Semáforo Core</title>
     <style>
-        /* BASE Y FONDO */
+        /* BASE Y FONDO (Oscuro para contrastar con los colores vivos) */
         body { 
-            background: #0f1012; 
+            background: #090a0b; 
             color: #fff; 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
@@ -17,54 +17,82 @@
             align-items: center;
         }
 
-        .header-sentinel { text-align: center; margin-bottom: 50px; }
-        h1 { color: #00ffcc; letter-spacing: 5px; text-transform: uppercase; margin: 0; font-size: 2.5rem; }
+        .header-sentinel { text-align: center; margin-bottom: 60px; }
+        h1 { color: #fff; letter-spacing: 5px; text-transform: uppercase; margin: 0; font-size: 2.8rem; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         
         .status-main { 
             display: flex; justify-content: center; align-items: center; gap: 12px; 
-            font-weight: bold; margin-top: 15px; font-size: 1.1rem;
+            font-weight: bold; margin-top: 20px; font-size: 1.2rem;
+            color: #888; /* Color neutro para el estado general inicial */
         }
 
         /* GRID DE CLUSTERS */
-        .clusters-grid {
+        .clusters-semaforo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1100px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
             width: 100%;
         }
 
-        /* EL CUADRO (CARTA) */
-        .cluster-card-pro {
-            background: #18191c;
-            border-radius: 12px;
-            padding: 25px;
-            border-left: 6px solid #444; /* Color base gris */
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
+        /* EL CUADRO (CARTA) - Diseño Semáforo Sólido */
+        .cluster-box {
+            border-radius: 15px;
+            padding: 30px;
+            color: #fff;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* ESTADOS DINÁMICOS */
-        .status-online { border-left-color: #23a55a; box-shadow: 0 4px 15px rgba(35, 165, 90, 0.1); }
-        .status-offline { border-left-color: #f23f43; box-shadow: 0 4px 15px rgba(242, 63, 67, 0.1); }
+        /* EFECTO DE LUZ DETRÁS DE LOS TEXTOS */
+        .cluster-box::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            transition: all 0.4s ease;
+        }
 
-        .cluster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .cluster-title { font-size: 1.2rem; font-weight: bold; }
+        /* ESTADOS DE COLOR SÓLIDO (SEMÁFORO) */
+        .cluster-box.box-online { 
+            background-color: #23a55a; /* VERDE CONECTADO */
+            border: 2px solid #23a55a;
+        }
+        .cluster-box.box-online:hover { 
+            box-shadow: 0 0 30px rgba(35, 165, 90, 0.6);
+            transform: scale(1.03);
+        }
+
+        .cluster-box.box-offline { 
+            background-color: #f23f43; /* ROJO CAÍDO */
+            border: 2px solid #f23f43;
+        }
+        .cluster-box.box-offline:hover { 
+            box-shadow: 0 0 30px rgba(242, 63, 67, 0.6);
+            transform: scale(1.03);
+        }
+
+        /* TEXTOS DENTRO DEL CUADRO */
+        .box-header { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+        .box-title { font-size: 1.4rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         
-        .status-tag { 
+        .box-status-tag { 
             font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: bold;
-            border: 1px solid currentColor;
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
         }
 
-        /* BARRAS Y DATOS */
-        .ram-bar-bg { background: #2f3136; height: 8px; border-radius: 4px; margin: 15px 0; overflow: hidden; }
-        .ram-bar-fill { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .box-data { position: relative; z-index: 1; margin-top: auto; }
+        .data-item { display: flex; justify-content: space-between; font-size: 1rem; margin-top: 10px; }
+        .data-label { opacity: 0.8; font-weight: 300; }
+        .data-value { font-weight: bold; font-family: 'JetBrains Mono', monospace; }
 
-        .data-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 10px; }
-        .data-label { color: #949ba4; }
-        .data-value { color: #fff; font-family: 'JetBrains Mono', monospace; }
-
-        .online-dot { height: 12px; width: 12px; border-radius: 50%; }
+        /* PUNTO DE PULSO GENERAL */
+        .online-dot { height: 14px; width: 14px; border-radius: 50%; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(35, 165, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0); } }
     </style>
 </head>
 <body>
@@ -72,62 +100,65 @@
     <div class="header-sentinel">
         <h1>SENTINEL CORE</h1>
         <div id="conexion-texto" class="status-main">
-            <div class="online-dot" style="background: #888;"></div> 
-            <span style="color: #888;">CONECTANDO CON EL NODO...</span>
+            <div class="online-dot" style="background: #555;"></div> 
+            <span>CONECTANDO...</span>
         </div>
     </div>
 
-    <div id="lista-clusters-detallada" class="clusters-grid">
+    <div id="lista-semaforo" class="clusters-semaforo-grid">
         </div>
 
     <script>
-        async function actualizarEstado() {
-            const contenedor = document.getElementById('lista-clusters-detallada');
+        async function actualizarSemaforo() {
+            const contenedor = document.getElementById('lista-semaforo');
             const statusTexto = document.getElementById('conexion-texto');
 
             try {
                 const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
-                if (!res.ok) throw new Error('Error en API');
+                if (!res.ok) throw new Error('Api Offline');
                 const data = await res.json();
 
                 if (data.clusters) {
                     contenedor.innerHTML = data.clusters.map(c => {
+                        // DETECTAR ESTADO
                         const isOnline = c.status && c.status.toLowerCase() === 'online';
-                        const colorEstado = isOnline ? '#23a55a' : '#f23f43';
+                        
+                        // ASIGNAR CLASE DE COLOR (SEMÁFORO)
+                        const boxColorClass = isOnline ? 'box-online' : 'box-offline';
                         
                         return `
-                            <div class="cluster-card-pro ${isOnline ? 'status-online' : 'status-offline'}">
-                                <div class="cluster-header">
-                                    <span class="cluster-title">Cluster ${c.id}</span>
-                                    <span class="status-tag" style="color: ${colorEstado}">${isOnline ? 'CONECTADO' : 'DESCONECTADO'}</span>
+                            <div class="cluster-box ${boxColorClass}">
+                                <div class="box-header">
+                                    <span class="box-title">Núcleo ${c.id}</span>
+                                    <span class="box-status-tag">${isOnline ? 'CONECTADO' : 'CAÍDO'}</span>
                                 </div>
                                 
-                                <div class="ram-bar-bg">
-                                    <div class="ram-bar-fill" style="width: ${(c.ram / 512) * 100}%; background: ${colorEstado}"></div>
-                                </div>
-
-                                <div class="data-row">
-                                    <span class="data-label">Uso de Memoria</span>
-                                    <span class="data-value">${c.ram || 0} MB</span>
-                                </div>
-                                <div class="data-row">
-                                    <span class="data-label">Uptime</span>
-                                    <span class="data-value">${isOnline ? c.uptime : '---'}</span>
+                                <div class="box-data">
+                                    <div class="data-item">
+                                        <span class="data-label">Memoria</span>
+                                        <span class="data-value">${c.ram || 0} MB</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Actividad</span>
+                                        <span class="data-value">${isOnline ? c.uptime : '---'}</span>
+                                    </div>
                                 </div>
                             </div>
                         `;
                     }).join('');
 
-                    statusTexto.innerHTML = `<div class="online-dot" style="background:#23a55a; box-shadow:0 0 10px #23a55a"></div> <span style="color:#23a55a">SISTEMA TOTALMENTE OPERATIVO</span>`;
+                    // Actualizar estado general
+                    statusTexto.innerHTML = `<div class="online-dot" style="background:#23a55a; animation: pulse 2s infinite;"></div> <span style="color:#23a55a">SISTEMA TOTALMENTE OPERATIVO</span>`;
                 }
             } catch (e) {
+                // Si falla, ponemos el estado general en rojo
                 statusTexto.innerHTML = `<div class="online-dot" style="background:#f23f43; box-shadow:0 0 10px #f23f43"></div> <span style="color:#f23f43">NODO FUERA DE LÍNEA</span>`;
-                contenedor.innerHTML = `<p style="grid-column: 1/-1; opacity:0.5; text-align:center;">No hay conexión con Abyssus Core. Verifica el túnel de Cloudflare.</p>`;
+                contenedor.innerHTML = `<p style="grid-column: 1/-1; opacity:0.5; text-align:center;">No hay respuesta del Abyssus Core. Revisa el VPS.</p>`;
             }
         }
 
-        actualizarEstado();
-        setInterval(actualizarEstado, 5000);
+        actualizarSemaforo();
+        setInterval(actualizarSemaforo, 5000);
     </script>
 </body>
 </html>
