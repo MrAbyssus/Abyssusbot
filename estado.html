@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Sentinel - Panel de Estado</title>
+    <title>Abyssus Sentinel - Dashboard Pro</title>
     <style>
         body { 
             background: #0f1012; 
@@ -12,55 +12,71 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding-top: 60px;
+            padding: 60px 20px;
         }
 
         .container { 
-            width: 90%;
-            max-width: 1000px; /* Limitamos el ancho para que no se desparrame en pantallas 4K */
+            width: 100%;
+            max-width: 1000px;
             text-align: center;
         }
 
+        /* Título Principal */
         h2 { 
             font-size: 2rem; 
-            margin-bottom: 40px; 
-            letter-spacing: 2px;
+            margin-bottom: 30px; 
             color: #00ffcc;
             text-transform: uppercase;
+            letter-spacing: 3px;
         }
 
-        /* Caja contenedora del Panel */
+        /* Panel Principal */
         .status-panel {
             background: #18191c;
             border-radius: 15px;
-            padding: 40px;
+            padding: 30px;
             border: 1px solid #2f3136;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
-        /* Leyenda Centrada */
-        .legend { 
-            display: flex;
-            justify-content: center;
-            gap: 30px;
+        /* SECCIÓN RESUMEN (Igual al estilo del index pero adaptado) */
+        .resumen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
             margin-bottom: 40px;
-            flex-wrap: wrap;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #2f3136;
         }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #949ba4; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
 
-        /* Grid de Cuadritos Centrado y Proporcionado */
+        .resumen-card {
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,255,204,0.1);
+        }
+
+        .resumen-val { font-size: 1.4rem; font-weight: bold; color: #00ffcc; display: block; }
+        .resumen-lab { font-size: 0.75rem; color: #949ba4; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* SECCIÓN GRID DE CLUSTERS */
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .legend { display: flex; gap: 15px; font-size: 0.8rem; }
+        .legend-item { display: flex; align-items: center; gap: 6px; color: #949ba4; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Cuadros un poco más grandes */
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 12px;
             justify-content: center;
-            margin-top: 20px;
         }
 
         .cluster-box {
@@ -71,41 +87,19 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
         }
 
-        /* Colores del Semáforo con Brillo (Glow) */
-        .box-online { 
-            background: rgba(35, 165, 90, 0.2) !important; 
-            border-color: #23a55a !important; 
-            color: #23a55a;
-            box-shadow: 0 0 10px rgba(35, 165, 90, 0.2);
-        }
-        .box-warning { 
-            background: rgba(240, 178, 50, 0.2) !important; 
-            border-color: #f0b232 !important; 
-            color: #f0b232;
-        }
-        .box-offline { 
-            background: rgba(242, 63, 67, 0.2) !important; 
-            border-color: #f23f43 !important; 
-            color: #f23f43;
-        }
+        /* Colores Dinámicos con Efecto Glass */
+        .box-online { background: rgba(35, 165, 90, 0.15) !important; border-color: #23a55a !important; color: #23a55a; }
+        .box-warning { background: rgba(240, 178, 50, 0.15) !important; border-color: #f0b232 !important; color: #f0b232; }
+        .box-offline { background: rgba(242, 63, 67, 0.15) !important; border-color: #f23f43 !important; color: #f23f43; }
 
-        .cluster-box:hover { 
-            transform: translateY(-5px) scale(1.1); 
-            z-index: 10; 
-            background: rgba(255,255,255,0.1) !important;
-            color: #fff;
-        }
-
-        /* Info del Cluster (Debajo del número) */
-        .cluster-id { font-size: 1.1rem; }
-        .cluster-label { font-size: 0.5rem; text-transform: uppercase; opacity: 0.7; }
+        .cluster-box:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: rgba(255,255,255,0.1) !important; }
+        .cluster-id { font-size: 1.1rem; font-weight: bold; }
+        .cluster-label { font-size: 0.5rem; opacity: 0.6; font-weight: bold; }
 
     </style>
 </head>
@@ -115,50 +109,81 @@
     <h2>Abyssus Sentinel Core</h2>
 
     <div class="status-panel">
-        <div class="legend">
-            <div class="legend-item"><div class="dot" style="background:#23a55a"></div> Operativo</div>
-            <div class="legend-item"><div class="dot" style="background:#f0b232"></div> Reconectando</div>
-            <div class="legend-item"><div class="dot" style="background:#f23f43"></div> Fuera de línea</div>
+        
+        <div class="resumen-grid">
+            <div class="resumen-card">
+                <span id="total-servidores" class="resumen-val">--</span>
+                <span class="resumen-lab">Servidores</span>
+            </div>
+            <div class="resumen-card">
+                <span id="total-usuarios" class="resumen-val">--</span>
+                <span class="resumen-lab">Usuarios</span>
+            </div>
+            <div class="resumen-card">
+                <span id="total-shards" class="resumen-val">--</span>
+                <span class="resumen-lab">Shards</span>
+            </div>
+            <div class="resumen-card">
+                <span id="total-uptime" class="resumen-val">99.9%</span>
+                <span class="resumen-lab">Uptime</span>
+            </div>
+        </div>
+
+        <div class="grid-header">
+            <span style="font-weight: bold; font-size: 0.9rem;">Estado de los Núcleos</span>
+            <div class="legend">
+                <div class="legend-item"><div class="dot" style="background:#23a55a"></div> OK</div>
+                <div class="legend-item"><div class="dot" style="background:#f23f43"></div> DOWN</div>
+            </div>
         </div>
 
         <div id="grid-container" class="status-grid">
             </div>
+
     </div>
-    
-    <p style="margin-top: 30px; color: #4f545c; font-size: 0.8rem;">
-        Actualización automática cada 5 segundos • Nodo: OVH Cloud
+
+    <p style="margin-top: 30px; color: #4f545c; font-size: 0.8rem; letter-spacing: 1px;">
+        MONITOREO EN TIEMPO REAL • OVH INFRASTRUCTURE
     </p>
 </div>
 
 <script>
-    async function actualizarGrid() {
+    async function actualizarDashboard() {
         try {
             const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
             const data = await res.json();
-            const grid = document.getElementById('grid-container');
+            
+            // 1. Actualizar Resumen (Si tu API manda estos datos globales)
+            if (data.global) {
+                document.getElementById('total-servidores').innerText = data.global.servers.toLocaleString();
+                document.getElementById('total-usuarios').innerText = data.global.users.toLocaleString();
+                document.getElementById('total-shards').innerText = data.global.shards;
+            }
 
+            // 2. Actualizar Grid de Clusters
+            const grid = document.getElementById('grid-container');
             if (data.clusters) {
                 grid.innerHTML = data.clusters.map(c => {
                     const status = c.status.toLowerCase();
                     let colorClass = 'box-offline';
                     if (status === 'online') colorClass = 'box-online';
-                    if (status === 'connecting' || status === 'reconnecting') colorClass = 'box-warning';
+                    if (status === 'connecting') colorClass = 'box-warning';
 
                     return `
                         <div class="cluster-box ${colorClass}">
-                            <span class="cluster-label">ID</span>
+                            <span class="cluster-label">CLUSTER</span>
                             <span class="cluster-id">${c.id}</span>
                         </div>
                     `;
                 }).join('');
             }
         } catch (e) {
-            console.error("Error de conexión");
+            console.error("Error conectando con Sentinel API");
         }
     }
 
-    actualizarGrid();
-    setInterval(actualizarGrid, 5000);
+    actualizarDashboard();
+    setInterval(actualizarDashboard, 5000);
 </script>
 
 </body>
