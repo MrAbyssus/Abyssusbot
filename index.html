@@ -395,32 +395,9 @@ footer a:hover{
   </div>
 </section>
 
- async function actualizarMonitor() {
-    try {
-        // SUSTITUYE 'IP_DE_TU_VPS' por la IP real de tu OVH
-        const res = await fetch('http://IP_DE_TU_VPS:3000/api/stats');
-        const clusters = await response.json();
-
-        // Ejemplo de cómo ponerlo en tu HTML
-        const container = document.getElementById('stats-vps');
-        container.innerHTML = clusters.map(c => `
-            <div class="card">
-                <h3>Cluster ${c.id}</h3>
-                <p>Estado: ${c.status === 'online' ? '🟢' : '🔴'}</p>
-                <p>RAM: ${c.memory} MB</p>
-                <p>CPU: ${c.cpu}%</p>
-            </div>
-        `).join('');
-
-    } catch (e) {
-        console.error("Error conectando al VPS de Abyssus", e);
-    }
-}
-
-// Se actualiza cada 10 segundos para que la web esté "viva"
-setInterval(actualizarMonitor, 10000);
-actualizarMonitor();
- 
+<div id="stats-vps">
+    <p>Cargando estadísticas de los clusters...</p>
+</div>
 
 <!-- CTA -->
 <section class="cta">
