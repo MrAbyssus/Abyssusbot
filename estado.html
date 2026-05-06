@@ -3,82 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Sentinel - Status Grid</title>
+    <title>Abyssus Sentinel - Panel de Estado</title>
     <style>
         body { 
             background: #0f1012; 
             color: #fff; 
             font-family: 'Inter', sans-serif; 
-            padding: 40px; 
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 60px;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { 
+            width: 90%;
+            max-width: 1000px; /* Limitamos el ancho para que no se desparrame en pantallas 4K */
+            text-align: center;
+        }
 
-        h2 { font-size: 1.5rem; margin-bottom: 20px; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
+        h2 { 
+            font-size: 2rem; 
+            margin-bottom: 40px; 
+            letter-spacing: 2px;
+            color: #00ffcc;
+            text-transform: uppercase;
+        }
 
-        /* Leyenda de Colores */
-        .legend { margin-bottom: 30px; font-size: 0.9rem; }
-        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        /* Caja contenedora del Panel */
+        .status-panel {
+            background: #18191c;
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid #2f3136;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Leyenda Centrada */
+        .legend { 
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #949ba4; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
 
-        /* Grid de Cuadritos */
+        /* Grid de Cuadritos Centrado y Proporcionado */
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
-            gap: 8px;
-            background: #18191c;
-            padding: 20px;
-            border-radius: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Cuadros un poco más grandes */
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .cluster-box {
             aspect-ratio: 1 / 1;
-            background: #2f3136; /* Color si está cargando */
-            border-radius: 4px;
+            background: #2f3136;
+            border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            color: rgba(255,255,255,0.8);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            border: 2px solid transparent;
         }
 
-        /* Colores del Semáforo */
-        .box-online { background: #23a55a !important; color: #fff; }
-        .box-warning { background: #f0b232 !important; color: #000; }
-        .box-offline { background: #f23f43 !important; color: #fff; }
-
-        .cluster-box:hover { transform: scale(1.2); z-index: 10; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-
-        /* Tooltip simple al pasar el mouse */
-        .cluster-box:hover::after {
-            content: attr(data-info);
-            position: absolute;
-            bottom: 125%;
-            background: #000;
-            padding: 5px 10px;
-            border-radius: 4px;
-            white-space: nowrap;
-            font-size: 0.7rem;
+        /* Colores del Semáforo con Brillo (Glow) */
+        .box-online { 
+            background: rgba(35, 165, 90, 0.2) !important; 
+            border-color: #23a55a !important; 
+            color: #23a55a;
+            box-shadow: 0 0 10px rgba(35, 165, 90, 0.2);
         }
+        .box-warning { 
+            background: rgba(240, 178, 50, 0.2) !important; 
+            border-color: #f0b232 !important; 
+            color: #f0b232;
+        }
+        .box-offline { 
+            background: rgba(242, 63, 67, 0.2) !important; 
+            border-color: #f23f43 !important; 
+            color: #f23f43;
+        }
+
+        .cluster-box:hover { 
+            transform: translateY(-5px) scale(1.1); 
+            z-index: 10; 
+            background: rgba(255,255,255,0.1) !important;
+            color: #fff;
+        }
+
+        /* Info del Cluster (Debajo del número) */
+        .cluster-id { font-size: 1.1rem; }
+        .cluster-label { font-size: 0.5rem; text-transform: uppercase; opacity: 0.7; }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Estado de clusters</h2>
+    <h2>Abyssus Sentinel Core</h2>
 
-    <div class="legend">
-        <div class="legend-item"><div class="dot" style="background:#23a55a"></div> El cluster está conectado.</div>
-        <div class="legend-item"><div class="dot" style="background:#f0b232"></div> El cluster tiene problemas.</div>
-        <div class="legend-item"><div class="dot" style="background:#f23f43"></div> El cluster está desconectado.</div>
-    </div>
-
-    <div id="grid-container" class="status-grid">
+    <div class="status-panel">
+        <div class="legend">
+            <div class="legend-item"><div class="dot" style="background:#23a55a"></div> Operativo</div>
+            <div class="legend-item"><div class="dot" style="background:#f0b232"></div> Reconectando</div>
+            <div class="legend-item"><div class="dot" style="background:#f23f43"></div> Fuera de línea</div>
         </div>
+
+        <div id="grid-container" class="status-grid">
+            </div>
+    </div>
+    
+    <p style="margin-top: 30px; color: #4f545c; font-size: 0.8rem;">
+        Actualización automática cada 5 segundos • Nodo: OVH Cloud
+    </p>
 </div>
 
 <script>
@@ -96,9 +145,9 @@
                     if (status === 'connecting' || status === 'reconnecting') colorClass = 'box-warning';
 
                     return `
-                        <div class="cluster-box ${colorClass}" 
-                             data-info="Cluster ${c.id} | RAM: ${c.ram}MB | Uptime: ${c.uptime}">
-                            ${c.id}
+                        <div class="cluster-box ${colorClass}">
+                            <span class="cluster-label">ID</span>
+                            <span class="cluster-id">${c.id}</span>
                         </div>
                     `;
                 }).join('');
