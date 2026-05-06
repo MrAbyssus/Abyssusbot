@@ -1,31 +1,28 @@
 <script>
     async function actualizarDashboard() {
         try {
-            // USAMOS LA RUTA /API/STATUS PARA RECIBIR DATOS, NO DISEÑO
-            const link = 'https://shoes-lamb-busy-anytime.trycloudflare.com/api/status';
+            // MUY IMPORTANTE: La URL debe terminar en /api/status
+            const url = 'https://shoes-lamb-busy-anytime.trycloudflare.com/api/status';
             
-            const respuesta = await fetch(link);
-            const datos = await respuesta.json();
+            const res = await fetch(url);
+            const data = await res.json();
 
-            const contenedor = document.getElementById('lista-clusters'); // El ID de tu div
+            const lista = document.getElementById('lista-clusters'); // Asegúrate que este ID exista
             
-            if (datos.clusters) {
-                contenedor.innerHTML = datos.clusters.map(c => `
-                    <div class="cluster-card" style="background:#222; padding:15px; margin:10px; border-radius:8px; border-left: 4px solid #0ff;">
-                        <h3 style="color:#0ff; margin:0;">CLUSTER ${c.id}</h3>
-                        <p style="color:white;">Estado: ${c.status.toUpperCase()}</p>
-                        <p style="color:#aaa; font-size:12px;">RAM: ${c.ram || '--'} MB | Uptime: ${c.uptime || '--'}</p>
+            if (data.clusters) {
+                lista.innerHTML = data.clusters.map(c => `
+                    <div style="background:#222; padding:10px; margin:5px; border-radius:5px; border-left: 4px solid #0ff;">
+                        <h4 style="margin:0; color:#0ff;">CLUSTER ${c.id}</h4>
+                        <p style="margin:0; font-size:14px;">ESTADO: ${c.status.toUpperCase()}</p>
                     </div>
                 `).join('');
                 
-                document.getElementById('conexion-estado').innerHTML = '🟢 SISTEMA OPERATIVO';
+                document.getElementById('conexion-estado').innerHTML = '<span style="color:#00ff00">🟢 CONECTADO</span>';
             }
-        } catch (error) {
-            console.error("Error:", error);
-            document.getElementById('conexion-estado').innerHTML = '🔴 FALLO DE COMUNICACIÓN';
+        } catch (e) {
+            document.getElementById('conexion-estado').innerHTML = '<span style="color:red">🔴 DESCONECTADO</span>';
         }
     }
-
     setInterval(actualizarDashboard, 5000);
     actualizarDashboard();
 </script>
