@@ -1,46 +1,31 @@
-<style>
-    /* ... (Mantenemos el estilo de Sentinel Core) ... */
+<div class="header-sentinel">
+    <h1>SENTINEL CORE</h1>
+    <div id="conexion-texto" class="status-main">
+        <div class="online-dot" style="background: #888; box-shadow: none;"></div> 
+        <span>Sincronizando con el VPS...</span>
+    </div>
+</div>
 
-    .cluster-card-pro {
-        background: #18191c;
-        border-radius: 10px;
-        padding: 25px;
-        position: relative;
-        transition: all 0.3s ease;
-        /* El borde izquierdo cambiará de color por JS */
-        border-left: 6px solid #444; 
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    /* Clases de estado dinámicas */
-    .status-online { border-left-color: #23a55a !important; box-shadow: 0 0 15px rgba(35, 165, 90, 0.1); }
-    .status-offline { border-left-color: #f23f43 !important; box-shadow: 0 0 15px rgba(242, 63, 67, 0.1); }
-    .status-warning { border-left-color: #f0b232 !important; }
-
-    .status-tag {
-        font-size: 0.7rem;
-        font-weight: bold;
-        padding: 3px 10px;
-        border-radius: 20px;
-        text-transform: uppercase;
-    }
-
-    .tag-online { background: rgba(35, 165, 90, 0.1); color: #23a55a; border: 1px solid #23a55a; }
-    .tag-offline { background: rgba(242, 63, 67, 0.1); color: #f23f43; border: 1px solid #f23f43; }
-</style>
+<div id="lista-clusters-detallada" class="clusters-grid">
+    <p style="text-align:center; width:100%; opacity:0.5;">Cargando datos de los núcleos...</p>
+</div>
 
 <script>
     async function actualizarEstadoColor() {
+        const contenedor = document.getElementById('lista-clusters-detallada');
+        const statusTexto = document.getElementById('conexion-texto');
+
         try {
             const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+            
+            // Si la respuesta no es OK, lanzamos error para ir al 'catch'
+            if (!res.ok) throw new Error('Error en el servidor');
+            
             const data = await res.json();
-            const contenedor = document.getElementById('lista-clusters-detallada');
 
-            if (data.clusters) {
+            if (data && data.clusters) {
                 contenedor.innerHTML = data.clusters.map(c => {
-                    // LÓGICA DE COLOR:
-                    // Si el status no es 'online', se pone rojo.
-                    const isOnline = c.status.toLowerCase() === 'online';
+                    const isOnline = c.status && c.status.toLowerCase() === 'online';
                     const estadoClase = isOnline ? 'status-online' : 'status-offline';
                     const tagClase = isOnline ? 'tag-online' : 'tag-offline';
 
@@ -66,13 +51,19 @@
                         </div>
                     `;
                 }).join('');
+
+                // Actualizar encabezado general
+                statusTexto.innerHTML = `<div class="online-dot"></div> <span style="color:#23a55a">SISTEMA TOTALMENTE OPERATIVO</span>`;
             }
         } catch (e) {
-            // Si falla la conexión, podríamos poner todos en rojo aquí
-            console.error("Error de conexión");
+            console.error("Error detectado:", e);
+            // Si falla, mostramos un mensaje de error visual en lugar de dejarlo en blanco
+            statusTexto.innerHTML = `<div class="online-dot" style="background:#f23f43; box-shadow:0 0 10px #f23f43"></div> <span style="color:#f23f43">ERROR DE CONEXIÓN CON EL NODO</span>`;
+            contenedor.innerHTML = `<p style="color:#888; grid-column: 1/-1;">No se pudo obtener información de los clusters. Revisa si el VPS está encendido.</p>`;
         }
     }
 
-    setInterval(actualizarEstadoColor, 5000);
+    // Ejecutar inmediatamente y luego cada 5 segundos
     actualizarEstadoColor();
+    setInterval(actualizarEstadoColor, 5000);
 </script>
