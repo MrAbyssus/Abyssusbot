@@ -395,48 +395,43 @@ footer a:hover{
   </div>
 </section>
 
-<div id="status-general" style="text-align:center; color:white; font-family:sans-serif;">
+<div id="status-general" style="text-align:center; color:white; font-family:sans-serif; background:#111; padding:20px; border-radius:15px;">
     <h2>Estatus de Abyssus Bot</h2>
     <p id="conexion-texto">Estado: <span style="color:orange">Conectando...</span></p>
     
-    <div id="clusters-lista" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+    <div id="clusters-lista" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;"></div>
 </div>
 
 <script>
     async function actualizarDashboard() {
         try {
-            // USAMOS LA NUEVA URL + /status
-            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/status');
+            // RECUERDA: La URL debe ser /api/status para recibir los datos de los clusters
+            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
             const data = await res.json();
 
             const lista = document.getElementById('clusters-lista');
             
-            // Si el bot manda clusters, los dibujamos uno por uno
             if (data.clusters && data.clusters.length > 0) {
                 lista.innerHTML = data.clusters.map(c => `
-                    <div style="background: #2a2a2a; border: 1px solid #444; padding: 15px; margin: 10px; border-radius: 8px; min-width: 150px;">
+                    <div style="background: #2a2a2a; border: 1px solid #444; padding: 15px; margin: 5px; border-radius: 8px; min-width: 150px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
                         <h3 style="margin:0; color: #00ffcc;">Cluster ${c.id}</h3>
-                        <p style="margin: 5px 0;">📊 RAM: ${c.ram} MB</p>
-                        <p style="margin: 5px 0;">🕒 Uptime: ${c.uptime}</p>
+                        <p style="margin: 5px 0;">📊 RAM: ${c.ram || '--'} MB</p>
+                        <p style="margin: 5px 0;">🕒 Uptime: ${c.uptime || '--'}</p>
+                        <p style="margin: 5px 0; font-size:12px; color:#aaa;">Status: ${c.status.toUpperCase()}</p>
                     </div>
                 `).join('');
+                
+                document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:#00ff00">🟢 En línea</span>';
             }
-
-            document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:#00ff00">🟢 En línea</span>';
-            
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error detectado:", error);
             document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:red">🔴 Desconectado</span>';
         }
     }
 
-    // Actualizar cada 5 segundos
     setInterval(actualizarDashboard, 5000);
     actualizarDashboard();
 </script>
-
- <div id="conexion-estado">Cargando estado...</div>
-<div id="lista-clusters"></div>
  
 <!-- CTA -->
 <section class="cta">
