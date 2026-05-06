@@ -351,78 +351,98 @@ footer a:hover{
     </div>
   </div>
 </section>
+
+ 
 <!-- ESTADO BOT -->
 <!-- STATS -->
-<div class="stats">
-  <div class="stat">
-    <h3>+10K</h3>
-    <p>Usuarios</p>
-  </div>
-  <div class="stat">
-    <h3>99.9%</h3>
-    <p>Uptime</p>
-  </div>
-  <div class="stat">
-    <h3>24/7</h3>
-    <p>Online</p>
-  </div>
-</div>
-
 <style>
-    /* Contenedor principal centrado */
+    /* Estilos visuales integrados */
     #status-general {
         color: #dbdee1;
-        padding: 40px 20px; /* Más espacio arriba para que respire */
+        padding: 40px 20px;
         font-family: 'Inter', sans-serif;
-        text-align: center; /* CENTRA TODO EL CONTENIDO INTERNO */
+        text-align: center; /* Centra el título y el texto de estado */
     }
 
-    /* Estilo del título */
     h2 { 
         color: #ffffff; 
         font-size: 1.8rem;
-        margin: 0 0 10px 0;
+        margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 3px;
-        display: inline-block; /* Permite un centrado más limpio */
     }
 
-    /* Contenedor del estado centrado */
     #conexion-texto { 
         font-size: 0.95rem;
-        margin: 0 auto 40px auto;
-        opacity: 0.9;
+        margin-bottom: 40px;
         display: flex;
         align-items: center;
-        justify-content: center; /* CENTRA EL PUNTO Y EL TEXTO EN LA MISMA LÍNEA */
+        justify-content: center; /* Alinea el punto verde con el texto al centro */
         gap: 10px;
     }
 
-    /* Tarjetas de clusters (mantienen su diseño pero alineadas al centro) */
-    .clusters-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center; /* MANTIENE LAS CARDS CENTRADAS */
-        gap: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
+    /* Tarjetas transparentes para que se vea el fondo de tu web */
+    .cluster-card {
+        background: rgba(255, 255, 255, 0.03); 
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 12px;
+        min-width: 180px;
+        transition: all 0.3s ease;
+        text-align: left;
+        backdrop-filter: blur(5px); /* Suaviza el fondo detrás de la card */
     }
 
-    /* ... (El resto de tus estilos .cluster-card, .online-dot, etc. se mantienen igual) ... */
+    .cluster-card:hover {
+        border-color: #00ffcc;
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .cluster-card h3 {
+        margin: 0 0 15px 0;
+        color: #00ffcc;
+        font-size: 1rem;
+    }
+
+    .stat {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+        font-size: 0.85rem;
+    }
+
+    .stat-label { color: #949ba4; }
+    .stat-value { color: #ffffff; font-family: monospace; }
+
+    /* Punto verde animado */
+    .online-dot {
+        height: 10px;
+        width: 10px;
+        background-color: #23a55a;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #23a55a;
+        animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
 </style>
 
 <div id="status-general">
     <h2>🚀 ABYSSUS SENTINEL</h2>
-    
     <div id="conexion-texto">
-        Estado: <span style="color:#5865f2">Sincronizando núcleos...</span>
+        Estado: <span style="color:#23a55a; font-weight:bold;">SISTEMA OPERATIVO</span>
     </div>
     
-    <div id="clusters-lista" class="clusters-container"></div>
+    <div id="clusters-lista" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+        </div>
 </div>
 
 <script>
-    // Tu lógica de fetch se mantiene igual, solo asegúrate de actualizar el ID del texto de conexión
     async function actualizarDashboard() {
         try {
             const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
@@ -432,7 +452,7 @@ footer a:hover{
             if (data.clusters) {
                 lista.innerHTML = data.clusters.map(c => `
                     <div class="cluster-card">
-                        <h3>Cluster ${c.id} ${c.status === 'online' ? '<span class="online-dot"></span>' : ''}</h3>
+                        <h3>Cluster ${c.id}</h3>
                         <div class="stat">
                             <span class="stat-label">RAM</span>
                             <span class="stat-value">${c.ram || '0'} MB</span>
@@ -441,20 +461,14 @@ footer a:hover{
                             <span class="stat-label">UPTIME</span>
                             <span class="stat-value">${c.uptime || '0m'}</span>
                         </div>
-                        <div class="status-badge" style="color: ${c.status === 'online' ? '#00ffcc' : '#ff4444'}">
-                            ${c.status.toUpperCase()}
+                        <div style="margin-top:15px; font-size: 0.7rem; color: #00ffcc; font-weight:bold;">
+                            ● ${c.status.toUpperCase()}
                         </div>
                     </div>
                 `).join('');
-                
-                // Actualizamos el texto centrado con el indicador visual
-                document.getElementById('conexion-texto').innerHTML = `
-                    Estado: <span class="online-dot" style="position:static; margin:0;"></span> 
-                    <span style="color:#23a55a; font-weight:bold; letter-spacing:1px;">SISTEMA OPERATIVO</span>
-                `;
             }
         } catch (e) {
-            document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:#ff4444">NODO NO ALCANZABLE</span>';
+            console.log("Error de conexión");
         }
     }
 
