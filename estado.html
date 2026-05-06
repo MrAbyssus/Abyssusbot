@@ -99,6 +99,9 @@
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 </head>
 <body>
 
@@ -147,68 +150,122 @@
     </div>
 </div>
 
+    <div class="section-title">Historial de RAM (Total)</div>
+<div class="status-container" style="margin-bottom: 40px; height: 250px;">
+    <canvas id="ramChart"></canvas>
+</div>
+
 <script>
-    let secondsSinceUpdate = 0;
+   let secondsSinceUpdate = 0;
+let ramHistory = [];
+let labelHistory = [];
+let ramChart;
 
-    // 1. Contador visual de segundos
-    setInterval(() => {
-        secondsSinceUpdate++;
-        const timerElement = document.getElementById('update-timer');
-        if (timerElement) timerElement.innerText = secondsSinceUpdate;
-    }, 1000);
-
-    // 2. Función única para actualizar datos
-    async function updateStatus() {
-        try {
-            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
-            const data = await res.json();
-
-            if (data.clusters && data.clusters.length > 0) {
-                // Reiniciar contador al recibir datos
-                secondsSinceUpdate = 0;
-
-                // Actualizar números del resumen
-                const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-                const mainUptime = data.clusters[0].uptime; 
-
-                document.getElementById('stat-clusters').innerText = data.clusters.length;
-                document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-                document.getElementById('res-uptime').innerText = mainUptime;
-
-                if(data.global) {
-                    document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
-                }
-
-                // Generar el Grid de clusters
-                const grid = document.getElementById('status-grid');
-                grid.innerHTML = data.clusters.map(c => {
-                    const status = c.status.toLowerCase();
-                    let colorClass = 'offline';
-                    if (status === 'online') colorClass = 'online';
-                    if (status === 'connecting') colorClass = 'warning';
-
-                    return `
-                        <div class="box ${colorClass}">
-                            ${c.id}
-                            <div class="tooltip">
-                                <b>Cluster ${c.id}</b><br><br>
-                                RAM: ${c.ram} MB<br>
-                                UPTIME: ${c.uptime}<br>
-                                STATUS: ${status.toUpperCase()}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        } catch (e) {
-            console.error("Error de conexión");
-            document.getElementById('update-timer').innerText = "ERROR";
-        }
+// 1. Inicializar Gráfica
+const ctx = document.getElementById('ramChart').getContext('2d');
+ramChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labelHistory,
+        datasets: [{
+            label: 'RAM Total (MB)',
+            data: ramHistory,
+            borderColor: '#00ffcc',
+            backgroundColor: 'rgba(0, 255, 204, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: { beginAtZero: false, grid: { color: '#2f3136' } },
+            x: { grid: { display: false } }
+        },
+        plugins: { legend: { display: false } }
     }
+});
 
-    // Ejecutar al cargar y cada 5 segundos
-    updateStatus();
-    setInterval(updateStatus, 5000);
+// 2. Solicitar permisos de notificación
+if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+}
+
+function sendAlert(clusterId) {
+    if (Notification.permission === "granted") {
+        new Notification("⚠️ ALERTA: Abyssus Sentinel", {
+            body: `El Cluster ${clusterId} se ha desconectado.`,
+            icon: "img/favicon-web.png"
+        });
+    }
+}
+
+// 3. Contador visual
+setInterval(() => {
+    secondsSinceUpdate++;
+    document.getElementById('update-timer').innerText = secondsSinceUpdate;
+}, 1000);
+
+async function updateStatus() {
+    try {
+        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+        const data = await res.json();
+
+        if (data.clusters && data.clusters.length > 0) {
+            secondsSinceUpdate = 0;
+            const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+            
+            // Actualizar Resumen
+            document.getElementById('stat-clusters').innerText = data.clusters.length;
+            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+            document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
+
+            // --- Lógica de la Gráfica ---
+            const now = new Date();
+            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
+            
+            ramHistory.push(totalRam);
+            labelHistory.push(timeLabel);
+            
+            if(ramHistory.length > 20) { // Mantener solo los últimos 20 puntos
+                ramHistory.shift();
+                labelHistory.shift();
+            }
+            ramChart.update();
+
+            // --- Grid y Notificaciones ---
+            const grid = document.getElementById('status-grid');
+            grid.innerHTML = data.clusters.map(c => {
+                const status = c.status.toLowerCase();
+                
+                // Si detectamos que está offline, disparamos notificación
+                if (status === 'offline') sendAlert(c.id);
+
+                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
+
+                return `
+                    <div class="box ${colorClass}">
+                        ${c.id}
+                        <div class="tooltip">
+                            <b>Cluster ${c.id}</b><br><br>
+                            RAM: ${c.ram} MB<br>
+                            UPTIME: ${c.uptime}<br>
+                            STATUS: ${status.toUpperCase()}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    } catch (e) {
+        console.error("Error");
+        document.getElementById('update-timer').innerText = "ERROR";
+    }
+}
+
+updateStatus();
+setInterval(updateStatus, 5000);
 </script>
 
 </body>
