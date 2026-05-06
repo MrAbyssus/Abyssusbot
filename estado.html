@@ -106,17 +106,42 @@
         .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
 
         /* SECCIÓN RESUMEN */
-        .resumen-box { margin-bottom: 40px; font-size: 0.95rem; line-height: 1.6; }
-        .resumen-box b { color: #fff; }
-        .tech-info { 
-            background: #0c0d12; 
-            padding: 10px 15px; 
-            border-radius: 5px; 
-            display: inline-block; 
-            margin-top: 10px; 
-            font-family: monospace;
-            border-left: 3px solid var(--accent);
-        }
+       /* SECCIÓN RESUMEN */
+.resumen-box { 
+    margin-bottom: 40px; 
+    font-size: 0.95rem; 
+    line-height: 1.6; 
+}
+
+.resumen-box b { 
+    color: #fff; 
+}
+
+/* El cuadro de información técnica que pediste */
+.tech-info { 
+    background: #0c0d12; 
+    padding: 15px 20px; 
+    border-radius: 5px; 
+    display: block; /* Ocupa el ancho para que se vea lleno */
+    max-width: fit-content;
+    margin-top: 15px; 
+    font-family: 'Courier New', monospace; /* Fuente de código */
+    border-left: 4px solid var(--accent); /* Borde cian grueso */
+    box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
+}
+
+.tech-line {
+    display: flex;
+    gap: 15px;
+    color: var(--accent); /* Color cian para los valores */
+    font-weight: bold;
+}
+
+.tech-label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
 
         /* SECCIÓN GRID DE CLUSTERS */
         .status-container {
@@ -231,43 +256,53 @@
 </div>
 
 <script>
-    async function updateStatus() {
+   async function updateStatus() {
         try {
             const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
             const data = await res.json();
 
-            // Actualizar Resumen Global
-            document.getElementById('stat-clusters').innerText = data.clusters.length;
-            if(data.global) {
-                document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
-                // Datos del primer cluster para el ejemplo del resumen
-                document.getElementById('res-ram').innerText = data.clusters[0].ram + " MB";
-                document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
+            if (data.clusters && data.clusters.length > 0) {
+                // 1. Calcular RAM Total sumando todos los clusters
+                const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+                
+                // 2. Obtener el Uptime más alto (el del sistema principal)
+                // Asumiendo que c.uptime viene como "X min" o similar
+                const mainUptime = data.clusters[0].uptime; 
+
+                // --- ACTUALIZAR RESUMEN ---
+                document.getElementById('stat-clusters').innerText = data.clusters.length;
+                document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+                document.getElementById('res-uptime').innerText = mainUptime;
+
+                if(data.global) {
+                    document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
+                }
+
+                // --- GENERAR GRID ---
+                const grid = document.getElementById('status-grid');
+                grid.innerHTML = data.clusters.map(c => {
+                    const status = c.status.toLowerCase();
+                    let colorClass = 'offline';
+                    if (status === 'online') colorClass = 'online';
+                    if (status === 'connecting') colorClass = 'warning';
+
+                    return `
+                        <div class="box ${colorClass}">
+                            ${c.id}
+                            <div class="tooltip">
+                                <b>Cluster ${c.id}</b><br><br>
+                                RAM: ${c.ram} MB<br>
+                                UPTIME: ${c.uptime}<br>
+                                STATUS: ${status.toUpperCase()}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
 
-            // Generar Grid
-            const grid = document.getElementById('status-grid');
-            grid.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                let colorClass = 'offline';
-                if (status === 'online') colorClass = 'online';
-                if (status === 'connecting') colorClass = 'warning';
-
-                return `
-                    <div class="box ${colorClass}">
-                        ${c.id}
-                        <div class="tooltip">
-                            <b>Cluster ${c.id}</b><br><br>
-                            RAM: ${c.ram} MB<br>
-                            UPTIME: ${c.uptime}<br>
-                            STATUS: ${status.toUpperCase()}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
         } catch (e) {
-            console.error("Error de conexión");
+            console.error("Error de conexión con la API de Sentinel");
+            document.getElementById('res-ram').innerText = "ERROR";
         }
     }
 
