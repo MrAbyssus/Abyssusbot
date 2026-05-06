@@ -4,8 +4,7 @@
   "dominio": "https://mrabyssus.github.io/Abyssusbot",
   "verificado": true,
   "firma": "abyssus-verification=MrAbyssus",
-  "version": "1.0",
-  "actualizado": "2025-09-22T00:00:00Z",
+  "version": "1.1",
+  "actualizado": "2026-05-05T22:33:00Z",
   "descripcion": "Archivo de verificación oficial del bot Abyssus. Usado para comprobar la propiedad y autenticidad del dominio."
 }
-
