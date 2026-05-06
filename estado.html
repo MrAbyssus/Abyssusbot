@@ -15,7 +15,7 @@
             --offline: #f04747;
             --text-main: #dcddde;
             --text-muted: #8e9297;
-            --accent: #00ffcc; /* Cambiado a cian para que combine con el logo */
+            --accent: #00ffcc;
         }
 
         body {
@@ -23,7 +23,7 @@
             color: var(--text-main);
             font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding-top: 100px; /* Espacio para la navbar */
+            padding-top: 100px;
             display: flex;
             justify-content: center;
         }
@@ -48,9 +48,17 @@
         .nav-links a { color: #949ba4; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
         .nav-links a.active { color: var(--accent); }
 
-        .container { width: 90%; max-width: 1000px; padding: 20px; }
+        /* ESTRUCTURA PRINCIPAL */
+        .container { 
+            width: 90%; 
+            max-width: 1000px; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column; /* Asegura que todo vaya hacia abajo */
+        }
 
-        .section-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
+        .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
+        .section-title:first-child { margin-top: 0; }
         
         .legend-list { list-style: none; padding: 0; margin-bottom: 30px; }
         .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
@@ -59,8 +67,8 @@
         .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
         .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
 
-        /* RESUMEN */
-        .resumen-box { margin-bottom: 40px; }
+        /* CAJAS DE INFORMACIÓN */
+        .resumen-box { margin-bottom: 20px; }
         .tech-info { 
             background: #0c0d12; 
             padding: 15px 20px; 
@@ -75,8 +83,16 @@
         .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
         .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
 
-        /* GRID */
-        .status-container { background: var(--panel); border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        /* GRÁFICA Y GRID */
+        .status-container { 
+            background: var(--panel); 
+            border-radius: 8px; 
+            padding: 25px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
         .box {
             aspect-ratio: 1/1; background: #2f3136; border-radius: 4px;
@@ -89,7 +105,6 @@
         .warning { color: var(--warning); }
         .offline { color: var(--offline); }
 
-        /* Tooltip */
         .box .tooltip {
             visibility: hidden; width: 140px; background: #000; color: #fff;
             text-align: left; border-radius: 4px; padding: 10px;
@@ -99,9 +114,7 @@
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body>
 
@@ -144,24 +157,26 @@
         </div>
     </div>
 
+    <div class="section-title">Historial de RAM (Total)</div>
+    <div class="status-container" style="margin-bottom: 20px;">
+        <div style="height: 220px; width: 100%;">
+            <canvas id="ramChart"></canvas>
+        </div>
+    </div>
+
     <div class="section-title">Estado de clusters</div>
     <div class="status-container">
         <div id="status-grid" class="grid"></div>
     </div>
 </div>
 
-    <div class="section-title">Historial de RAM (Total)</div>
-<div class="status-container" style="margin-bottom: 40px; height: 250px;">
-    <canvas id="ramChart"></canvas>
-</div>
-
 <script>
-   let secondsSinceUpdate = 0;
+let secondsSinceUpdate = 0;
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// 1. Inicializar Gráfica
+// --- INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -174,21 +189,29 @@ ramChart = new Chart(ctx, {
             backgroundColor: 'rgba(0, 255, 204, 0.1)',
             borderWidth: 2,
             fill: true,
-            tension: 0.4
+            tension: 0.4,
+            pointRadius: 2
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            y: { beginAtZero: false, grid: { color: '#2f3136' } },
-            x: { grid: { display: false } }
+            y: { 
+                beginAtZero: false, 
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#8e9297', font: { size: 10 } }
+            },
+            x: { 
+                grid: { display: false },
+                ticks: { color: '#8e9297', font: { size: 10 } }
+            }
         },
         plugins: { legend: { display: false } }
     }
 });
 
-// 2. Solicitar permisos de notificación
+// --- NOTIFICACIONES ---
 if (Notification.permission !== "granted") {
     Notification.requestPermission();
 }
@@ -202,7 +225,7 @@ function sendAlert(clusterId) {
     }
 }
 
-// 3. Contador visual
+// --- ACTUALIZACIÓN DE DATOS ---
 setInterval(() => {
     secondsSinceUpdate++;
     document.getElementById('update-timer').innerText = secondsSinceUpdate;
@@ -217,30 +240,29 @@ async function updateStatus() {
             secondsSinceUpdate = 0;
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             
-            // Actualizar Resumen
+            // Actualizar Texto
             document.getElementById('stat-clusters').innerText = data.clusters.length;
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
+            if(data.global) document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
 
-            // --- Lógica de la Gráfica ---
+            // Actualizar Gráfica
             const now = new Date();
-            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
+            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
             
             ramHistory.push(totalRam);
             labelHistory.push(timeLabel);
             
-            if(ramHistory.length > 20) { // Mantener solo los últimos 20 puntos
+            if(ramHistory.length > 30) { 
                 ramHistory.shift();
                 labelHistory.shift();
             }
             ramChart.update();
 
-            // --- Grid y Notificaciones ---
+            // Actualizar Grid
             const grid = document.getElementById('status-grid');
             grid.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
-                
-                // Si detectamos que está offline, disparamos notificación
                 if (status === 'offline') sendAlert(c.id);
 
                 let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
@@ -259,14 +281,13 @@ async function updateStatus() {
             }).join('');
         }
     } catch (e) {
-        console.error("Error");
-        document.getElementById('update-timer').innerText = "ERROR";
+        console.error("Fetch error");
+        document.getElementById('update-timer').innerText = "ERR";
     }
 }
 
 updateStatus();
 setInterval(updateStatus, 5000);
 </script>
-
 </body>
 </html>
