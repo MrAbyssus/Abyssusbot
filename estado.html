@@ -1,99 +1,78 @@
 <style>
-    body { background: #0f1012; color: #fff; font-family: 'Inter', sans-serif; padding: 40px; }
-    
-    .header-sentinel { text-align: center; margin-bottom: 40px; }
-    h1 { color: #00ffcc; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 5px; }
-    
-    .status-main { 
-        display: flex; justify-content: center; align-items: center; gap: 10px; 
-        font-weight: bold; color: #23a55a; margin-bottom: 40px;
-    }
-
-    /* Grid optimizado para que los clusters se vean grandes */
-    .clusters-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 25px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+    /* ... (Mantenemos el estilo de Sentinel Core) ... */
 
     .cluster-card-pro {
         background: #18191c;
-        border: 1px solid #2f3136;
-        border-left: 4px solid #00ffcc;
         border-radius: 10px;
         padding: 25px;
         position: relative;
         transition: all 0.3s ease;
+        /* El borde izquierdo cambiará de color por JS */
+        border-left: 6px solid #444; 
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    .cluster-card-pro:hover {
-        border-color: #00ffcc;
-        transform: scale(1.02);
-        box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+    /* Clases de estado dinámicas */
+    .status-online { border-left-color: #23a55a !important; box-shadow: 0 0 15px rgba(35, 165, 90, 0.1); }
+    .status-offline { border-left-color: #f23f43 !important; box-shadow: 0 0 15px rgba(242, 63, 67, 0.1); }
+    .status-warning { border-left-color: #f0b232 !important; }
+
+    .status-tag {
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
     }
 
-    .cluster-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .cluster-title { font-size: 1.2rem; font-weight: bold; color: #fff; }
-    .status-tag { color: #00ffcc; font-size: 0.8rem; border: 1px solid #00ffcc; padding: 2px 8px; border-radius: 4px; }
-
-    /* Barra de carga visual para la RAM */
-    .ram-bar-bg { background: #2f3136; height: 6px; border-radius: 3px; margin: 15px 0; }
-    .ram-bar-fill { background: #00ffcc; height: 100%; border-radius: 3px; transition: width 0.5s; }
-
-    .data-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 10px; }
-    .data-label { color: #888; }
-    .data-value { color: #fff; font-family: 'JetBrains Mono', monospace; }
-
-    .online-dot { height: 10px; width: 10px; background: #23a55a; border-radius: 50%; box-shadow: 0 0 10px #23a55a; }
+    .tag-online { background: rgba(35, 165, 90, 0.1); color: #23a55a; border: 1px solid #23a55a; }
+    .tag-offline { background: rgba(242, 63, 67, 0.1); color: #f23f43; border: 1px solid #f23f43; }
 </style>
 
-<div class="header-sentinel">
-    <h1>SENTINEL CORE</h1>
-    <div class="status-main">
-        <div class="online-dot"></div> SISTEMA TOTALMENTE OPERATIVO
-    </div>
-</div>
-
-<div id="lista-clusters-detallada" class="clusters-grid">
-    </div>
-
 <script>
-    async function actualizarEstado() {
+    async function actualizarEstadoColor() {
         try {
             const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
             const data = await res.json();
             const contenedor = document.getElementById('lista-clusters-detallada');
 
             if (data.clusters) {
-                contenedor.innerHTML = data.clusters.map(c => `
-                    <div class="cluster-card-pro">
-                        <div class="cluster-header">
-                            <span class="cluster-title">Cluster ${c.id}</span>
-                            <span class="status-tag">ONLINE</span>
-                        </div>
-                        
-                        <div class="ram-bar-bg">
-                            <div class="ram-bar-fill" style="width: ${(c.ram / 512) * 100}%"></div>
-                        </div>
+                contenedor.innerHTML = data.clusters.map(c => {
+                    // LÓGICA DE COLOR:
+                    // Si el status no es 'online', se pone rojo.
+                    const isOnline = c.status.toLowerCase() === 'online';
+                    const estadoClase = isOnline ? 'status-online' : 'status-offline';
+                    const tagClase = isOnline ? 'tag-online' : 'tag-offline';
 
-                        <div class="data-row">
-                            <span class="data-label">Uso de Memoria</span>
-                            <span class="data-value">${c.ram} MB</span>
+                    return `
+                        <div class="cluster-card-pro ${estadoClase}">
+                            <div class="cluster-header">
+                                <span class="cluster-title">Cluster ${c.id}</span>
+                                <span class="status-tag ${tagClase}">${isOnline ? 'CONECTADO' : 'CAÍDO'}</span>
+                            </div>
+                            
+                            <div class="ram-bar-bg">
+                                <div class="ram-bar-fill" style="width: ${(c.ram / 512) * 100}%; background: ${isOnline ? '#00ffcc' : '#f23f43'}"></div>
+                            </div>
+
+                            <div class="data-row">
+                                <span class="data-label">Uso de Memoria</span>
+                                <span class="data-value">${c.ram || 0} MB</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">Uptime</span>
+                                <span class="data-value">${isOnline ? c.uptime : '---'}</span>
+                            </div>
                         </div>
-                        <div class="data-row">
-                            <span class="data-label">Tiempo Activo</span>
-                            <span class="data-value">${c.uptime}</span>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         } catch (e) {
-            console.error("Error al conectar con Abyssus Core");
+            // Si falla la conexión, podríamos poner todos en rojo aquí
+            console.error("Error de conexión");
         }
     }
 
-    setInterval(actualizarEstado, 5000);
-    actualizarEstado();
+    setInterval(actualizarEstadoColor, 5000);
+    actualizarEstadoColor();
 </script>
