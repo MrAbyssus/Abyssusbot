@@ -395,38 +395,44 @@ footer a:hover{
   </div>
 </section>
 
-<div style="background: #222; color: #fff; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif; max-width: 300px; margin: 20px auto; text-align: center;">
+<div id="status-general" style="text-align:center; color:white; font-family:sans-serif;">
     <h2>Estatus de Abyssus Bot</h2>
-    <p>Estado: <strong id="estado-web" style="color: yellow;">Cargando...</strong></p>
-    <p>Uso de CPU: <strong id="cpu-web">--</strong>%</p>
-    <p>Uso de RAM: <strong id="ram-web">--</strong> MB</p>
+    <p id="conexion-texto">Estado: <span style="color:orange">Conectando...</span></p>
+    
+    <div id="clusters-lista" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
 </div>
 
 <script>
-    async function traerEstatus() {
+    async function actualizarDashboard() {
         try {
-            // Tu URL del túnel con el /status al final
-            const url = 'https://works-consequence-patent-inspection.trycloudflare.com/status';
+            // USAMOS LA NUEVA URL + /status
+            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/status');
+            const data = await res.json();
+
+            const lista = document.getElementById('clusters-lista');
             
-            const respuesta = await fetch(url);
-            const datos = await respuesta.json();
+            // Si el bot manda clusters, los dibujamos uno por uno
+            if (data.clusters && data.clusters.length > 0) {
+                lista.innerHTML = data.clusters.map(c => `
+                    <div style="background: #2a2a2a; border: 1px solid #444; padding: 15px; margin: 10px; border-radius: 8px; min-width: 150px;">
+                        <h3 style="margin:0; color: #00ffcc;">Cluster ${c.id}</h3>
+                        <p style="margin: 5px 0;">📊 RAM: ${c.ram} MB</p>
+                        <p style="margin: 5px 0;">🕒 Uptime: ${c.uptime}</p>
+                    </div>
+                `).join('');
+            }
 
-            // Metemos los datos del bot dentro de los huecos de la página
-            document.getElementById('cpu-web').innerText = datos.cpu;
-            document.getElementById('ram-web').innerText = datos.ram;
-            document.getElementById('estado-web').innerText = "🟢 En Línea";
-            document.getElementById('estado-web').style.color = "#2ecc71";
-
+            document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:#00ff00">🟢 En línea</span>';
+            
         } catch (error) {
-            console.error("Error al conectar con el túnel:", error);
-            document.getElementById('estado-web').innerText = "🔴 Desconectado";
-            document.getElementById('estado-web').style.color = "#e74c3c";
+            console.error("Error:", error);
+            document.getElementById('conexion-texto').innerHTML = 'Estado: <span style="color:red">🔴 Desconectado</span>';
         }
     }
 
-    // Se ejecuta de inmediato y luego se repite cada 5 segundos
-    traerEstatus();
-    setInterval(traerEstatus, 5000);
+    // Actualizar cada 5 segundos
+    setInterval(actualizarDashboard, 5000);
+    actualizarDashboard();
 </script>
  
 <!-- CTA -->
