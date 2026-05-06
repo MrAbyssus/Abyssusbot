@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mrabyssus.github.io/Abyssusbot/sitemap.xml
-
