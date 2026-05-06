@@ -231,6 +231,14 @@
 </head>
 <body>
 
+<div class="resumen-box">
+    <div id="tech-details" class="tech-info">
+        </div>
+    <div id="last-update" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 10px; font-family: monospace;">
+        • Sincronizado hace: <span id="update-timer" style="color: var(--accent);">0</span>s
+    </div>
+</div>
+
 <div class="container">
     <div class="section-title">Colores</div>
     <ul class="legend-list">
@@ -319,8 +327,36 @@
         }
     }
 
-    updateStatus();
-    setInterval(updateStatus, 5000);
+    let secondsSinceUpdate = 0;
+
+// Este contador corre cada segundo para la interfaz
+setInterval(() => {
+    secondsSinceUpdate++;
+    const timerElement = document.getElementById('update-timer');
+    if (timerElement) timerElement.innerText = secondsSinceUpdate;
+}, 1000);
+
+async function updateStatus() {
+    try {
+        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+        const data = await res.json();
+
+        if (data) {
+            // ... (todo tu código actual de actualizar RAM, Clusters, etc.) ...
+
+            // REINICIAR EL CONTADOR cuando los datos lleguen con éxito
+            secondsSinceUpdate = 0; 
+        }
+    } catch (e) {
+        console.error("Error de conexión");
+        document.getElementById('update-timer').innerText = "ERROR";
+    }
+}
+
+// Tu intervalo de actualización de datos (cada 5 seg)
+updateStatus();
+setInterval(updateStatus, 5000);
+
 </script>
 
 </body>
