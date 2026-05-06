@@ -1,69 +1,133 @@
-<div class="header-sentinel">
-    <h1>SENTINEL CORE</h1>
-    <div id="conexion-texto" class="status-main">
-        <div class="online-dot" style="background: #888; box-shadow: none;"></div> 
-        <span>Sincronizando con el VPS...</span>
-    </div>
-</div>
-
-<div id="lista-clusters-detallada" class="clusters-grid">
-    <p style="text-align:center; width:100%; opacity:0.5;">Cargando datos de los núcleos...</p>
-</div>
-
-<script>
-    async function actualizarEstadoColor() {
-        const contenedor = document.getElementById('lista-clusters-detallada');
-        const statusTexto = document.getElementById('conexion-texto');
-
-        try {
-            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
-            
-            // Si la respuesta no es OK, lanzamos error para ir al 'catch'
-            if (!res.ok) throw new Error('Error en el servidor');
-            
-            const data = await res.json();
-
-            if (data && data.clusters) {
-                contenedor.innerHTML = data.clusters.map(c => {
-                    const isOnline = c.status && c.status.toLowerCase() === 'online';
-                    const estadoClase = isOnline ? 'status-online' : 'status-offline';
-                    const tagClase = isOnline ? 'tag-online' : 'tag-offline';
-
-                    return `
-                        <div class="cluster-card-pro ${estadoClase}">
-                            <div class="cluster-header">
-                                <span class="cluster-title">Cluster ${c.id}</span>
-                                <span class="status-tag ${tagClase}">${isOnline ? 'CONECTADO' : 'CAÍDO'}</span>
-                            </div>
-                            
-                            <div class="ram-bar-bg">
-                                <div class="ram-bar-fill" style="width: ${(c.ram / 512) * 100}%; background: ${isOnline ? '#00ffcc' : '#f23f43'}"></div>
-                            </div>
-
-                            <div class="data-row">
-                                <span class="data-label">Uso de Memoria</span>
-                                <span class="data-value">${c.ram || 0} MB</span>
-                            </div>
-                            <div class="data-row">
-                                <span class="data-label">Uptime</span>
-                                <span class="data-value">${isOnline ? c.uptime : '---'}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                // Actualizar encabezado general
-                statusTexto.innerHTML = `<div class="online-dot"></div> <span style="color:#23a55a">SISTEMA TOTALMENTE OPERATIVO</span>`;
-            }
-        } catch (e) {
-            console.error("Error detectado:", e);
-            // Si falla, mostramos un mensaje de error visual en lugar de dejarlo en blanco
-            statusTexto.innerHTML = `<div class="online-dot" style="background:#f23f43; box-shadow:0 0 10px #f23f43"></div> <span style="color:#f23f43">ERROR DE CONEXIÓN CON EL NODO</span>`;
-            contenedor.innerHTML = `<p style="color:#888; grid-column: 1/-1;">No se pudo obtener información de los clusters. Revisa si el VPS está encendido.</p>`;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abyssus Sentinel - Estado</title>
+    <style>
+        /* BASE Y FONDO */
+        body { 
+            background: #0f1012; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 40px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-    }
 
-    // Ejecutar inmediatamente y luego cada 5 segundos
-    actualizarEstadoColor();
-    setInterval(actualizarEstadoColor, 5000);
-</script>
+        .header-sentinel { text-align: center; margin-bottom: 50px; }
+        h1 { color: #00ffcc; letter-spacing: 5px; text-transform: uppercase; margin: 0; font-size: 2.5rem; }
+        
+        .status-main { 
+            display: flex; justify-content: center; align-items: center; gap: 12px; 
+            font-weight: bold; margin-top: 15px; font-size: 1.1rem;
+        }
+
+        /* GRID DE CLUSTERS */
+        .clusters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* EL CUADRO (CARTA) */
+        .cluster-card-pro {
+            background: #18191c;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 6px solid #444; /* Color base gris */
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* ESTADOS DINÁMICOS */
+        .status-online { border-left-color: #23a55a; box-shadow: 0 4px 15px rgba(35, 165, 90, 0.1); }
+        .status-offline { border-left-color: #f23f43; box-shadow: 0 4px 15px rgba(242, 63, 67, 0.1); }
+
+        .cluster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .cluster-title { font-size: 1.2rem; font-weight: bold; }
+        
+        .status-tag { 
+            font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: bold;
+            border: 1px solid currentColor;
+        }
+
+        /* BARRAS Y DATOS */
+        .ram-bar-bg { background: #2f3136; height: 8px; border-radius: 4px; margin: 15px 0; overflow: hidden; }
+        .ram-bar-fill { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .data-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 10px; }
+        .data-label { color: #949ba4; }
+        .data-value { color: #fff; font-family: 'JetBrains Mono', monospace; }
+
+        .online-dot { height: 12px; width: 12px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+
+    <div class="header-sentinel">
+        <h1>SENTINEL CORE</h1>
+        <div id="conexion-texto" class="status-main">
+            <div class="online-dot" style="background: #888;"></div> 
+            <span style="color: #888;">CONECTANDO CON EL NODO...</span>
+        </div>
+    </div>
+
+    <div id="lista-clusters-detallada" class="clusters-grid">
+        </div>
+
+    <script>
+        async function actualizarEstado() {
+            const contenedor = document.getElementById('lista-clusters-detallada');
+            const statusTexto = document.getElementById('conexion-texto');
+
+            try {
+                const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+                if (!res.ok) throw new Error('Error en API');
+                const data = await res.json();
+
+                if (data.clusters) {
+                    contenedor.innerHTML = data.clusters.map(c => {
+                        const isOnline = c.status && c.status.toLowerCase() === 'online';
+                        const colorEstado = isOnline ? '#23a55a' : '#f23f43';
+                        
+                        return `
+                            <div class="cluster-card-pro ${isOnline ? 'status-online' : 'status-offline'}">
+                                <div class="cluster-header">
+                                    <span class="cluster-title">Cluster ${c.id}</span>
+                                    <span class="status-tag" style="color: ${colorEstado}">${isOnline ? 'CONECTADO' : 'DESCONECTADO'}</span>
+                                </div>
+                                
+                                <div class="ram-bar-bg">
+                                    <div class="ram-bar-fill" style="width: ${(c.ram / 512) * 100}%; background: ${colorEstado}"></div>
+                                </div>
+
+                                <div class="data-row">
+                                    <span class="data-label">Uso de Memoria</span>
+                                    <span class="data-value">${c.ram || 0} MB</span>
+                                </div>
+                                <div class="data-row">
+                                    <span class="data-label">Uptime</span>
+                                    <span class="data-value">${isOnline ? c.uptime : '---'}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    statusTexto.innerHTML = `<div class="online-dot" style="background:#23a55a; box-shadow:0 0 10px #23a55a"></div> <span style="color:#23a55a">SISTEMA TOTALMENTE OPERATIVO</span>`;
+                }
+            } catch (e) {
+                statusTexto.innerHTML = `<div class="online-dot" style="background:#f23f43; box-shadow:0 0 10px #f23f43"></div> <span style="color:#f23f43">NODO FUERA DE LÍNEA</span>`;
+                contenedor.innerHTML = `<p style="grid-column: 1/-1; opacity:0.5; text-align:center;">No hay conexión con Abyssus Core. Verifica el túnel de Cloudflare.</p>`;
+            }
+        }
+
+        actualizarEstado();
+        setInterval(actualizarEstado, 5000);
+    </script>
+</body>
+</html>
