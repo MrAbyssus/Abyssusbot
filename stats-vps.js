@@ -1,7 +1,7 @@
 async function actualizarMonitor() {
     try {
         // Usamos tu IP real
-        const response = await fetch('http://51.77.211.104:3000/api/stats');
+        const response = await fetch('http://51.77.211.104:3030/api/stats');
         
         if (!response.ok) throw new Error('Error en la respuesta del servidor');
         
