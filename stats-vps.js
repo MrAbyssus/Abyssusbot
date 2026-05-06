@@ -1,24 +1,33 @@
 <script>
-    async function actualizarDatos() {
+    async function obtenerDatos() {
         try {
-            // Esta es la URL de tu túnel (la que funciona con HTTPS)
-            const respuesta = await fetch('https://works-consequence-patent-inspection.trycloudflare.com/status');
-            const datos = await respuesta.json();
+            const res = await fetch('https://works-consequence-patent-inspection.trycloudflare.com/status');
+            const data = await res.json();
 
-            // Aquí metemos los datos del bot en los huecos de arriba
-            document.getElementById('cpu-valor').innerText = datos.cpu;
-            document.getElementById('ram-valor').innerText = datos.ram;
-            document.getElementById('estado').innerText = "🟢 Online";
-            document.getElementById('estado').style.color = "#2ecc71";
+            // 1. Limpiamos el contenedor de clusters antes de poner los nuevos
+            const contenedor = document.getElementById('clusters-container');
+            contenedor.innerHTML = ''; 
+
+            // 2. Recorremos cada cluster que envía tu bot
+            data.clusters.forEach(cluster => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <h4>Cluster ${cluster.id}</h4>
+                        <p>RAM: ${cluster.ram} MB</p>
+                        <p>Uptime: ${cluster.uptime}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('status-text').innerText = "🟢 En línea";
+            document.getElementById('status-text').style.color = "#00ff00";
 
         } catch (error) {
-            console.error("Error al conectar:", error);
-            document.getElementById('estado').innerText = "🔴 Desconectado";
-            document.getElementById('estado').style.color = "red";
+            document.getElementById('status-text').innerText = "🔴 Error de conexión (Revisa el túnel)";
+            document.getElementById('status-text').style.color = "red";
         }
     }
 
-    // Se actualiza solo cada 5 segundos
-    setInterval(actualizarDatos, 5000);
-    actualizarDatos();
+    setInterval(obtenerDatos, 5000);
+    obtenerDatos();
 </script>
