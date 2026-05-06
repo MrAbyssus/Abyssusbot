@@ -395,11 +395,39 @@ footer a:hover{
   </div>
 </section>
 
- <div id="dashboard">
-    <p>Estado del Bot: <span id="estado">Cargando...</span></p>
-    <p>Uso de CPU: <span id="cpu-valor">--</span>%</p>
-    <p>Uso de RAM: <span id="ram-valor">--</span> MB</p>
+<div style="background: #222; color: #fff; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif; max-width: 300px; margin: 20px auto; text-align: center;">
+    <h2>Estatus de Abyssus Bot</h2>
+    <p>Estado: <strong id="estado-web" style="color: yellow;">Cargando...</strong></p>
+    <p>Uso de CPU: <strong id="cpu-web">--</strong>%</p>
+    <p>Uso de RAM: <strong id="ram-web">--</strong> MB</p>
 </div>
+
+<script>
+    async function traerEstatus() {
+        try {
+            // Tu URL del túnel con el /status al final
+            const url = 'https://works-consequence-patent-inspection.trycloudflare.com/status';
+            
+            const respuesta = await fetch(url);
+            const datos = await respuesta.json();
+
+            // Metemos los datos del bot dentro de los huecos de la página
+            document.getElementById('cpu-web').innerText = datos.cpu;
+            document.getElementById('ram-web').innerText = datos.ram;
+            document.getElementById('estado-web').innerText = "🟢 En Línea";
+            document.getElementById('estado-web').style.color = "#2ecc71";
+
+        } catch (error) {
+            console.error("Error al conectar con el túnel:", error);
+            document.getElementById('estado-web').innerText = "🔴 Desconectado";
+            document.getElementById('estado-web').style.color = "#e74c3c";
+        }
+    }
+
+    // Se ejecuta de inmediato y luego se repite cada 5 segundos
+    traerEstatus();
+    setInterval(traerEstatus, 5000);
+</script>
  
 <!-- CTA -->
 <section class="cta">
