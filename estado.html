@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abyssus Sentinel - Estado Detallado</title>
+    <style>
+        body { background: #0f1012; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 40px; }
+        
+        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
+        
+        /* Dashboard Header */
+        .header-status { margin-bottom: 50px; }
+        h1 { font-size: 2.5rem; letter-spacing: 4px; margin-bottom: 10px; color: #00ffcc; }
+        
+        /* Grid de métricas globales del VPS */
+        .vps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .vps-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(0,255,204,0.2);
+        }
+
+        /* Estilo de los Clusters (Más detallados) */
+        .clusters-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .cluster-full-card {
+            background: #18191c;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: left;
+            border-left: 5px solid #00ffcc;
+        }
+
+        .tag { background: #232428; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; color: #00ffcc; }
+        
+        .progress-bar {
+            background: #333;
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .progress-fill { background: #00ffcc; height: 100%; width: 0%; transition: width 1s ease-in-out; }
+
+        .online-pulse {
+            height: 12px; width: 12px; background: #23a55a; border-radius: 50%;
+            display: inline-block; box-shadow: 0 0 10px #23a55a; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 70% { transform: scale(1.1); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-status">
+        <h1>SENTINEL CORE</h1>
+        <p><span class="online-pulse"></span> SISTEMA TOTALMENTE OPERATIVO</p>
+    </div>
+
+    <div class="vps-grid">
+        <div class="vps-card">
+            <div style="color: #888; font-size: 0.9rem;">CPU LOAD</div>
+            <div id="vps-cpu" style="font-size: 1.5rem; font-weight: bold;">--%</div>
+        </div>
+        <div class="vps-card">
+            <div style="color: #888; font-size: 0.9rem;">MEMORIA TOTAL</div>
+            <div id="vps-ram" style="font-size: 1.5rem; font-weight: bold;">-- / -- GB</div>
+        </div>
+        <div class="vps-card">
+            <div style="color: #888; font-size: 0.9rem;">UBICACIÓN</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #00ffcc;">OVH CLOUD</div>
+        </div>
+    </div>
+
+    <div id="clusters-detallados" class="clusters-detail-grid">
+        </div>
+</div>
+
+<script>
+    async function cargarEstadoDetallado() {
+        try {
+            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+            const data = await res.json();
+            
+            // Actualizar datos del VPS (si tu API los manda, si no, puedes quitarlos o agregarlos a tu bot)
+            if(data.vps) {
+                document.getElementById('vps-cpu').innerText = data.vps.cpu + '%';
+                document.getElementById('vps-ram').innerText = data.vps.ram_usada + ' / ' + data.vps.ram_total + ' GB';
+            }
+
+            const contenedor = document.getElementById('clusters-detallados');
+            contenedor.innerHTML = data.clusters.map(c => `
+                <div class="cluster-full-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 1.2rem; font-weight: bold;">Cluster ${c.id}</span>
+                        <span class="tag">${c.status.toUpperCase()}</span>
+                    </div>
+                    <p style="color: #888; font-size: 0.9rem; margin: 10px 0;">ID del Proceso: #${Math.floor(Math.random() * 9000) + 1000}</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(c.ram / 512) * 100}%"></div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; font-size: 0.85rem;">
+                        <div><strong>RAM:</strong> ${c.ram} MB</div>
+                        <div><strong>UPTIME:</strong> ${c.uptime}</div>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (e) {
+            console.error("Error cargando el estado detallado");
+        }
+    }
+
+    setInterval(cargarEstadoDetallado, 5000);
+    cargarEstadoDetallado();
+</script>
+
+</body>
+</html>
