@@ -1,12 +1,16 @@
 async function actualizarMonitor() {
     try {
-        // ⚠️ IMPORTANTE: Cambia 'TU_IP_DE_OVH' por la IP real de tu VPS
-        const res = await fetch('http://51.77.211.104:3000/api/stats');
-        const clusters = await res.json();
+        // Usamos tu IP real
+        const response = await fetch('http://51.77.211.104:3000/api/stats');
+        
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+        
+        const clusters = await response.json();
 
         const container = document.getElementById('stats-vps');
         if (!container) return;
 
+        // Limpiamos y dibujamos los clusters
         container.innerHTML = clusters.map(c => `
             <div style="background: #1a1b1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin: 10px; color: white; font-family: sans-serif;">
                 <h3 style="margin: 0 0 10px 0; color: #5865F2;">Cluster ${c.id}</h3>
@@ -17,12 +21,14 @@ async function actualizarMonitor() {
         `).join('');
 
     } catch (e) {
-        console.error("Error conectando al VPS de Abyssus:", e);
+        console.error("Error conectando al VPS:", e);
         const container = document.getElementById('stats-vps');
-        if (container) container.innerHTML = '<p style="color: red;">⚠️ No se pudo obtener datos del VPS</p>';
+        if (container) {
+            container.innerHTML = '<p style="color: #ff4747;">⚠️ No se pudo conectar con el servidor de monitoreo.</p>';
+        }
     }
 }
 
-// Se actualiza cada 10 segundos
+// Actualizar cada 10 segundos
 setInterval(actualizarMonitor, 10000);
 actualizarMonitor();
