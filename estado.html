@@ -244,7 +244,7 @@ async function updateStatus() {
             document.getElementById('stat-clusters').innerText = data.clusters.length;
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
-            if(data.global) document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
+            if(data.global) {document.getElementById('stat-shards').innerText = `${data.global.online} / ${data.global.total}`;}
 
             // Actualizar Gráfica
             const now = new Date();
@@ -292,3 +292,4 @@ setInterval(updateStatus, 5000);
     
 </body>    
 </html>
+
