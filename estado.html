@@ -130,12 +130,21 @@
 </nav>
 
 <div class="container">
-    <div class="section-title">Colores</div>
-    <ul class="legend-list">
-        <li class="legend-item"><span class="icon icon-online">✔</span> El cluster está conectado.</li>
-        <li class="legend-item"><span class="icon icon-warning">⚠</span> El cluster tiene problemas de conexión.</li>
-        <li class="legend-item"><span class="icon icon-offline">✖</span> El cluster está desconectado.</li>
-    </ul>
+   <div class="section-title">Colores y Estado</div>
+<ul class="legend-list">
+    <li class="legend-item">
+        <span class="icon icon-online">✔</span> 
+        El **Cluster / Shard** está conectado y funcionando correctamente.
+    </li>
+    <li class="legend-item">
+        <span class="icon icon-warning">⚠</span> 
+        El **Cluster / Shard** está intentando reconectar o tiene latencia alta.
+    </li>
+    <li class="legend-item">
+        <span class="icon icon-offline">✖</span> 
+        El **Cluster / Shard** está detenido o ha perdido la conexión.
+    </li>
+</ul>
 
     <div class="section-title">Resumen</div>
     <div class="resumen-box">
