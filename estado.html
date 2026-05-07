@@ -265,25 +265,46 @@ async function updateStatus() {
             ramChart.update();
 
             // Actualizar Grid
-            const shardsGrid = document.getElementById('shards-grid');
-let allShardsHTML = "";
+            // --- ACTUALIZAR GRID DE CLUSTERS ---
+            const gridClusters = document.getElementById('status-grid');
+            gridClusters.innerHTML = data.clusters.map(c => {
+                const status = c.status.toLowerCase();
+                if (status === 'offline') sendAlert(c.id);
+                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
 
-data.clusters.forEach(c => {
-    // Si cada cluster es un shard (lo más común en tu config de PM2)
-    const status = c.status.toLowerCase();
-    let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-    
-    allShardsHTML += `
-        <div class="box ${colorClass}">
-            S${c.id}
-            <div class="tooltip">
-                <b>Shard ${c.id}</b><br>
-                Estado: ${status.toUpperCase()}<br>
-                Latencia: -- ms
-            </div>
-        </div>
-    `;
+                return `
+                    <div class="box ${colorClass}">
+                        ${c.id}
+                        <div class="tooltip">
+                            <b>Cluster ${c.id}</b><br><br>
+                            RAM: ${c.ram} MB<br>
+                            UPTIME: ${c.uptime}<br>
+                            STATUS: ${status.toUpperCase()}
+                        </div>
+                    </div>
+                `;
             }).join('');
+
+            // --- ACTUALIZAR GRID DE SHARDS ---
+            const shardsGrid = document.getElementById('shards-grid');
+            let allShardsHTML = "";
+
+            data.clusters.forEach(c => {
+                const status = c.status.toLowerCase();
+                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
+                
+                allShardsHTML += `
+                    <div class="box ${colorClass}">
+                        S${c.id}
+                        <div class="tooltip">
+                            <b>Shard ${c.id}</b><br>
+                            Estado: ${status.toUpperCase()}<br>
+                            Latencia: -- ms
+                        </div>
+                    </div>
+                `;
+            });
+            shardsGrid.innerHTML = allShardsHTML;
         }
     } catch (e) {
         console.error("Fetch error");
@@ -297,4 +318,5 @@ setInterval(updateStatus, 5000);
     
 </body>    
 </html>
+
 
