@@ -54,7 +54,7 @@
             max-width: 1000px; 
             padding: 20px;
             display: flex;
-            flex-direction: column; /* Asegura que todo vaya hacia abajo */
+            flex-direction: column;
         }
 
         .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
@@ -140,7 +140,7 @@
     <div class="section-title">Resumen</div>
     <div class="resumen-box">
         <div>Clusters: <b id="stat-clusters">--</b></div>
-        <div>Shards: <b id="stat-shards">-- / --</b></div>
+        <div>Shards Online: <b id="stat-shards">-- / --</b></div>
         
         <div class="tech-info">
             <div class="tech-line">
@@ -165,14 +165,14 @@
     </div>
 
     <div class="section-title">Estado de clusters</div>
-    <div class="status-container">
+    <div class="status-container" style="margin-bottom: 20px;">
         <div id="status-grid" class="grid"></div>
     </div>
-</div>
 
-<div class="section-title">Estado de Shards</div>
-<div class="status-container" style="margin-bottom: 20px;">
-    <div id="shards-grid" class="grid"></div>
+    <div class="section-title">Estado de Shards</div>
+    <div class="status-container">
+        <div id="shards-grid" class="grid"></div>
+    </div>
 </div>
 
 <script>
@@ -181,7 +181,6 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -202,24 +201,14 @@ ramChart = new Chart(ctx, {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            y: { 
-                beginAtZero: false, 
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#8e9297', font: { size: 10 } }
-            },
-            x: { 
-                grid: { display: false },
-                ticks: { color: '#8e9297', font: { size: 10 } }
-            }
+            y: { beginAtZero: false, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297', font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { color: '#8e9297', font: { size: 10 } } }
         },
         plugins: { legend: { display: false } }
     }
 });
 
-// --- NOTIFICACIONES ---
-if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-}
+if (Notification.permission !== "granted") { Notification.requestPermission(); }
 
 function sendAlert(clusterId) {
     if (Notification.permission === "granted") {
@@ -230,7 +219,6 @@ function sendAlert(clusterId) {
     }
 }
 
-// --- ACTUALIZACIÓN DE DATOS ---
 setInterval(() => {
     secondsSinceUpdate++;
     document.getElementById('update-timer').innerText = secondsSinceUpdate;
@@ -244,34 +232,28 @@ async function updateStatus() {
         if (data.clusters && data.clusters.length > 0) {
             secondsSinceUpdate = 0;
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+            const onlineCount = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
             
-            // Actualizar Texto
+            // Actualizar Textos de Resumen
             document.getElementById('stat-clusters').innerText = data.clusters.length;
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
-            if(data.global) document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
+            document.getElementById('stat-shards').innerText = `${onlineCount} / ${data.clusters.length}`;
 
             // Actualizar Gráfica
             const now = new Date();
             const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
-            
             ramHistory.push(totalRam);
             labelHistory.push(timeLabel);
-            
-            if(ramHistory.length > 30) { 
-                ramHistory.shift();
-                labelHistory.shift();
-            }
+            if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // Actualizar Grid
             // --- ACTUALIZAR GRID DE CLUSTERS ---
             const gridClusters = document.getElementById('status-grid');
             gridClusters.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
                 if (status === 'offline') sendAlert(c.id);
-                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-
+                let colorClass = (status === 'online') ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
                 return `
                     <div class="box ${colorClass}">
                         ${c.id}
@@ -281,19 +263,15 @@ async function updateStatus() {
                             UPTIME: ${c.uptime}<br>
                             STATUS: ${status.toUpperCase()}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
 
             // --- ACTUALIZAR GRID DE SHARDS ---
             const shardsGrid = document.getElementById('shards-grid');
-            let allShardsHTML = "";
-
-            data.clusters.forEach(c => {
+            shardsGrid.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
-                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                
-                allShardsHTML += `
+                let colorClass = (status === 'online') ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
+                return `
                     <div class="box ${colorClass}">
                         S${c.id}
                         <div class="tooltip">
@@ -301,10 +279,8 @@ async function updateStatus() {
                             Estado: ${status.toUpperCase()}<br>
                             Latencia: -- ms
                         </div>
-                    </div>
-                `;
-            });
-            shardsGrid.innerHTML = allShardsHTML;
+                    </div>`;
+            }).join('');
         }
     } catch (e) {
         console.error("Fetch error");
@@ -314,8 +290,7 @@ async function updateStatus() {
 
 updateStatus();
 setInterval(updateStatus, 5000);
-</script>  
-    
+</script>   
 </body>    
 </html>
 
