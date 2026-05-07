@@ -113,7 +113,7 @@
 </footer>
 
 <script>
-    const comandos = [
+   const comandos = [
         // --- MODERACIÓN & STAFF ---
         { n: "/multas toggle", d: "💸 Configura el sistema de multas en tiempo real", c: "moderacion" },
         { n: "/multas set", d: "Cambiar monto de multa por infracción", c: "moderacion" },
@@ -160,7 +160,7 @@
         { n: "/inventory", d: "Revisa los artículos que posees", c: "economia" },
         { n: "/reset", d: "Reiniciar el sistema de economía (Admin)", c: "economia" },
         { n: "/limosna", d: "Pedir limosna diaria o a un usuario", c: "economia" },
-        { n: "/banco depositar", d: "Guarda tus AbyCoins en el banco", c: "economia" },
+        { n: "/banco depositar", d: "Guarda tus AbyCoins de forma segura en el banco", c: "economia" },
         { n: "/banco retirar", d: "Retira tus ahorros de la cuenta bancaria", c: "economia" },
         { n: "/banco consultar", d: "Consulta tu estado de cuenta y ahorros", c: "economia" },
         { n: "/equipar", d: "Usa un artículo de tu inventario mediante su ID", c: "economia" },
@@ -170,54 +170,76 @@
 
         // --- DIVERSIÓN & JUEGOS ---
         { n: "/roleta", d: "🎡 Prueba tu suerte en la ruleta con castigos", c: "diversion" },
-        { n: "/chismosos", d: "🗣️ Rumores falsos para entretener al servidor", c: "diversion" },
+        { n: "/chismosos", d: "🗣️ Inventa rumores falsos para entretener", c: "diversion" },
         { n: "/sabio", d: "🧘 Frases filosóficas totalmente absurdas", c: "diversion" },
         { n: "/emoji", d: "🎭 El bot te responde exclusivamente con emojis", c: "diversion" },
         { n: "/drama", d: "🎬 Simula una situación grave (modo teatral)", c: "diversion" },
-        { n: "/quien", d: "🎲 Elige a un usuario aleatorio del canal", c: "diversion" },
-        { n: "/consejo", d: "💡 Consejo aleatorio: sabio o muy sarcástico", c: "diversion" },
+        { n: "/quien", d: "🎲 Abyssus elige a un usuario aleatorio", c: "diversion" },
+        { n: "/consejo", d: "💡 Consejo aleatorio: sabio o sarcástico", c: "diversion" },
         { n: "/duelo", d: "⚔️ Inicia un duelo ficticio entre dos usuarios", c: "diversion" },
         { n: "/califica", d: "⚖️ El bot califica lo que quieras con humor", c: "diversion" },
         { n: "/apodo", d: "🏷️ Genera un apodo aleatorio y original", c: "diversion" },
         { n: "/karma", d: "✨ Muestra el karma acumulado por tus acciones", c: "diversion" },
         { n: "/8ball", d: "🔮 Pregunta a la bola mágica de Abyssus", c: "diversion" },
         { n: "/coinflip", d: "🪙 Lanza una moneda virtual (Cara o Cruz)", c: "diversion" },
-        { n: "/gracias", d: "🙏 Agradece a alguien y súmale puntos de karma", c: "diversion" },
+        { n: "/gracias", d: "🙏 Agradece a alguien y súmale karma", c: "diversion" },
         { n: "/roast", d: "🔥 Broma sarcástica o burla ligera", c: "diversion" },
         { n: "/juego", d: "🎮 Trivia, PPT, Adivinanzas o Dados", c: "diversion" },
-        { n: "/ttt reto", d: "❌ Reta a alguien a Tres en Raya", c: "diversion" },
+        { n: "/ttt reto", d: "❌ Reta a un usuario a Tres en Raya", c: "diversion" },
         { n: "/ttt random", d: "⭕ Partida rápida de Tres en Raya", c: "diversion" },
-        { n: "/ttt ranking", d: "🏆 Ranking de los mejores en Tres en Raya", c: "diversion" },
+        { n: "/ttt ranking", d: "🏆 Ranking de los mejores jugadores de TTT", c: "diversion" },
 
         // --- INTERACCIONES & EMOCIONES ---
         { n: "/angry", d: "💢 Expresa tu enfado en el chat", c: "interaccion" },
         { n: "/blush", d: "😊 Te sonrojas por algo que dijeron", c: "interaccion" },
         { n: "/bored", d: "🥱 Avisa a todos que estás aburrido/a", c: "interaccion" },
-        { n: "/confused", d: "😕 Te sientes confundido/a por la situación", c: "interaccion" },
+        { n: "/confused", d: "😕 Te sientes confundido/a", c: "interaccion" },
         { n: "/disgust", d: "🤢 Expresa disgusto o asco", c: "interaccion" },
         { n: "/fail", d: "🤦 Un fallo épico (Epic Fail)", c: "interaccion" },
-        { n: "/happy", d: "😄 Comparte tu felicidad con el servidor", c: "interaccion" },
+        { n: "/happy", d: "😄 Comparte tu felicidad", c: "interaccion" },
         { n: "/nope", d: "🚫 Un rotundo 'No' para la situación", c: "interaccion" },
         { n: "/sad", d: "😢 Te pones triste por un momento", c: "interaccion" },
-        { n: "/scared", d: "😨 Te asustas por algo que ha pasado", c: "interaccion" },
-        { n: "/scream", d: "😱 Pegas un grito de terror o emoción", c: "interaccion" },
-        { n: "/shrug", d: "🤷 ¯\\_(ツ)_/¯ No tienes ni idea de qué pasa", c: "interaccion" },
+        { n: "/scared", d: "😨 Te asustas por algo", c: "interaccion" },
+        { n: "/scream", d: "😱 Pegas un grito en el canal", c: "interaccion" },
+        { n: "/shrug", d: "🤷 ¯\\_(ツ)_/¯ No tienes idea", c: "interaccion" },
         { n: "/smile", d: "🙂 Muestras una sonrisa amable", c: "interaccion" },
-        { n: "/thinking", d: "🤔 Te pones a pensar profundamente", c: "interaccion" },
+        { n: "/thinking", d: "🤔 Piensas profundamente", c: "interaccion" },
 
-        // --- CONFIGURACIÓN & NIVELES ---
-        { n: "/setwelcome canal", d: "Canal para los mensajes de bienvenida", c: "configuracion" },
-        { n: "/setwelcome mensaje", d: "Contenido del mensaje de bienvenida", c: "configuracion" },
-        { n: "/setwelcome rol", d: "Asigna un rol automático al unirse", c: "configuracion" },
+        // --- MASCOTAS (PETS) ---
+        { n: "/pet invocar", d: "✨ Invoca una criatura emocional", c: "configuracion" },
+        { n: "/pet jugar", d: "🎾 Interactúa emocionalmente con tu mascota", c: "configuracion" },
+        { n: "/pet alimentar", d: "🍎 Alimenta a tu mascota", c: "configuracion" },
+        { n: "/pet estado", d: "📊 Consulta el estado de tu mascota", c: "configuracion" },
+        { n: "/pet fusionar", d: "🌀 Fusiona tu mascota (Entidad desconocida)", c: "configuracion" },
+        { n: "/pet liberar", d: "🍃 Libera a tu mascota", c: "configuracion" },
+
+        // --- CONFIGURACIÓN DE BIENVENIDAS ---
+        { n: "/setwelcome canal", d: "📍 Canal donde se enviarán las bienvenidas", c: "configuracion" },
+        { n: "/setwelcome titulo", d: "📝 Título del embed de bienvenida", c: "configuracion" },
+        { n: "/setwelcome mensaje", d: "💬 Mensaje principal de la bienvenida", c: "configuracion" },
+        { n: "/setwelcome color", d: "🎨 Color hexadecimal (ej: #3498db)", c: "configuracion" },
+        { n: "/setwelcome imagen", d: "🖼️ URL de imagen o avatar para el embed", c: "configuracion" },
+        { n: "/setwelcome fooster", d: "👣 Texto del pie de página (footer)", c: "configuracion" },
+        { n: "/setwelcome rol", d: "🎭 Rol automático al unirse", c: "configuracion" },
+        { n: "/setwelcome desactivar", d: "❌ Elimina toda la configuración", c: "configuracion" },
+        { n: "/setwelcome eliminarcanal", d: "🗑️ Elimina solo el canal de bienvenida", c: "configuracion" },
+
+        // --- NIVELES & UTILIDAD ---
         { n: "/configniveles", d: "⚙️ Configura el sistema de niveles y XP", c: "configuracion" },
         { n: "/rank", d: "🎖️ Muestra tu tarjeta de nivel y XP actual", c: "utilidad" },
-        { n: "/nivel leaderboard", d: "🏆 Ranking de usuarios con más nivel", c: "utilidad" },
+        { n: "/nivel leaderboard", d: "🏆 Ranking global de niveles", c: "utilidad" },
+        { n: "/ping", d: "⚡ Muestra la latencia entre Abyssus y Discord", c: "utilidad" },
+        { n: "/userinfo", d: "👤 Información detallada de un usuario", c: "utilidad" },
+        { n: "/serverinfo", d: "🏠 Estadísticas y datos del servidor", c: "utilidad" },
+        { n: "/avatar", d: "🖼️ Muestra la foto de perfil en alta calidad", c: "utilidad" },
+        { n: "/embedgenerador", d: "🛠️ Genera mensajes embed personalizados", c: "utilidad" },
+        { n: "/lol-champion", d: "🎮 Consulta info técnica de campeones de LoL", c: "utilidad" },
+        { n: "/invite", d: "🔗 Enlace oficial para invitar al bot", c: "utilidad" },
 
-        // --- UTILIDAD & NSFW ---
-        { n: "/ping", d: "Verifica la latencia de Abyssus", c: "utilidad" },
-        { n: "/serverinfo", d: "Estadísticas generales del servidor", c: "utilidad" },
-        { n: "/nsfw cambiar", d: "Activa/Desactiva el estado NSFW en el canal", c: "nsfw" },
-        { n: "/nsfw listar", d: "📋 Muestra los canales NSFW del servidor", c: "nsfw" }
+        // --- NSFW ---
+        { n: "/nsfw cambiar", d: "🔞 Activa/Desactiva el estado NSFW del canal", c: "nsfw" },
+        { n: "/nsfw listar", d: "📋 Muestra todos los canales NSFW", c: "nsfw" },
+        { n: "/nsfw reset", d: "🧹 Limpia toda la configuración NSFW", c: "nsfw" }
     ];
 
     function render(filtro = 'all', busqueda = '') {
