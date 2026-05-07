@@ -1,487 +1,186 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comandos — Abyssus Bot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos — Abyssus Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.2);
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --text-muted: #aaa;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #fff;
+            min-height: 100vh;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
+        /* NAV */
+        nav {
+            position: fixed; top: 0; width: 100%; backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        }
+        nav h1 { font-weight: 800; color: var(--accent); font-size: 1.5rem; }
+        nav .links a { color: #ccc; text-decoration: none; margin-left: 20px; transition: .3s; font-size: 0.9rem; }
+        nav .links a:hover { color: #fff; }
 
-body{
-  font-family:'Inter',sans-serif;
-  background: radial-gradient(circle at top,#0f172a,#020617);
-  color:#fff;
-}
+        /* HEADER */
+        .header { text-align: center; padding-top: 130px; margin-bottom: 20px; }
+        .header h1 { font-size: 2.5rem; font-weight: 800; }
+        .header span { background: linear-gradient(90deg, #38bdf8, #6366f1); -webkit-background-clip: text; color: transparent; }
+        .header p { color: var(--text-muted); margin-top: 10px; }
 
-/* NAV (MISMO QUE INDEX) */
-nav{
-  position:fixed;
-  top:0;
-  width:100%;
-  backdrop-filter:blur(12px);
-  background:rgba(15,23,42,0.6);
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  padding:15px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:1000;
-}
+        /* CONTROLES */
+        .controls { max-width: 1100px; margin: 0 auto 30px; padding: 0 20px; }
+        .search-box { width: 100%; max-width: 500px; margin: 0 auto 20px; }
+        .search-box input {
+            width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            background: rgba(255,255,255,0.05); color: #fff; outline: none; transition: .3s;
+        }
+        .search-box input:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
 
-nav h1{
-  font-weight:800;
-  color:#38bdf8;
-}
+        .categories { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .category {
+            padding: 8px 20px; border-radius: 20px; background: var(--bg-card);
+            cursor: pointer; transition: .3s; font-size: 0.85rem; border: 1px solid transparent;
+        }
+        .category:hover, .category.active { background: var(--accent); color: #000; font-weight: 600; }
 
-nav .links a{
-  color:#ccc;
-  text-decoration:none;
-  margin-left:20px;
-  transition:.3s;
-}
-nav .links a:hover{color:#fff}
+        /* GRID DE COMANDOS */
+        .commands-grid {
+            max-width: 1100px; margin: auto; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px; padding: 20px;
+        }
 
-/* BOTÓN DISCORD */
-.discord-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 18px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:14px;
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(135deg,#6366f1,#38bdf8);
-  box-shadow:0 4px 15px rgba(99,102,241,0.4);
-  transition:.3s;
-}
+        /* CARD INDIVIDUAL */
+        .command-card {
+            background: var(--bg-card); border-radius: 12px; padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05); transition: .3s;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .command-card:hover {
+            transform: translateY(-5px); border-color: var(--accent);
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+        .cmd-name { font-family: 'monospace'; font-weight: 600; color: var(--accent); font-size: 1.1rem; }
+        .cmd-desc { font-size: 0.85rem; color: #ccc; margin: 10px 0; line-height: 1.4; }
+        .cmd-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .cmd-tag { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-.discord-btn img{
-  filter:brightness(0) invert(1);
-}
-
-.discord-btn:hover{
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 8px 25px rgba(99,102,241,0.6);
-}
-
-/* HEADER */
-.header{
-  text-align:center;
-  padding-top:130px;
-  margin-bottom:40px;
-}
-
-.header h1{
-  font-size:2.8rem;
-  font-weight:800;
-}
-
-.header span{
-  background:linear-gradient(90deg,#38bdf8,#6366f1);
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-.header p{
-  color:#aaa;
-  margin-top:10px;
-}
-
-/* BUSCADOR */
-.search-box{
-  max-width:500px;
-  margin:20px auto;
-}
-
-.search-box input{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-  color:#fff;
-  outline:none;
-  backdrop-filter:blur(10px);
-}
-
-/* CATEGORÍAS */
-.categories{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:30px;
-}
-
-.category{
-  padding:8px 18px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.05);
-  cursor:pointer;
-  transition:.3s;
-}
-
-.category:hover{
-  background:linear-gradient(135deg,#6366f1,#38bdf8);
-}
-
-/* GRID */
-.commands{
-  max-width:1100px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
-  padding:20px;
-}
-
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.04);
-  border-radius:16px;
-  padding:20px;
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.05);
-  transition:.3s;
-}
-
-.card:hover{
-  transform:translateY(-6px);
-  border-color:#38bdf8;
-  box-shadow:0 0 25px rgba(56,189,248,0.2);
-}
-
-.command-name{
-  font-weight:600;
-  font-size:1.2em;
-  color:#38bdf8;
-}
-
-.command-desc{
-  font-size:0.9em;
-  color:#ccc;
-  margin-top:6px;
-}
-
-.command-tag{
-  margin-top:10px;
-  font-size:0.75em;
-  color:#aaa;
-}
-
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:30px;
-  color:#777;
-  border-top:1px solid rgba(255,255,255,0.05);
-}
-</style>
+        footer { text-align: center; padding: 40px; color: #555; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+    </style>
 </head>
-
 <body>
 
-<!-- NAV -->
 <nav>
-  <h1>Abyssus</h1>
-
-  <div class="links">
-    <a href="index.html">Inicio</a>
-    <a href="#">Comandos</a>
-    <a href="estado.html">Estado de Red</a>
-  </div>
-
-  <a href="https://discord.com/oauth2/authorize?client_id=680897280433324081&redirect_uri=https://abyssus-auth.onrender.com/callback&response_type=code&scope=identify%20guilds"
-     class="discord-btn">
-
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg"
-         width="18">
-
-    Sign in with Discord
-  </a>
+    <h1>Abyssus</h1>
+    <div class="links">
+        <a href="index.html">Inicio</a>
+        <a href="#">Comandos</a>
+        <a href="estado.html">Estado de Red</a>
+    </div>
 </nav>
 
-<!-- HEADER -->
 <div class="header">
-  <h1>📜 <span>Comandos</span></h1>
-  <p>Explora todo lo que puede hacer Abyssus Bot</p>
+    <h1>📜 <span>Comandos</span></h1>
+    <p>Explora la potencia de Abyssus Bot en tu servidor</p>
 </div>
 
-<!-- BUSCADOR -->
-<div class="search-box">
-  <input type="text" id="search" placeholder="Buscar comando...">
+<div class="controls">
+    <div class="search-box">
+        <input type="text" id="search" placeholder="Buscar comando (ej: ban, multas...)">
+    </div>
+    <div class="categories">
+        <div class="category active" onclick="filter('all', this)">Todos</div>
+        <div class="category" onclick="filter('moderacion', this)">Moderación</div>
+        <div class="category" onclick="filter('economia', this)">Economía</div>
+        <div class="category" onclick="filter('utilidad', this)">Utilidad</div>
+    </div>
 </div>
 
-<!-- CATEGORÍAS -->
-<div class="categories">
-  <div class="category" onclick="filter('all')">Todos</div>
-  <div class="category" onclick="filter('moderacion')">Moderación</div>
-  <div class="category" onclick="filter('economia')">Economía</div>
-  <div class="category" onclick="filter('utilidad')">Utilidad</div>
-</div>
-
-<!-- COMANDOS -->
-<div class="commands" id="commands">
-
-<div class="card" data-cat="moderacion">
-  <div class="command-name">/multas toggle</div>
-  <div class="command-desc">💸 Sistema de multas ahora configurable en tiempo real</div>
-  <div class="command-name">/multas set</div>
-  <div class="command-desc">Cambiar monto de multa</div>
-  <div class="command-name">/multas ve</div>
-  <div class="command-desc">Ver configuración actual</div>
-  <div class="command-name">/multas permisos</div>
-  <div class="command-desc">Gestionar roles autorizados</div>
-  <div class="command-name">/multas historial</div>
-  <div class="command-desc">Ver historial de multas</div>
-  <div class="command-name">/multas dm</div>
-  <div class="command-desc">Activar o desactivar DM de multas</div>
-  <div class="command-name">/serverstats desactivar</div>
-  <div class="command-desc">Desactiva los canales de estadísticas</div>
-  <div class="command-name">/ticket</div>
-  <div class="command-desc">Crea un ticket de soporte</div>
-  <div class="command-name">/ban</div>
-  <div class="command-desc">Banea a un usuario</div>
-  <div class="command-name">/kick</div>
-  <div class="command-desc">Expulsa a un usuario</div>
-  <div class="command-name">/warn</div>
-  <div class="command-desc">Advierte a un usuario</div>
-  <div class="command-name">/view-warnings</div>
-  <div class="command-desc">Muestra advertencias</div>
-  <div class="command-name">/clearwarning</div>
-  <div class="command-desc">Elimina advertencias por ID</div>
-  <div class="command-name">/purge</div>
-  <div class="command-desc">Borra mensajes por cantidad</div>
-  <div class="command-name">/mute</div>
-  <div class="command-desc">Silencia a un usuario</div>
-  <div class="command-name">/unmute</div>
-  <div class="command-desc">Quita el silencio</div>
-  <div class="command-name">/timemute</div>
-  <div class="command-desc">Silencia por tiempo definido</div>
-  <div class="command-name">/rol crear</div>
-  <div class="command-desc">Crea nuevo rol con opciones avanzadas</div>
-  <div class="command-name">/rol eliminar</div>
-  <div class="command-desc">Elimina rol del servidor</div>
-  <div class="command-name">/911</div>
-  <div class="command-desc">Sistema de alertas y moderación</div>
-  <div class="command-name">/911 enviar</div>
-  <div class="command-desc">Envía una alerta al equipo</div>
-  <div class="command-name">/911 estado</div>
-  <div class="command-desc">Consulta el estado de tu alerta</div>
-  <div class="command-name">/modlogs</div>
-  <div class="command-desc">Consulta historial de moderación</div>
-  <div class="command-name">/modlogs usuario</div>
-  <div class="command-desc">Ver historial de moderación de un usuario</div>
-  <div class="command-name">/modlogs config</div>
-  <div class="command-desc">Establece o restablece el canal de logs</div>
-  <div class="command-name">/modlogs global</div>
-  <div class="command-desc">Ver historial completo del servidor</div>
-  <div class="command-name">/modlogs tipo</div>
-  <div class="command-desc">Filtrar historial por tipo de acción</div>
-  <div class="command-name">/modlogs borrar</div>
-  <div class="command-desc">Eliminar todos los registros de moderación del servidor</div>
-  <div class="command-name">/configlogs</div>
-  <div class="command-desc">Consulta historial de usuario</div>
-  <div class="command-name">/config setmute</div>
-  <div class="command-desc">Define el rol para silenciar</div>
-  <div class="command-name">/confess set</div>
-  <div class="command-desc">Configura canal de confesiones</div>
-  <div class="command-name">/reportar</div>
-  <div class="command-desc">Recibe denuncias de usuarios</div>
-  <div class="command-name">/autoroles set</div>
-  <div class="command-desc">📌 Establece el rol automático</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles asignar</div>
-  <div class="command-desc">🎯 Asigna el rol automático al usuario actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-
-  <div class="command-tag">Moderación</div>
-</div>
-
-<div class="card" data-cat="moderacion">
-  <div class="command-name">/multas toggle</div>
-  <div class="command-desc">💸 Sistema de multas ahora configurable en tiempo real</div>
-  <div class="command-name">/multas set</div>
-  <div class="command-desc">Cambiar monto de multa</div>
-  <div class="command-name">/multas ve</div>
-  <div class="command-desc">Ver configuración actual</div>
-  <div class="command-name">/multas permisos</div>
-  <div class="command-desc">Gestionar roles autorizados</div>
-  <div class="command-name">/multas historial</div>
-  <div class="command-desc">Ver historial de multas</div>
-  <div class="command-name">/multas dm</div>
-  <div class="command-desc">Activar o desactivar DM de multas</div>
-  <div class="command-name">/serverstats desactivar</div>
-  <div class="command-desc">Desactiva los canales de estadísticas</div>
-  <div class="command-name">/ticket</div>
-  <div class="command-desc">Crea un ticket de soporte</div>
-  <div class="command-name">/ban</div>
-  <div class="command-desc">Banea a un usuario</div>
-  <div class="command-name">/kick</div>
-  <div class="command-desc">Expulsa a un usuario</div>
-  <div class="command-name">/warn</div>
-  <div class="command-desc">Advierte a un usuario</div>
-  <div class="command-name">/view-warnings</div>
-  <div class="command-desc">Muestra advertencias</div>
-  <div class="command-name">/clearwarning</div>
-  <div class="command-desc">Elimina advertencias por ID</div>
-  <div class="command-name">/purge</div>
-  <div class="command-desc">Borra mensajes por cantidad</div>
-  <div class="command-name">/mute</div>
-  <div class="command-desc">Silencia a un usuario</div>
-  <div class="command-name">/unmute</div>
-  <div class="command-desc">Quita el silencio</div>
-  <div class="command-name">/timemute</div>
-  <div class="command-desc">Silencia por tiempo definido</div>
-  <div class="command-name">/rol crear</div>
-  <div class="command-desc">Crea nuevo rol con opciones avanzadas</div>
-  <div class="command-name">/rol eliminar</div>
-  <div class="command-desc">Elimina rol del servidor</div>
-  <div class="command-name">/911</div>
-  <div class="command-desc">Sistema de alertas y moderación</div>
-  <div class="command-name">/911 enviar</div>
-  <div class="command-desc">Envía una alerta al equipo</div>
-  <div class="command-name">/911 estado</div>
-  <div class="command-desc">Consulta el estado de tu alerta</div>
-  <div class="command-name">/modlogs</div>
-  <div class="command-desc">Consulta historial de moderación</div>
-  <div class="command-name">/modlogs usuario</div>
-  <div class="command-desc">Ver historial de moderación de un usuario</div>
-  <div class="command-name">/modlogs config</div>
-  <div class="command-desc">Establece o restablece el canal de logs</div>
-  <div class="command-name">/modlogs global</div>
-  <div class="command-desc">Ver historial completo del servidor</div>
-  <div class="command-name">/modlogs tipo</div>
-  <div class="command-desc">Filtrar historial por tipo de acción</div>
-  <div class="command-name">/modlogs borrar</div>
-  <div class="command-desc">Eliminar todos los registros de moderación del servidor</div>
-  <div class="command-name">/configlogs</div>
-  <div class="command-desc">Consulta historial de usuario</div>
-  <div class="command-name">/config setmute</div>
-  <div class="command-desc">Define el rol para silenciar</div>
-  <div class="command-name">/confess set</div>
-  <div class="command-desc">Configura canal de confesiones</div>
-  <div class="command-name">/reportar</div>
-  <div class="command-desc">Recibe denuncias de usuarios</div>
-  <div class="command-name">/autoroles set</div>
-  <div class="command-desc">📌 Establece el rol automático</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles asignar</div>
-  <div class="command-desc">🎯 Asigna el rol automático al usuario actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-name">/autoroles view</div>
-  <div class="command-desc">🔍 Muestra el rol automático actual</div>
-  <div class="command-tag">Moderación</div>
-</div>
-
-<div class="card" data-cat="economia">
-  <div class="command-name">/daily</div>
-  <div class="command-desc">Reclama tu recompensa diaria</div>
-  <div class="command-tag">Economía</div>
-</div>
-
-<div class="card" data-cat="economia">
-  <div class="command-name">/balance</div>
-  <div class="command-desc">Consulta tu dinero</div>
-  <div class="command-tag">Economía</div>
-</div>
-
-<div class="card" data-cat="utilidad">
-  <div class="command-name">/ping</div>
-  <div class="command-desc">Ver latencia del bot</div>
-  <div class="command-name">/help</div>
-  <div class="command-desc">Muestra esta lista de comandos</div>
-  <div class="command-name">userinfo</div>
-  <div class="command-desc">Muestra información de un usuario</div>
-  <div class="command-name">/serverinfo</div>
-  <div class="command-desc">Muestra información del servidor</div>
-  <div class="command-name">/avatar</div>
-  <div class="command-desc">Muestra el avatar de un usuario</div>
-  <div class="command-name">/roles</div>
-  <div class="command-desc">Lista los roles del servidor</div>
-  <div class="command-name">/embedgenerador</div>
-  <div class="command-desc">Genera un mensaje embed personalizado</div>
-  <div class="command-name">/lol-champion</div>
-  <div class="command-desc">Muestra información sobre un campeón de League of Legends</div>
-  <div class="command-name">/invite</div>
-  <div class="command-desc">Enlace para invitar a Abyssus</div>
-  
-  <div class="command-tag">Utilidad</div>
-</div>
-
-<div class="card" data-cat="utilidad">
-  <div class="command-name">/ping</div>
-  <div class="command-desc">Ver latencia del bot</div>
-  <div class="command-name">/help</div>
-  <div class="command-desc">Muestra esta lista de comandos</div>
-  <div class="command-name">userinfo</div>
-  <div class="command-desc">Muestra información de un usuario</div>
-  <div class="command-name">/serverinfo</div>
-  <div class="command-desc">Muestra información del servidor</div>
-  <div class="command-name">/avatar</div>
-  <div class="command-desc">Muestra el avatar de un usuario</div>
-  <div class="command-name">/roles</div>
-  <div class="command-desc">Lista los roles del servidor</div>
-  <div class="command-name">/embedgenerador</div>
-  <div class="command-desc">Genera un mensaje embed personalizado</div>
-  <div class="command-name">/lol-champion</div>
-  <div class="command-desc">Muestra información sobre un campeón de League of Legends</div>
-  <div class="command-name">/invite</div>
-  <div class="command-desc">Enlace para invitar a Abyssus</div>
-</div>
-
-</div>
+<div class="commands-grid" id="commands-container">
+    </div>
 
 <footer>
-© 2026 Abyssus Bot — No afiliado con Discord
+    © 2026 Abyssus Bot — No afiliado con Discord
 </footer>
 
 <script>
-const search = document.getElementById("search");
-const cards = document.querySelectorAll(".card");
+    const comandos = [
+        // MODERACIÓN
+        { n: "/multas toggle", d: "💸 Configura el sistema de multas en tiempo real", c: "moderacion" },
+        { n: "/multas set", d: "Cambiar monto de multa por infracción", c: "moderacion" },
+        { n: "/multas ve", d: "Ver configuración actual de multas", c: "moderacion" },
+        { n: "/ticket", d: "Crea un panel de soporte interactivo", c: "moderacion" },
+        { n: "/ban", d: "Banea a un usuario de forma permanente", c: "moderacion" },
+        { n: "/kick", d: "Expulsa a un usuario del servidor", c: "moderacion" },
+        { n: "/purge", d: "Borra mensajes masivamente por cantidad", c: "moderacion" },
+        { n: "/mute", d: "Silencia a un usuario indefinidamente", c: "moderacion" },
+        { n: "/timemute", d: "Silencia a un usuario por tiempo definido", c: "moderacion" },
+        { n: "/911 enviar", d: "Envía una alerta de emergencia al equipo", c: "moderacion" },
+        { n: "/modlogs config", d: "Establece el canal de registros de moderación", c: "moderacion" },
+        { n: "/autoroles set", d: "📌 Establece el rol automático al entrar", c: "moderacion" },
+        { n: "/confess set", d: "Configura el canal para confesiones anónimas", c: "moderacion" },
+        
+        // ECONOMÍA
+        { n: "/daily", d: "Reclama tu recompensa diaria de monedas", c: "economia" },
+        { n: "/balance", d: "Consulta tu dinero disponible en el banco", c: "economia" },
+        
+        // UTILIDAD
+        { n: "/ping", d: "Muestra la latencia entre Abyssus y Discord", c: "utilidad" },
+        { n: "/userinfo", d: "Muestra información detallada de un usuario", c: "utilidad" },
+        { n: "/serverinfo", d: "Muestra estadísticas del servidor actual", c: "utilidad" },
+        { n: "/avatar", d: "Muestra la foto de perfil en alta calidad", c: "utilidad" },
+        { n: "/embedgenerador", d: "Genera mensajes embed personalizados", c: "utilidad" },
+        { n: "/lol-champion", d: "Info sobre campeones de League of Legends", c: "utilidad" },
+        { n: "/invite", d: "Obtén el enlace para invitar al bot", c: "utilidad" }
+    ];
 
-search.addEventListener("keyup", () => {
-  let val = search.value.toLowerCase();
-  cards.forEach(card => {
-    let text = card.innerText.toLowerCase();
-    card.style.display = text.includes(val) ? "block" : "none";
-  });
-});
+    function render(filtro = 'all', busqueda = '') {
+        const container = document.getElementById('commands-container');
+        container.innerHTML = '';
+        
+        const filtrados = comandos.filter(cmd => {
+            const matchCat = filtro === 'all' || cmd.c === filtro;
+            const matchSearch = cmd.n.toLowerCase().includes(busqueda.toLowerCase()) || 
+                                cmd.d.toLowerCase().includes(busqueda.toLowerCase());
+            return matchCat && matchSearch;
+        });
 
-function filter(cat){
-  cards.forEach(card=>{
-    if(cat === 'all'){
-      card.style.display = "block";
-    } else {
-      card.style.display = card.dataset.cat === cat ? "block" : "none";
+        filtrados.forEach(cmd => {
+            container.innerHTML += `
+                <div class="command-card">
+                    <div class="cmd-name">${cmd.n}</div>
+                    <div class="cmd-desc">${cmd.d}</div>
+                    <div class="cmd-footer">
+                        <span class="cmd-tag">${cmd.c}</span>
+                    </div>
+                </div>
+            `;
+        });
     }
-  });
-}
-</script>
 
+    function filter(cat, el) {
+        document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        render(cat, document.getElementById('search').value);
+    }
+
+    document.getElementById('search').addEventListener('input', (e) => {
+        const activeCat = document.querySelector('.category.active').innerText.toLowerCase();
+        const cat = activeCat === 'todos' ? 'all' : activeCat;
+        render(cat, e.target.value);
+    });
+
+    render(); // Carga inicial
+</script>
 </body>
 </html>
