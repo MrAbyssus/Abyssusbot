@@ -113,7 +113,7 @@
 </footer>
 
 <script>
-   <script>
+  <script>
     const comandos = [
         // --- MODERACIÓN & STAFF ---
         { n: "/multas toggle", d: "💸 Configura el sistema de multas en tiempo real", c: "moderacion" },
@@ -241,7 +241,7 @@
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
-        // Opcional: alert('Copiado: ' + text);
+        // Opcional: Podrías añadir un aviso visual aquí
     }
 
     function filter(cat, el) {
@@ -256,6 +256,7 @@
         render(cat, e.target.value);
     });
 
+    // Carga inicial
     render();
 </script>
 </body>
