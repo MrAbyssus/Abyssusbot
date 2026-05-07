@@ -21,11 +21,30 @@
             min-height: 100vh;
         }
 
-        nav {
-            position: fixed; top: 0; width: 100%; backdrop-filter: blur(12px);
-            background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+       nav {
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.8); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 70px;    /* Le damos una altura fija */
+            display: flex; 
+            align-items: center; 
+            z-index: 1000;
         }
+
+        /* Esta clase es la que hace la magia del centrado */
+        .nav-container {
+            width: 100%;
+            max-width: 1100px; /* Esto hace que mida lo mismo que tus comandos */
+            margin: 0 auto;    /* Esto centra la caja en la pantalla */
+            padding: 0 20px;   /* Espacio para que no toque los bordes en el móvil */
+            display: flex;
+            justify-content: space-between; /* Logo a un lado, links al otro */
+            align-items: center;
+        }
+
         nav h1 { font-weight: 800; color: var(--accent); font-size: 1.5rem; }
         nav .links a { color: #ccc; text-decoration: none; margin-left: 20px; transition: .3s; font-size: 0.9rem; }
         nav .links a:hover { color: #fff; }
@@ -77,11 +96,13 @@
 <body>
 
 <nav>
-    <h1>Abyssus</h1>
-    <div class="links">
-        <a href="index.html">Inicio</a>
-        <a href="#">Comandos</a>
-        <a href="estado.html">Estado de Red</a>
+    <div class="nav-container">
+        <h1>Abyssus</h1>
+        <div class="links">
+            <a href="index.html">Inicio</a>
+            <a href="#">Comandos</a>
+            <a href="estado.html">Estado de Red</a>
+        </div>
     </div>
 </nav>
 
