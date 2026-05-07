@@ -170,6 +170,11 @@
     </div>
 </div>
 
+<div class="section-title">Estado de Shards</div>
+<div class="status-container" style="margin-bottom: 20px;">
+    <div id="shards-grid" class="grid"></div>
+</div>
+
 <script>
 let secondsSinceUpdate = 0;
 let ramHistory = [];
@@ -244,7 +249,7 @@ async function updateStatus() {
             document.getElementById('stat-clusters').innerText = data.clusters.length;
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
-            if(data.global) {document.getElementById('stat-shards').innerText = `${data.global.online} / ${data.global.total}`;}
+            if(data.global) document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
 
             // Actualizar Gráfica
             const now = new Date();
@@ -260,24 +265,24 @@ async function updateStatus() {
             ramChart.update();
 
             // Actualizar Grid
-            const grid = document.getElementById('status-grid');
-            grid.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                if (status === 'offline') sendAlert(c.id);
+            const shardsGrid = document.getElementById('shards-grid');
+let allShardsHTML = "";
 
-                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-
-                return `
-                    <div class="box ${colorClass}">
-                        ${c.id}
-                        <div class="tooltip">
-                            <b>Cluster ${c.id}</b><br><br>
-                            RAM: ${c.ram} MB<br>
-                            UPTIME: ${c.uptime}<br>
-                            STATUS: ${status.toUpperCase()}
-                        </div>
-                    </div>
-                `;
+data.clusters.forEach(c => {
+    // Si cada cluster es un shard (lo más común en tu config de PM2)
+    const status = c.status.toLowerCase();
+    let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
+    
+    allShardsHTML += `
+        <div class="box ${colorClass}">
+            S${c.id}
+            <div class="tooltip">
+                <b>Shard ${c.id}</b><br>
+                Estado: ${status.toUpperCase()}<br>
+                Latencia: -- ms
+            </div>
+        </div>
+    `;
             }).join('');
         }
     } catch (e) {
