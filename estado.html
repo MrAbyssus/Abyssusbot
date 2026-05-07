@@ -146,6 +146,10 @@
     </li>
 </ul>
 
+    <div id="system-status-text" style="margin-top: 10px; font-weight: bold; color: var(--online);">
+    • Todos los sistemas están operando con normalidad.
+</div>
+
     <div class="section-title">Resumen</div>
     <div class="resumen-box">
         <div>Clusters: <b id="stat-clusters">--</b></div>
@@ -274,6 +278,18 @@ async function updateStatus() {
                         </div>
                     </div>`;
             }).join('');
+
+            // Dentro de tu función updateStatus...
+const allOnline = data.clusters.every(c => c.status.toLowerCase() === 'online');
+const statusText = document.getElementById('system-status-text');
+
+if (allOnline) {
+    statusText.innerText = "• Todos los sistemas están operando con normalidad.";
+    statusText.style.color = "var(--online)";
+} else {
+    statusText.innerText = "• Se han detectado problemas técnicos en algunos sectores.";
+    statusText.style.color = "var(--warning)";
+}
 
             // --- ACTUALIZAR GRID DE SHARDS ---
             const shardsGrid = document.getElementById('shards-grid');
