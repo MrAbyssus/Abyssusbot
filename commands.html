@@ -21,7 +21,6 @@
             min-height: 100vh;
         }
 
-        /* NAV */
         nav {
             position: fixed; top: 0; width: 100%; backdrop-filter: blur(12px);
             background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -31,13 +30,11 @@
         nav .links a { color: #ccc; text-decoration: none; margin-left: 20px; transition: .3s; font-size: 0.9rem; }
         nav .links a:hover { color: #fff; }
 
-        /* HEADER */
         .header { text-align: center; padding-top: 130px; margin-bottom: 20px; }
         .header h1 { font-size: 2.5rem; font-weight: 800; }
         .header span { background: linear-gradient(90deg, #38bdf8, #6366f1); -webkit-background-clip: text; color: transparent; }
         .header p { color: var(--text-muted); margin-top: 10px; }
 
-        /* CONTROLES */
         .controls { max-width: 1100px; margin: 0 auto 30px; padding: 0 20px; }
         .search-box { width: 100%; max-width: 500px; margin: 0 auto 20px; }
         .search-box input {
@@ -53,14 +50,12 @@
         }
         .category:hover, .category.active { background: var(--accent); color: #000; font-weight: 600; }
 
-        /* GRID DE COMANDOS */
         .commands-grid {
             max-width: 1100px; margin: auto; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px; padding: 20px;
         }
 
-        /* CARD INDIVIDUAL */
         .command-card {
             background: var(--bg-card); border-radius: 12px; padding: 18px;
             border: 1px solid rgba(255, 255, 255, 0.05); transition: .3s;
@@ -72,8 +67,9 @@
         }
         .cmd-name { font-family: 'monospace'; font-weight: 600; color: var(--accent); font-size: 1.1rem; }
         .cmd-desc { font-size: 0.85rem; color: #ccc; margin: 10px 0; line-height: 1.4; }
-        .cmd-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .cmd-tag { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .copy-hint { font-size: 0.65rem; color: var(--accent); opacity: 0.6; margin-top: 5px; }
 
         footer { text-align: center; padding: 40px; color: #555; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
     </style>
@@ -96,18 +92,18 @@
 
 <div class="controls">
     <div class="search-box">
-        <input type="text" id="search" placeholder="Buscar comando (ej: ban, multas...)">
+        <input type="text" id="search" placeholder="Buscar comando (ej: ban, multas, nsfw...)">
     </div>
     <div class="categories">
-        <div class="category active" onclick="filter('all', this)">Todos</div>
-        <div class="category" onclick="filter('moderacion', this)">Moderación</div>
-        <div class="category" onclick="filter('economia', this)">Economía</div>
-        <div class="category" onclick="filter('utilidad', this)">Utilidad</div>
+        <div class="category active" data-cat="all" onclick="filter('all', this)">Todos</div>
+        <div class="category" data-cat="moderacion" onclick="filter('moderacion', this)">Moderación</div>
+        <div class="category" data-cat="economia" onclick="filter('economia', this)">Economía</div>
+        <div class="category" data-cat="utilidad" onclick="filter('utilidad', this)">Utilidad</div>
+        <div class="category" data-cat="nsfw" onclick="filter('nsfw', this)">NSFW</div>
     </div>
 </div>
 
-<div class="commands-grid" id="commands-container">
-    </div>
+<div class="commands-grid" id="commands-container"></div>
 
 <footer>
     © 2026 Abyssus Bot — No afiliado con Discord
@@ -115,33 +111,61 @@
 
 <script>
     const comandos = [
-        // MODERACIÓN
-        { n: "/multas toggle", d: "💸 Configura el sistema de multas en tiempo real", c: "moderacion" },
+        // --- MULTAS ---
+        { n: "/multas toggle", d: "💸 Sistema de multas configurable en tiempo real", c: "moderacion" },
         { n: "/multas set", d: "Cambiar monto de multa por infracción", c: "moderacion" },
-        { n: "/multas ve", d: "Ver configuración actual de multas", c: "moderacion" },
-        { n: "/ticket", d: "Crea un panel de soporte interactivo", c: "moderacion" },
+        { n: "/multas ver", d: "Ver configuración actual de multas", c: "moderacion" },
+        { n: "/multas permisos", d: "Gestionar roles autorizados para multar", c: "moderacion" },
+        { n: "/multas historial", d: "Ver historial de sanciones económicas", c: "moderacion" },
+        { n: "/multas dm", d: "Activar/Desactivar avisos por mensaje directo", c: "moderacion" },
+
+        // --- MODERACIÓN CORE ---
         { n: "/ban", d: "Banea a un usuario de forma permanente", c: "moderacion" },
         { n: "/kick", d: "Expulsa a un usuario del servidor", c: "moderacion" },
-        { n: "/purge", d: "Borra mensajes masivamente por cantidad", c: "moderacion" },
-        { n: "/mute", d: "Silencia a un usuario indefinidamente", c: "moderacion" },
-        { n: "/timemute", d: "Silencia a un usuario por tiempo definido", c: "moderacion" },
-        { n: "/911 enviar", d: "Envía una alerta de emergencia al equipo", c: "moderacion" },
+        { n: "/warn", d: "Advierte a un usuario por mal comportamiento", c: "moderacion" },
+        { n: "/view-warnings", d: "Muestra la lista de advertencias de un usuario", c: "moderacion" },
+        { n: "/clearwarning", d: "Elimina una advertencia específica por su ID", c: "moderacion" },
+        { n: "/purge", d: "Borra mensajes masivamente (hasta 100)", c: "moderacion" },
+        { n: "/mute", d: "Silencia a un usuario del servidor", c: "moderacion" },
+        { n: "/unmute", d: "Devuelve la voz a un usuario silenciado", c: "moderacion" },
+        { n: "/timemute", d: "Silencia por un tiempo definido (ej: 10m, 1h)", c: "moderacion" },
+
+        // --- SISTEMA 911 / TICKETS ---
+        { n: "/911 enviar", d: "Envía una alerta de emergencia al equipo de staff", c: "moderacion" },
+        { n: "/911 estado", d: "Consulta si tu reporte ha sido atendido", c: "moderacion" },
+        { n: "/911 resolver", d: "Marca una alerta como resuelta (Staff)", c: "moderacion" },
+        { n: "/ticket", d: "Crea un ticket de soporte interactivo", c: "moderacion" },
+        { n: "/settickets", d: "Configura el sistema de tickets en el servidor", c: "moderacion" },
+
+        // --- LOGS & CONFIG ---
         { n: "/modlogs config", d: "Establece el canal de registros de moderación", c: "moderacion" },
-        { n: "/autoroles set", d: "📌 Establece el rol automático al entrar", c: "moderacion" },
+        { n: "/modlogs usuario", d: "Ver historial de acciones contra un usuario", c: "moderacion" },
+        { n: "/modlogs borrar", d: "Elimina todos los registros del servidor", c: "moderacion" },
         { n: "/confess set", d: "Configura el canal para confesiones anónimas", c: "moderacion" },
-        
-        // ECONOMÍA
+        { n: "/reportar", d: "Recibe denuncias directas de los usuarios", c: "moderacion" },
+
+        // --- AUTOROLES ---
+        { n: "/autoroles set", d: "📌 Establece el rol automático al entrar", c: "moderacion" },
+        { n: "/autoroles view", d: "🔍 Muestra la configuración de roles actual", c: "moderacion" },
+        { n: "/autoroles asignar", d: "🎯 Asigna el rol automático manualmente", c: "moderacion" },
+
+        // --- NSFW ---
+        { n: "/nsfw cambiar", d: "Activa/Desactiva el estado NSFW en el canal", c: "nsfw" },
+        { n: "/nsfw listar", d: "📋 Muestra todos los canales NSFW del servidor", c: "nsfw" },
+        { n: "/nsfw reset", d: "🧹 Limpia toda la configuración NSFW", c: "nsfw" },
+
+        // --- ECONOMÍA ---
         { n: "/daily", d: "Reclama tu recompensa diaria de monedas", c: "economia" },
-        { n: "/balance", d: "Consulta tu dinero disponible en el banco", c: "economia" },
-        
-        // UTILIDAD
-        { n: "/ping", d: "Muestra la latencia entre Abyssus y Discord", c: "utilidad" },
-        { n: "/userinfo", d: "Muestra información detallada de un usuario", c: "utilidad" },
-        { n: "/serverinfo", d: "Muestra estadísticas del servidor actual", c: "utilidad" },
-        { n: "/avatar", d: "Muestra la foto de perfil en alta calidad", c: "utilidad" },
-        { n: "/embedgenerador", d: "Genera mensajes embed personalizados", c: "utilidad" },
-        { n: "/lol-champion", d: "Info sobre campeones de League of Legends", c: "utilidad" },
-        { n: "/invite", d: "Obtén el enlace para invitar al bot", c: "utilidad" }
+        { n: "/balance", d: "Consulta tu saldo en efectivo y banco", c: "economia" },
+
+        // --- UTILIDAD ---
+        { n: "/ping", d: "Verifica la latencia de Abyssus", c: "utilidad" },
+        { n: "/userinfo", d: "Información detallada de un miembro", c: "utilidad" },
+        { n: "/serverinfo", d: "Estadísticas generales del servidor", c: "utilidad" },
+        { n: "/avatar", d: "Obtén el avatar de un usuario en HD", c: "utilidad" },
+        { n: "/embedgenerador", d: "Genera mensajes personalizados con formato", c: "utilidad" },
+        { n: "/lol-champion", d: "Info completa de campeones de LoL", c: "utilidad" },
+        { n: "/invite", d: "Enlace para invitar al bot", c: "utilidad" }
     ];
 
     function render(filtro = 'all', busqueda = '') {
@@ -157,14 +181,23 @@
 
         filtrados.forEach(cmd => {
             container.innerHTML += `
-                <div class="command-card">
-                    <div class="cmd-name">${cmd.n}</div>
-                    <div class="cmd-desc">${cmd.d}</div>
-                    <div class="cmd-footer">
+                <div class="command-card" onclick="copyToClipboard('${cmd.n}')">
+                    <div>
+                        <div class="cmd-name">${cmd.n}</div>
+                        <div class="cmd-desc">${cmd.d}</div>
+                    </div>
+                    <div>
                         <span class="cmd-tag">${cmd.c}</span>
+                        <div class="copy-hint">Click para copiar</div>
                     </div>
                 </div>
             `;
+        });
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // Opcional: Podrías añadir un toast o notificación aquí
         });
     }
 
@@ -175,12 +208,12 @@
     }
 
     document.getElementById('search').addEventListener('input', (e) => {
-        const activeCat = document.querySelector('.category.active').innerText.toLowerCase();
-        const cat = activeCat === 'todos' ? 'all' : activeCat;
+        const activeEl = document.querySelector('.category.active');
+        const cat = activeEl.getAttribute('data-cat');
         render(cat, e.target.value);
     });
 
-    render(); // Carga inicial
+    render();
 </script>
 </body>
 </html>
