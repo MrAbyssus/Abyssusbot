@@ -224,7 +224,7 @@ ramChart = new Chart(ctx, {
 // --- 3. ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
-        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status?t=' + Date.now());
+        const res = await fetch('https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now());
         const data = await res.json();
 
         if (data && data.clusters) {
