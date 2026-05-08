@@ -150,24 +150,25 @@ ramChart = new Chart(ctx, {
 
 async function updateStatus() {
     try {
-        const res = await fetch('https://helicopter-smoke-frontpage-vehicle.trycloudflare.com/status?t=' + Date.now());
+        // CAMBIO CRUCIAL: Se agregó /api/ antes de status
+        const res = await fetch('https://helicopter-smoke-frontpage-vehicle.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         const clusters = data.clusters || (Array.isArray(data) ? data : []);
 
         if (clusters.length > 0) {
-            const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.memory || c.ram || 0)), 0);
+            const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || c.memory || 0)), 0);
             const onlineCount = clusters.filter(c => (c.status || '').toLowerCase() === 'online').length;
 
             document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
             document.getElementById('stat-clusters').innerText = clusters.length;
             document.getElementById('stat-shards').innerText = `${onlineCount} / ${clusters.length}`;
-            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 660).toLocaleString();
-            document.getElementById('res-uptime').innerText = data.uptime || "ONLINE";
+            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
+            document.getElementById('res-uptime').innerText = data.global?.uptime || "ONLINE";
 
             const gridHTML = clusters.map(c => {
                 const s = (c.status || 'offline').toLowerCase();
                 const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.memory || c.ram || '0'}</div></div>`;
+                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu}</div></div>`;
             }).join('');
 
             document.getElementById('status-grid').innerHTML = gridHTML;
