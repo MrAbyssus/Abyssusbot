@@ -176,30 +176,24 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- 1. FUNCIÓN DE FORMATEO ADAPTADA ---
+// --- 1. FUNCIÓN DE FORMATEO ---
 function formatUptime(uptimeValue) {
     if (uptimeValue === undefined || uptimeValue === null) return "--";
-    
-    // Si ya trae formato de texto (ej. "152h"), lo mostramos directamente
     const strValue = String(uptimeValue).toLowerCase();
     if (strValue.includes('h') || strValue.includes('d') || strValue.includes('m')) {
         return uptimeValue;
     }
-
-    // Si es un número puro (milisegundos)
     let ms = parseInt(uptimeValue);
     if (isNaN(ms)) return uptimeValue;
-
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
-
     if (h > 0) return `${h}h ${m % 60}m`;
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
 }
 
-// --- INICIALIZAR GRÁFICA ---
+// --- 2. INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -227,55 +221,57 @@ ramChart = new Chart(ctx, {
     }
 });
 
-// --- ACTUALIZACIÓN DE DATOS PRINCIPAL ---
+// --- 3. ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
         const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
 
         if (data && data.clusters) {
-            // --- RASTREADOR DE UPTIME ---
-            // Buscamos en orden de probabilidad:
+            // A. RASTREO DE UPTIME
             const clusterCero = data.clusters[0];
-            const uptimeEncontrado = 
-                data.uptime ||                       // ¿Está en la raíz?
-                (clusterCero && clusterCero.uptime) || // ¿Está en el primer cluster?
-                (clusterCero && clusterCero.stats?.uptime) || // ¿Está dentro de stats?
-                (data.global && data.global.uptime) || // ¿Está en global?
-                "--";
-
+            const uptimeEncontrado = data.uptime || (clusterCero && clusterCero.uptime) || (data.global && data.global.uptime) || "--";
             document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
-            // ----------------------------
 
-            // Resto de la lógica (RAM y Servidores)
+            // B. CÁLCULOS DE RED Y RAM
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('stat-clusters').innerText = data.clusters.length;
-            
+            const clustersTotales = data.clusters.length;
+            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
             const totalServidores = (data.global && data.global.totalGuilds) || 660;
+
+            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+            document.getElementById('stat-clusters').innerText = clustersTotales;
+            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
             document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
 
-            // Gráfica y Grids
+            // C. ACTUALIZAR GRÁFICA
             const now = new Date();
             ramHistory.push(totalRam);
             labelHistory.push(now.toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // Actualizar Nodos (Clusters)
+            // D. ACTUALIZAR GRID DE CLUSTERS
             document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
                 const st = c.status.toLowerCase();
                 let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB</div></div>`;
+                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${st}<br>RAM: ${c.ram}MB</div></div>`;
+            }).join('');
+
+            // E. ACTUALIZAR GRID DE SHARDS (CORREGIDO)
+            document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
+                const st = c.status.toLowerCase();
+                let cl = st === 'online' ? 'online' : 'offline';
+                return `<div class="box ${cl}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
             }).join('');
         }
     } catch (e) {
-        console.error("Error detectado:", e);
-        document.getElementById('res-uptime').innerText = "Error API";
+        console.error("Error en la telemetría:", e);
+        document.getElementById('res-uptime').innerText = "API Error";
     }
 }
 
-// Ciclo de 5 segundos
+// Iniciar ciclo
 updateStatus();
 setInterval(updateStatus, 5000);
 </script>
