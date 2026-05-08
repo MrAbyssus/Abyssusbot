@@ -328,13 +328,17 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
 <script>
     async function actualizarDashboard() {
         try {
-            const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status');
+            // Agregamos Date.now() para evitar que el navegador guarde el resultado en caché
+            const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
             const data = await res.json();
             const lista = document.getElementById('clusters-lista');
             const countSrv = document.getElementById('count-servidores');
 
+            // Uptime general por si el cluster no lo tiene
+            const globalUptime = data.global?.uptime || '0m';
+
             if (data.global && countSrv) {
-                countSrv.innerText = "+" + data.global.totalGuilds;
+                countSrv.innerText = "+" + (data.global.totalGuilds || 0).toLocaleString();
             }
 
             if (data.clusters && lista) {
@@ -351,22 +355,23 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
                         </div>
                         <div class="stat-row">
                             <span>UPTIME</span>
-                            <span class="val">${c.uptime || '0m'}</span>
+                            <span class="val">${c.uptime || globalUptime}</span>
                         </div>
                         <div style="margin-top:15px; font-size: 0.7rem; color: #00ffcc; font-weight:bold; display:flex; align-items:center; gap:5px;">
-                            <div class="online-dot"></div> ${c.status.toUpperCase()}
+                            <div class="online-dot"></div> ${(c.status || 'OFFLINE').toUpperCase()}
                         </div>
                     </div>
                 `).join('');
             }
         } catch (e) {
-            console.log("Error cargando monitoreo");
+            console.log("Error cargando monitoreo", e);
         }
     }
+    
     setInterval(actualizarDashboard, 5000);
     actualizarDashboard();
 </script>
-
+ 
 <section class="features">
   <h2>Funciones principales</h2>
   <div class="grid">
