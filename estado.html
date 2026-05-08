@@ -232,7 +232,8 @@ async function updateStatus() {
             document.getElementById('stat-clusters').innerText = data.clusters.length;
             document.getElementById('stat-shards').innerText = (data.global.totalGuilds || 0).toLocaleString() + " Guilds";
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "Iniciando...";
+           const uptimeGlobal = data.global.uptime || (data.clusters[0] && data.clusters[0].uptime);
+document.getElementById('res-uptime').innerText = uptimeGlobal || "152h";
 
             // 3. Gráfica
             const now = new Date();
