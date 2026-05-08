@@ -54,7 +54,7 @@
             max-width: 1000px; 
             padding: 20px;
             display: flex;
-            flex-direction: column; /* Asegura que todo vaya hacia abajo */
+            flex-direction: column;
         }
 
         .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
@@ -101,16 +101,17 @@
             cursor: pointer; transition: transform 0.1s;
         }
         .box:hover { transform: scale(1.2); z-index: 10; }
-        .online { color: var(--online); }
-        .warning { color: var(--warning); }
-        .offline { color: var(--offline); }
+        .online { color: var(--online); border: 1px solid var(--online); }
+        .warning { color: var(--warning); border: 1px solid var(--warning); }
+        .offline { color: var(--offline); border: 1px solid var(--offline); }
 
         .box .tooltip {
-            visibility: hidden; width: 140px; background: #000; color: #fff;
+            visibility: hidden; width: 160px; background: #000; color: #fff;
             text-align: left; border-radius: 4px; padding: 10px;
             position: absolute; z-index: 100; bottom: 125%; left: 50%;
-            margin-left: -70px; opacity: 0; transition: opacity 0.2s;
-            font-size: 0.7rem; border: 1px solid #333; pointer-events: none;
+            margin-left: -80px; opacity: 0; transition: opacity 0.2s;
+            font-size: 0.75rem; border: 1px solid #333; pointer-events: none;
+            line-height: 1.4;
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
@@ -120,11 +121,11 @@
 
 <nav class="navbar">
     <div class="nav-content">
-        <a href="index.html" class="nav-logo">Abyssus Bot Uptime</a>
+        <a href="index.html" class="nav-logo">Abyssus Sentinel</a>
         <div class="nav-links">
             <a href="index.html">Inicio</a>
             <a href="estado.html" class="active">Estado de Red</a>
-            <a href="https://discord.com/invite/tu-invitacion" target="_blank">Soporte</a>
+            <a href="#" target="_blank">Soporte</a>
         </div>
     </div>
 </nav>
@@ -132,15 +133,15 @@
 <div class="container">
     <div class="section-title">Colores</div>
     <ul class="legend-list">
-        <li class="legend-item"><span class="icon icon-online">✔</span> El cluster está conectado.</li>
-        <li class="legend-item"><span class="icon icon-warning">⚠</span> El cluster tiene problemas de conexión.</li>
-        <li class="legend-item"><span class="icon icon-offline">✖</span> El cluster está desconectado.</li>
+        <li class="legend-item"><span class="icon icon-online">✔</span> Sistema operando correctamente.</li>
+        <li class="legend-item"><span class="icon icon-warning">⚠</span> Latencia alta o reconectando.</li>
+        <li class="legend-item"><span class="icon icon-offline">✖</span> Módulo fuera de línea.</li>
     </ul>
 
     <div class="section-title">Resumen</div>
     <div class="resumen-box">
-        <div>Clusters: <b id="stat-clusters">--</b></div>
-        <div>Shards: <b id="stat-shards">-- / --</b></div>
+        <div>Clusters activos: <b id="stat-clusters">--</b></div>
+        <div>Total Servidores: <b id="stat-shards" style="color: var(--accent);">--</b></div>
         
         <div class="tech-info">
             <div class="tech-line">
@@ -148,31 +149,31 @@
                 <span id="res-ram">-- MB</span>
             </div>
             <div class="tech-line">
-                <span class="tech-label">UPTIME:</span>
-                <span id="res-uptime">-- min</span>
+                <span class="tech-label">TIEMPO ACTIVO:</span>
+                <span id="res-uptime">--</span>
             </div>
         </div>
         <div id="last-update" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 12px; font-family: monospace;">
-            • Sincronizado hace: <span id="update-timer" style="color: var(--accent);">0</span>s
+            • Última sincronización: <span id="update-timer" style="color: var(--accent);">0</span>s
         </div>
     </div>
 
-    <div class="section-title">Historial de RAM (Total)</div>
+    <div class="section-title">Historial de Consumo (RAM)</div>
     <div class="status-container" style="margin-bottom: 20px;">
         <div style="height: 220px; width: 100%;">
             <canvas id="ramChart"></canvas>
         </div>
     </div>
 
-    <div class="section-title">Estado de clusters</div>
+    <div class="section-title">Nodos de Clusters</div>
     <div class="status-container">
         <div id="status-grid" class="grid"></div>
     </div>
-</div>
 
-<div class="section-title">Estado de Shards</div>
-<div class="status-container" style="margin-bottom: 20px;">
-    <div id="shards-grid" class="grid"></div>
+    <div class="section-title">Malla de Shards</div>
+    <div class="status-container" style="margin-bottom: 40px;">
+        <div id="shards-grid" class="grid"></div>
+    </div>
 </div>
 
 <script>
@@ -188,133 +189,100 @@ ramChart = new Chart(ctx, {
     data: {
         labels: labelHistory,
         datasets: [{
-            label: 'RAM Total (MB)',
+            label: 'RAM (MB)',
             data: ramHistory,
             borderColor: '#00ffcc',
             backgroundColor: 'rgba(0, 255, 204, 0.1)',
             borderWidth: 2,
             fill: true,
             tension: 0.4,
-            pointRadius: 2
+            pointRadius: 0
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            y: { 
-                beginAtZero: false, 
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#8e9297', font: { size: 10 } }
-            },
-            x: { 
-                grid: { display: false },
-                ticks: { color: '#8e9297', font: { size: 10 } }
-            }
+            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297' } },
+            x: { display: false }
         },
         plugins: { legend: { display: false } }
     }
 });
 
-// --- NOTIFICACIONES ---
-if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-}
-
-function sendAlert(clusterId) {
-    if (Notification.permission === "granted") {
-        new Notification("⚠️ ALERTA: Abyssus Sentinel", {
-            body: `El Cluster ${clusterId} se ha desconectado.`,
-            icon: "img/favicon-web.png"
-        });
-    }
-}
-
-// --- ACTUALIZACIÓN DE DATOS ---
+// --- TIMER VISUAL ---
 setInterval(() => {
     secondsSinceUpdate++;
     document.getElementById('update-timer').innerText = secondsSinceUpdate;
 }, 1000);
 
+// --- ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
         const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
         const data = await res.json();
 
-        if (data.clusters && data.clusters.length > 0) {
+        if (data.clusters) {
             secondsSinceUpdate = 0;
+            
+            // 1. Cálculos de Totales
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             
-            // Actualizar Texto
+            // 2. Actualizar Textos (Mapeando totalGuilds como vimos en tu terminal)
             document.getElementById('stat-clusters').innerText = data.clusters.length;
+            document.getElementById('stat-shards').innerText = (data.global.totalGuilds || 0).toLocaleString() + " Guilds";
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
-            if(data.global) document.getElementById('stat-shards').innerText = `${data.global.shards} / ${data.global.shards}`;
+            document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "Iniciando...";
 
-            // Actualizar Gráfica
+            // 3. Gráfica
             const now = new Date();
-            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
-            
             ramHistory.push(totalRam);
-            labelHistory.push(timeLabel);
-            
-            if(ramHistory.length > 30) { 
-                ramHistory.shift();
-                labelHistory.shift();
-            }
+            labelHistory.push(now.toLocaleTimeString());
+            if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // Actualizar Grid
-            // --- ACTUALIZAR GRID DE CLUSTERS ---
+            // 4. Grid de Clusters (Con CPU e ID)
             const gridClusters = document.getElementById('status-grid');
             gridClusters.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
-                if (status === 'offline') sendAlert(c.id);
                 let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-
                 return `
                     <div class="box ${colorClass}">
                         ${c.id}
                         <div class="tooltip">
-                            <b>Cluster ${c.id}</b><br><br>
+                            <b>Cluster ${c.id}</b><br>
+                            <span style="color:var(--accent)">CPU: ${c.cpu || '0%'}</span><br>
                             RAM: ${c.ram} MB<br>
-                            UPTIME: ${c.uptime}<br>
-                            STATUS: ${status.toUpperCase()}
+                            Estado: ${status.toUpperCase()}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
 
-            // --- ACTUALIZAR GRID DE SHARDS ---
+            // 5. Grid de Shards
             const shardsGrid = document.getElementById('shards-grid');
-            let allShardsHTML = "";
-
-            data.clusters.forEach(c => {
+            shardsGrid.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
-                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                
-                allShardsHTML += `
+                let colorClass = status === 'online' ? 'online' : 'offline';
+                return `
                     <div class="box ${colorClass}">
                         S${c.id}
                         <div class="tooltip">
                             <b>Shard ${c.id}</b><br>
-                            Estado: ${status.toUpperCase()}<br>
-                            Latencia: -- ms
+                            ID Nodo: Cluster ${c.id}<br>
+                            CPU: ${c.cpu || '0%'}
                         </div>
-                    </div>
-                `;
-            });
-            shardsGrid.innerHTML = allShardsHTML;
+                    </div>`;
+            }).join('');
         }
     } catch (e) {
-        console.error("Fetch error");
-        document.getElementById('update-timer').innerText = "ERR";
+        console.error("Error en Fetch:", e);
+        document.getElementById('update-timer').innerText = "ERROR";
     }
 }
 
+// Iniciar ciclo
 updateStatus();
 setInterval(updateStatus, 5000);
-</script>  
-    
-</body>    
+</script>
+</body>
 </html>
