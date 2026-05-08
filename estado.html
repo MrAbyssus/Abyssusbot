@@ -234,51 +234,44 @@ async function updateStatus() {
         const data = await res.json();
 
         if (data && data.clusters) {
-            // Cálculos
+            // --- RASTREADOR DE UPTIME ---
+            // Buscamos en orden de probabilidad:
+            const clusterCero = data.clusters[0];
+            const uptimeEncontrado = 
+                data.uptime ||                       // ¿Está en la raíz?
+                (clusterCero && clusterCero.uptime) || // ¿Está en el primer cluster?
+                (clusterCero && clusterCero.stats?.uptime) || // ¿Está dentro de stats?
+                (data.global && data.global.uptime) || // ¿Está en global?
+                "--";
+
+            document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
+            // ----------------------------
+
+            // Resto de la lógica (RAM y Servidores)
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            const clustersTotales = data.clusters.length;
-            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-            
-            // Verificamos si existe data.global o si el total de servers viene de otra forma
-            const totalServidores = (data.global && data.global.totalGuilds !== undefined) 
-                ? data.global.totalGuilds 
-                : 660; // Fallback por si la API no lo manda en el JSON pero lo sabemos
-
-            // Inyectar datos en el DOM
-            document.getElementById('stat-clusters').innerText = clustersTotales;
-            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
-            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+            document.getElementById('stat-clusters').innerText = data.clusters.length;
             
-            // Uptime: Tomamos el uptime global si existe, si no, el del primer cluster
-            const uptime = data.uptime || (data.clusters[0] ? data.clusters[0].uptime : "--");
-            document.getElementById('res-uptime').innerText = formatUptime(uptime);
+            const totalServidores = (data.global && data.global.totalGuilds) || 660;
+            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
 
-            // Gráfica de RAM
+            // Gráfica y Grids
             const now = new Date();
             ramHistory.push(totalRam);
             labelHistory.push(now.toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // Grid Clusters
-            const gridClusters = document.getElementById('status-grid');
-            gridClusters.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${colorClass}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>CPU: ${c.cpu || '0%'}<br>RAM: ${c.ram} MB</div></div>`;
-            }).join('');
-
-            // Grid Shards
-            const shardsGrid = document.getElementById('shards-grid');
-            shardsGrid.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                let colorClass = status === 'online' ? 'online' : 'offline';
-                return `<div class="box ${colorClass}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}</div></div>`;
+            // Actualizar Nodos (Clusters)
+            document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
+                const st = c.status.toLowerCase();
+                let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
+                return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB</div></div>`;
             }).join('');
         }
     } catch (e) {
-        console.error("Error Fetch:", e);
+        console.error("Error detectado:", e);
+        document.getElementById('res-uptime').innerText = "Error API";
     }
 }
 
