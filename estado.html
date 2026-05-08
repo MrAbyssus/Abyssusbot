@@ -3,284 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Sentinel - Status Grid Pro</title>
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <title>Abyssus Sentinel - Dashboard Final</title>
     <style>
         :root {
-            --bg: #16171d;
-            --panel: #1c1d24;
-            --online: #43b581;
-            --warning: #faa61a;
-            --offline: #f04747;
-            --text-main: #dcddde;
-            --text-muted: #8e9297;
+            --bg-color: #090a0b;
+            --panel-bg: #111214;
             --accent: #00ffcc;
+            --online: #23a55a;
+            --warning: #f0b232;
+            --offline: #f23f43;
+            --text-gray: #949ba4;
         }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        body { 
+            background: var(--bg-color); 
+            color: #fff; 
+            font-family: 'Inter', system-ui, sans-serif; 
             margin: 0;
-            padding-top: 100px;
             display: flex;
             justify-content: center;
+            padding: 40px 20px;
         }
 
-        /* NAVBAR */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 16, 18, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #2f3136;
-            padding: 15px 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-        }
-        .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
-        .nav-links { display: flex; gap: 25px; }
-        .nav-links a { color: #949ba4; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
-        .nav-links a.active { color: var(--accent); }
+        .container { width: 100%; max-width: 1100px; }
 
-        /* ESTRUCTURA PRINCIPAL */
-        .container { 
-            width: 90%; 
-            max-width: 1000px; 
+        h1 { text-align: center; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; font-size: 2rem; }
+
+        /* --- TARJETAS DE RESUMEN --- */
+        .resumen-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card-resumen {
+            background: var(--panel-bg);
+            border-radius: 12px;
             padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
+            gap: 5px;
         }
 
-        .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
-        .section-title:first-child { margin-top: 0; }
-        
-        .legend-list { list-style: none; padding: 0; margin-bottom: 30px; }
-        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
-        .icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 12px; }
-        .icon-online { border: 1px solid var(--online); color: var(--online); }
-        .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
-        .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
+        .resumen-titulo { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; }
+        .resumen-valor { font-size: 1.6rem; font-weight: bold; color: var(--accent); }
 
-        /* CAJAS DE INFORMACIÓN */
-        .resumen-box { margin-bottom: 20px; }
-        .tech-info { 
-            background: #0c0d12; 
-            padding: 15px 20px; 
-            border-radius: 5px; 
-            display: block; 
-            max-width: fit-content;
-            margin-top: 15px; 
-            font-family: 'Courier New', monospace;
-            border-left: 4px solid var(--accent);
-            box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
-        }
-        .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
-        .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
-
-        /* GRÁFICA Y GRID */
-        .status-container { 
-            background: var(--panel); 
-            border-radius: 8px; 
-            padding: 25px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-            width: 100%;
-            box-sizing: border-box;
+        /* --- PANEL DEL GRID --- */
+        .status-panel {
+            background: var(--panel-bg);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
-        .box {
-            aspect-ratio: 1/1; background: #2f3136; border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: bold; position: relative;
-            cursor: pointer; transition: transform 0.1s;
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .box:hover { transform: scale(1.2); z-index: 10; }
-        .online { color: var(--online); }
-        .warning { color: var(--warning); }
-        .offline { color: var(--offline); }
 
-        .box .tooltip {
-            visibility: hidden; width: 140px; background: #000; color: #fff;
-            text-align: left; border-radius: 4px; padding: 10px;
-            position: absolute; z-index: 100; bottom: 125%; left: 50%;
-            margin-left: -70px; opacity: 0; transition: opacity 0.2s;
-            font-size: 0.7rem; border: 1px solid #333; pointer-events: none;
+        .legend { display: flex; gap: 15px; font-size: 0.8rem; }
+        .legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-gray); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* --- EL GRID --- */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+            justify-content: center;
         }
-        .box:hover .tooltip { visibility: visible; opacity: 1; }
+
+        .cluster-box {
+            aspect-ratio: 1/1;
+            background: #1e1f22;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        /* Colores de estado */
+        .box-online { background: rgba(35, 165, 90, 0.1) !important; color: var(--online); border-color: var(--online); }
+        .box-warning { background: rgba(240, 178, 50, 0.1) !important; color: var(--warning); border-color: var(--warning); }
+        .box-offline { background: rgba(242, 63, 67, 0.1) !important; color: var(--offline); border-color: var(--offline); }
+
+        /* --- TOOLTIP (INFO FLOTANTE) --- */
+        .cluster-box .tooltip {
+            visibility: hidden;
+            width: 160px;
+            background-color: #000;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 12px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -80px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            border: 1px solid var(--accent);
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+
+        .cluster-box:hover .tooltip { visibility: visible; opacity: 1; }
+        .tooltip b { color: var(--accent); display: block; margin-bottom: 5px; font-size: 0.85rem; }
+        .tooltip-row { display: flex; justify-content: space-between; margin-top: 4px; border-top: 1px solid #222; padding-top: 4px; }
+
+        .cluster-box:hover { transform: scale(1.15); z-index: 99; }
+
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="nav-content">
-        <a href="index.html" class="nav-logo">Abyssus Bot Uptime</a>
-        <div class="nav-links">
-            <a href="index.html">Inicio</a>
-            <a href="estado.html" class="active">Estado de Red</a>
-            <a href="https://discord.com/invite/tu-invitacion" target="_blank">Soporte</a>
-        </div>
-    </div>
-</nav>
-
 <div class="container">
-   <div class="section-title">Colores y Estado</div>
-<ul class="legend-list">
-    <li class="legend-item">
-        <span class="icon icon-online">✔</span> 
-        El <b>Cluster / Shard</b> está conectado y funcionando correctamente.
-    </li>
-    <li class="legend-item">
-        <span class="icon icon-warning">⚠</span> 
-        El <b>Cluster / Shard</b> está intentando reconectar o tiene latencia alta.
-    </li>
-    <li class="legend-item">
-        <span class="icon icon-offline">✖</span> 
-        El <b>Cluster / Shard</b> está detenido o ha perdido la conexión.
-    </li>
-</ul>
+    <h1>SENTINEL CORE</h1>
 
-    <div id="system-status-text" style="margin-top: 10px; font-weight: bold; color: var(--online);">
-    • Todos los sistemas están operando con normalidad.
-</div>
+    <div class="resumen-container">
+        <div class="card-resumen">
+            <span class="resumen-titulo">Total Clusters</span>
+            <span id="total-clusters" class="resumen-valor">--</span>
+        </div>
+        <div class="card-resumen">
+            <span class="resumen-titulo">Servidores</span>
+            <span id="total-servers" class="resumen-valor">--</span>
+        </div>
+        <div class="card-resumen">
+            <span class="resumen-titulo">Usuarios Totales</span>
+            <span id="total-users" class="resumen-valor">--</span>
+        </div>
+    </div>
 
-    <div class="section-title">Resumen</div>
-    <div class="resumen-box">
-        <div>Clusters: <b id="stat-clusters">--</b></div>
-        <div>Shards Online: <b id="stat-shards">-- / --</b></div>
-        
-        <div class="tech-info">
-            <div class="tech-line">
-                <span class="tech-label">RAM TOTAL:</span>
-                <span id="res-ram">-- MB</span>
-            </div>
-            <div class="tech-line">
-                <span class="tech-label">UPTIME:</span>
-                <span id="res-uptime">-- min</span>
+    <div class="status-panel">
+        <div class="panel-header">
+            <span style="font-weight: bold; letter-spacing: 1px;">ESTADO DE NÚCLEOS</span>
+            <div class="legend">
+                <div class="legend-item"><div class="dot" style="background:var(--online)"></div> Conectado</div>
+                <div class="legend-item"><div class="dot" style="background:var(--offline)"></div> Caído</div>
             </div>
         </div>
-        <div id="last-update" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 12px; font-family: monospace;">
-            • Sincronizado hace: <span id="update-timer" style="color: var(--accent);">0</span>s
-        </div>
-    </div>
 
-    <div class="section-title">Historial de RAM (Total)</div>
-    <div class="status-container" style="margin-bottom: 20px;">
-        <div style="height: 220px; width: 100%;">
-            <canvas id="ramChart"></canvas>
-        </div>
-    </div>
-
-    <div class="section-title">Estado de clusters</div>
-    <div class="status-container" style="margin-bottom: 20px;">
-        <div id="status-grid" class="grid"></div>
-    </div>
-
-    <div class="section-title">Estado de Shards</div>
-    <div class="status-container">
-        <div id="shards-grid" class="grid"></div>
+        <div id="status-grid" class="status-grid">
+            </div>
     </div>
 </div>
 
 <script>
-let ramHistory = [];
-let labelHistory = [];
-let ramChart;
+    async function refreshSentinel() {
+        try {
+            const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+            const data = await res.json();
 
-// 1. Inicialización de la gráfica con protección
-function initChart() {
-    const canvas = document.getElementById('ramChart');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ramChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labelHistory,
-            datasets: [{
-                label: 'RAM (MB)',
-                data: ramHistory,
-                borderColor: '#00ffcc',
-                backgroundColor: 'rgba(0, 255, 204, 0.1)',
-                fill: true, tension: 0.4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-}
+            // Actualizar Resumen
+            if(data.global) {
+                document.getElementById('total-servers').innerText = data.global.servers.toLocaleString();
+                document.getElementById('total-users').innerText = data.global.users.toLocaleString();
+                document.getElementById('total-clusters').innerText = data.clusters.length;
+            }
 
-// 2. Función de actualización con reporte de errores
-async function updateStatus() {
-    const statusText = document.getElementById('system-status-text');
-    try {
-        // Probamos con la URL completa por si la relativa falla
-        const res = await fetch('/api/status');
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        
-        const data = await res.json();
-        if (!data.clusters) throw new Error("Datos de clusters no encontrados");
-
-        // RESET TIMER
-        document.getElementById('update-timer').innerText = "0";
-        
-        // ACTUALIZAR RESUMEN
-        const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-        document.getElementById('stat-clusters').innerText = data.clusters.length;
-        document.getElementById('stat-shards').innerText = `${data.global.totalGuilds} Servidores`;
-        document.getElementById('res-ram').innerText = `${totalRam} MB`;
-        document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "152h";
-
-        // GRÁFICA
-        const now = new Date();
-        ramHistory.push(totalRam);
-        labelHistory.push(`${now.getHours()}:${now.getMinutes()}`);
-        if(ramHistory.length > 20) { ramHistory.shift(); labelHistory.shift(); }
-        if(ramChart) ramChart.update();
-
-        // RENDER GRIDS
-        const render = (c, isShard) => `
-            <div class="box ${c.status === 'online' ? 'online' : 'offline'}">
-                ${isShard ? 'S' + c.id : c.id}
-                <div class="tooltip">
-                    <b>${isShard ? 'Shard' : 'Cluster'} ${c.id}</b><br>
-                    RAM: ${c.ram}MB | CPU: ${c.cpu}
-                </div>
-            </div>`;
-
-        document.getElementById('status-grid').innerHTML = data.clusters.map(c => render(c, false)).join('');
-        document.getElementById('shards-grid').innerHTML = data.clusters.map(c => render(c, true)).join('');
-        
-        statusText.innerText = "• Sistemas conectados y sincronizados.";
-        statusText.style.color = "var(--online)";
-
-    } catch (e) {
-        console.error("DEBUG:", e);
-        statusText.innerText = `• Error: ${e.message}. Revisa la consola (F12).`;
-        statusText.style.color = "var(--offline)";
+            // Actualizar Grid con Tooltips
+            const grid = document.getElementById('status-grid');
+            if(data.clusters) {
+                grid.innerHTML = data.clusters.map(c => {
+                    const isOnline = c.status.toLowerCase() === 'online';
+                    const statusClass = isOnline ? 'box-online' : 'box-offline';
+                    
+                    return `
+                        <div class="cluster-box ${statusClass}">
+                            ${c.id}
+                            <div class="tooltip">
+                                <b>CLUSTER ${c.id}</b>
+                                <div class="tooltip-row">
+                                    <span>RAM:</span>
+                                    <span>${c.ram} MB</span>
+                                </div>
+                                <div class="tooltip-row">
+                                    <span>UPTIME:</span>
+                                    <span>${isOnline ? c.uptime : 'OFFLINE'}</span>
+                                </div>
+                                <div class="tooltip-row">
+                                    <span>ESTADO:</span>
+                                    <span style="color:${isOnline ? 'var(--online)' : 'var(--offline)'}">${isOnline ? 'ONLINE' : 'CAÍDO'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        } catch (e) {
+            console.error("Error conectando a la API");
+        }
     }
-}
 
-// 3. Ejecución controlada
-window.addEventListener('DOMContentLoaded', () => {
-    initChart();
-    updateStatus();
-    setInterval(updateStatus, 5000);
-    
-    // Timer visual
-    let sec = 0;
-    setInterval(() => {
-        sec++;
-        const t = document.getElementById('update-timer');
-        if(t) t.innerText = sec;
-    }, 1000);
-});
+    refreshSentinel();
+    setInterval(refreshSentinel, 5000);
 </script>
-</body>    
-</html>
 
+</body>
+</html>
 
