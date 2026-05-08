@@ -137,12 +137,26 @@ ramChart = new Chart(ctx, {
 
 async function updateStatus() {
     try {
-        const miLink = 'https://volt-nhs-entering-compiled.trycloudflare.com'; 
-        const res = await fetch(`${miLink}/status?t=${Date.now()}`);
+        const miLink = 'https://volt-nhs-entering-compiled.trycloudflare.com/status'; 
+        
+        // Usamos una petición más agresiva con headers de JSON
+        const res = await fetch(miLink, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!res.ok) throw new Error("Error en respuesta");
+
         const data = await res.json();
+        
+        // DEBUG: Esto imprimirá los datos en tu consola (F12) para que veas que llegan
+        console.log("Datos recibidos:", data);
 
         if (data && data.clusters) {
-            // Actualizar Resumen
+            // 1. RESUMEN
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const onlineCount = data.clusters.filter(c => c.status === 'online').length;
 
@@ -152,29 +166,29 @@ async function updateStatus() {
             document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
             document.getElementById('res-uptime').innerText = formatUptime(data.uptime || data.clusters[0]?.uptime);
 
-            // Actualizar Grids
+            // 2. GRID DE CLUSTERS
             document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const cl = c.status === 'online' ? 'online' : (c.status === 'connecting' ? 'warning' : 'offline');
+                const cl = (c.status === 'online') ? 'online' : 'offline';
                 return `<div class="box ${cl}">${c.id}</div>`;
             }).join('');
 
+            // 3. GRID DE SHARDS
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const cl = c.status === 'online' ? 'online' : 'offline';
+                const cl = (c.status === 'online') ? 'online' : 'offline';
                 return `<div class="box ${cl}">S${c.id}</div>`;
             }).join('');
             
-            // Actualizar Gráfica
+            // 4. GRÁFICA
             ramHistory.push(totalRam);
             labelHistory.push(new Date().toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
         }
     } catch (e) {
-        console.error("Error en conexión:", e);
-        document.getElementById('res-uptime').innerText = "API Error";
+        console.error("Fallo el fetch:", e);
+        document.getElementById('res-uptime').innerText = "Fallo de Lectura";
     }
 }
-
 // Iniciar
 setInterval(updateStatus, 5000);
 updateStatus();
