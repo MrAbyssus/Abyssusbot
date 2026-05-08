@@ -182,6 +182,22 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
+// --- 1. FUNCIÓN DE FORMATEO (Faltaba esta definición) ---
+function formatUptime(uptimeStr) {
+    let ms = parseInt(uptimeStr);
+    if (isNaN(ms)) return uptimeStr || "0s"; 
+
+    let s = Math.floor(ms / 1000);
+    let m = Math.floor(s / 60);
+    let h = Math.floor(m / 60);
+    let d = Math.floor(h / 24);
+
+    if (d > 0) return `${d}d ${h % 24}h ${m % 60}m`;
+    if (h > 0) return `${h}h ${m % 60}m`;
+    if (m > 0) return `${m}m ${s % 60}s`;
+    return `${s}s`;
+}
+
 // --- INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
@@ -210,12 +226,6 @@ ramChart = new Chart(ctx, {
     }
 });
 
-// --- TIMER VISUAL ---
-setInterval(() => {
-    secondsSinceUpdate++;
-    document.getElementById('update-timer').innerText = secondsSinceUpdate;
-}, 1000);
-
 // --- ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
@@ -225,38 +235,30 @@ async function updateStatus() {
         if (data.clusters) {
             secondsSinceUpdate = 0;
             
-         // 1. Cálculos de estado
-const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-const clustersTotales = data.clusters.length;
-const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-const totalServidores = data.global.totalGuilds || 0;
+            // Cálculos de estado
+            const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+            const clustersTotales = data.clusters.length;
+            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
+            const totalServidores = data.global.totalGuilds || 0;
 
-// 2. Inyectar en los IDs correspondientes
-document.getElementById('stat-clusters').innerText = clustersTotales;
+            // Inyectar en los IDs
+            document.getElementById('stat-clusters').innerText = clustersTotales;
+            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
+            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
+            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+            
+            // Uptime con la función de formateo
+            const rawUptime = data.clusters[0].uptime; 
+            document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
 
-// Shards Online: 5 / 5
-document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
-
-// Total Servidores: 660
-document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
-
-// RAM y Uptime
-document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-// Busca esta línea:
-// document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
-
-// Y cámbiala por esta:
-const rawUptime = data.clusters[0].uptime; // El valor que viene del bot
-document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
-
-            // 3. Gráfica
+            // Gráfica
             const now = new Date();
             ramHistory.push(totalRam);
             labelHistory.push(now.toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // 4. Grid de Clusters (Con CPU e ID)
+            // Grid de Clusters
             const gridClusters = document.getElementById('status-grid');
             gridClusters.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
@@ -273,7 +275,7 @@ document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
                     </div>`;
             }).join('');
 
-            // 5. Grid de Shards
+            // Grid de Shards
             const shardsGrid = document.getElementById('shards-grid');
             shardsGrid.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
@@ -291,7 +293,6 @@ document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
         }
     } catch (e) {
         console.error("Error en Fetch:", e);
-        document.getElementById('update-timer').innerText = "ERROR";
     }
 }
 
