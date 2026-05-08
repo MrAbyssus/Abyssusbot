@@ -28,6 +28,7 @@
             justify-content: center;
         }
 
+        /* NAVBAR */
         .navbar {
             position: fixed;
             top: 0;
@@ -44,6 +45,7 @@
         .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
         .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
 
+        /* ESTRUCTURA PRINCIPAL */
         .container { 
             width: 90%; 
             max-width: 1000px; 
@@ -62,6 +64,8 @@
         .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
         .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
 
+        /* CAJAS DE INFORMACIÓN */
+        .resumen-box { margin-bottom: 20px; }
         .tech-info { 
             background: #0c0d12; 
             padding: 15px 20px; 
@@ -76,6 +80,7 @@
         .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
         .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
 
+        /* GRÁFICA Y GRID */
         .status-container { 
             background: var(--panel); 
             border-radius: 8px; 
@@ -116,7 +121,6 @@
         <a href="index.html" class="nav-logo">
             <span style="color: var(--text-muted); font-weight: normal;">ABYSSUS</span> SENTINEL
         </a>
-        <div id="conexion-estado" style="font-size: 0.8rem; font-weight: bold;"></div>
     </div>
 </nav>
       
@@ -171,28 +175,25 @@
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
-let estaCargando = false;
 
+// --- 1. FUNCIÓN DE FORMATEO ---
 function formatUptime(uptimeValue) {
-    if (!uptimeValue || uptimeValue === "--") return "Iniciando...";
-    let n = Number(uptimeValue);
-    if (isNaN(n)) return uptimeValue;
-
-    let ms = (n > 1000000000000) ? Date.now() - n : n;
-    if (ms < 0) ms = 0;
-
+    if (uptimeValue === undefined || uptimeValue === null) return "--";
+    const strValue = String(uptimeValue).toLowerCase();
+    if (strValue.includes('h') || strValue.includes('d') || strValue.includes('m')) {
+        return uptimeValue;
+    }
+    let ms = parseInt(uptimeValue);
+    if (isNaN(ms)) return uptimeValue;
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
-    let d = Math.floor(h / 24);
-
-    if (d > 0) return `${d}d ${h % 24}h ${m % 60}m`;
     if (h > 0) return `${h}h ${m % 60}m`;
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
 }
 
-// INICIALIZAR GRÁFICA
+// --- 2. INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -220,62 +221,59 @@ ramChart = new Chart(ctx, {
     }
 });
 
+// --- 3. ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
-    if (estaCargando) return;
-    estaCargando = true;
-
     try {
-        // TRUCO TÉCNICO: Usar ruta relativa para no depender de la URL de Cloudflare
-        const res = await fetch('/status?t=' + Date.now());
-        if (!res.ok) throw new Error("Offline");
-        
+        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
 
         if (data && data.clusters) {
-            // UPTIME
-            let up = data.uptime || (data.clusters[0] && (data.clusters[0].pm_uptime || data.clusters[0].uptime));
-            document.getElementById('res-uptime').innerText = formatUptime(up);
+            // A. RASTREO DE UPTIME
+            const clusterCero = data.clusters[0];
+            const uptimeEncontrado = data.uptime || (clusterCero && clusterCero.uptime) || (data.global && data.global.uptime) || "--";
+            document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
 
-            // STATS
+            // B. CÁLCULOS DE RED Y RAM
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            const totalClust = data.clusters.length;
-            const onlineClust = data.clusters.filter(c => c.status && c.status.toLowerCase() === 'online').length;
-            
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('stat-clusters').innerText = totalClust;
-            document.getElementById('stat-shards').innerText = `${onlineClust} / ${totalClust}`;
-            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-            document.getElementById('conexion-estado').innerHTML = '<span style="color:var(--online)">● ONLINE</span>';
+            const clustersTotales = data.clusters.length;
+            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
+            const totalServidores = (data.global && data.global.totalGuilds) || 660;
 
-            // GRÁFICA
+            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+            document.getElementById('stat-clusters').innerText = clustersTotales;
+            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
+            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
+
+            // C. ACTUALIZAR GRÁFICA
+            const now = new Date();
             ramHistory.push(totalRam);
-            labelHistory.push(new Date().toLocaleTimeString());
+            labelHistory.push(now.toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // GRID CLUSTERS
+            // D. ACTUALIZAR GRID DE CLUSTERS
             document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status ? c.status.toLowerCase() : 'offline';
+                const st = c.status.toLowerCase();
                 let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu || '0%'}</div></div>`;
+                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${st}<br>RAM: ${c.ram}MB</div></div>`;
             }).join('');
 
-            // GRID SHARDS
+            // E. ACTUALIZAR GRID DE SHARDS (CORREGIDO)
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status ? c.status.toLowerCase() : 'offline';
+                const st = c.status.toLowerCase();
                 let cl = st === 'online' ? 'online' : 'offline';
-                return `<div class="box ${cl}">S${c.id}<div class="tooltip">Shard ${c.id}<br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
+                return `<div class="box ${cl}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
             }).join('');
         }
     } catch (e) {
-        document.getElementById('conexion-estado').innerHTML = '<span style="color:var(--offline)">● OFFLINE</span>';
-    } finally {
-        estaCargando = false;
+        console.error("Error en la telemetría:", e);
+        document.getElementById('res-uptime').innerText = "API Error";
     }
 }
 
-setInterval(updateStatus, 5000);
+// Iniciar ciclo
 updateStatus();
+setInterval(updateStatus, 5000);
 </script>
 </body>
 </html>
