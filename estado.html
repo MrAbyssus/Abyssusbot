@@ -173,15 +173,12 @@ ramChart = new Chart(ctx, {
 
 async function updateStatus() {
     try {
-        // Añadimos headers para evitar bloqueos de Cloudflare
-        const res = await fetch('https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now(), {
-            headers: { 'Accept': 'application/json' }
-        });
+        // CORRECCIÓN FINAL: Pon aquí la URL real o localhost si estás en tu PC
+        // Ejemplo: 'http://localhost:3000/status'
+        const res = await fetch('https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now());
         
-        if (!res.ok) throw new Error("Network response was not ok");
+        if (!res.ok) throw new Error("API Offline");
         const data = await res.json();
-
-        // Buscamos los clusters sin importar si el bot los manda como data.clusters o como array
         const clusters = data.clusters || data.shards || (Array.isArray(data) ? data : null);
 
         if (clusters) {
@@ -199,14 +196,12 @@ async function updateStatus() {
             const up = data.uptime || clusters[0]?.uptime || "--";
             document.getElementById('res-uptime').innerText = formatUptime(up);
 
-            // GRID CLUSTERS
             document.getElementById('status-grid').innerHTML = clusters.map(c => {
                 const s = (c.status || '').toLowerCase();
                 const cl = (s === 'online' || s === 'ready') ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
                 return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.ram || 0}MB</div></div>`;
             }).join('');
 
-            // GRID SHARDS
             document.getElementById('shards-grid').innerHTML = clusters.map(c => {
                 const s = (c.status || '').toLowerCase();
                 const cl = (s === 'online' || s === 'ready') ? 'online' : 'offline';
@@ -219,7 +214,6 @@ async function updateStatus() {
             ramChart.update();
         }
     } catch (e) {
-        console.error("Error:", e);
         document.getElementById('res-uptime').innerText = "API Error";
     }
 }
