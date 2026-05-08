@@ -225,15 +225,18 @@ async function updateStatus() {
         if (data.clusters) {
             secondsSinceUpdate = 0;
             
-          // 1. Cálculos y Textos
+         // 1. Cálculos
 const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+const clustersTotales = data.clusters.length;
+const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
 
-document.getElementById('stat-clusters').innerText = data.clusters.length;
-// Aquí quitamos el texto extra y lo dejamos limpio:
-document.getElementById('stat-shards').innerText = `${data.global.totalGuilds} / ${data.global.totalGuilds}`;
+// 2. Inyectar en el HTML
+document.getElementById('stat-clusters').innerText = clustersTotales;
+
+// Esto te devolverá el "5 / 5" (o los que estén online)
+document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
+
 document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-
-// Para el Uptime, usamos el del primer cluster que es el que ya tienes funcionando
 document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
 
             // 3. Gráfica
