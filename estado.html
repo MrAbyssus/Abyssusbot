@@ -176,27 +176,27 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- CORRECCIÓN DEFINITIVA DE TIEMPO ACTIVO ---
 function formatUptime(uptimeValue) {
-    if (!uptimeValue || uptimeValue === "--") return "Calculando...";
+    if (!uptimeValue || uptimeValue === "--") return "Error de datos";
     
     let ms;
     const now = Date.now();
 
-    // 1. Si recibimos un string tipo "2h 30m" de la API, lo dejamos pasar directamente
-    if (typeof uptimeValue === 'string' && (uptimeValue.includes('h') || uptimeValue.includes('m'))) {
-        return uptimeValue;
-    }
-
-    // 2. Si es un número gigante (Timestamp de PM2: ej. 1715123456789)
-    if (Number(uptimeValue) > 1000000000000) {
-        ms = now - Number(uptimeValue);
+    // Lógica para detectar el tipo de dato
+    let n = Number(uptimeValue);
+    if (!isNaN(n)) {
+        // Si es un timestamp de PM2 (ej. 1715123456789)
+        if (n > 1000000000000) {
+            ms = now - n;
+        } else {
+            // Si ya son milisegundos de diferencia
+            ms = n;
+        }
     } else {
-        // 3. Si son milisegundos ya calculados
-        ms = parseInt(uptimeValue);
+        return uptimeValue; // Si ya viene formateado como "1h 20m"
     }
 
-    if (isNaN(ms) || ms < 0) return "--";
+    if (ms < 0) ms = 0;
 
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
@@ -237,22 +237,27 @@ ramChart = new Chart(ctx, {
     }
 });
 
-// ACTUALIZACIÓN PRINCIPAL
 async function updateStatus() {
     try {
         const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
 
         if (data && data.clusters) {
-            // BUSCAR UPTIME (Prioridad: global > cluster0 > pm_uptime)
-            const c0 = data.clusters[0];
-            const rawUptime = data.uptime || (c0 && (c0.pm_uptime || c0.uptime)) || "--";
-            document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
+            // BUSCAR EL UPTIME EN TODA LA RESPUESTA
+            let up = "--";
+            if (data.uptime) up = data.uptime;
+            else if (data.global && data.global.uptime) up = data.global.uptime;
+            else if (data.clusters[0]) {
+                // PM2 a veces lo mete dentro de pm2_env
+                up = data.clusters[0].pm_uptime || data.clusters[0].uptime || (data.clusters[0].pm2_env && data.clusters[0].pm2_env.pm_uptime);
+            }
+
+            document.getElementById('res-uptime').innerText = formatUptime(up);
 
             // RAM Y STATS
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const totalClust = data.clusters.length;
-            const onlineClust = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
+            const onlineClust = data.clusters.filter(c => c.status && c.status.toLowerCase() === 'online').length;
             
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             document.getElementById('stat-clusters').innerText = totalClust;
@@ -267,14 +272,14 @@ async function updateStatus() {
 
             // GRID CLUSTERS
             document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
+                const st = c.status ? c.status.toLowerCase() : 'offline';
                 let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
                 return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu || '0%'}</div></div>`;
             }).join('');
 
             // GRID SHARDS
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
+                const st = c.status ? c.status.toLowerCase() : 'offline';
                 let cl = st === 'online' ? 'online' : 'offline';
                 return `<div class="box ${cl}">S${c.id}<div class="tooltip">Shard ${c.id}<br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
             }).join('');
