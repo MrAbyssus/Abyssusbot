@@ -225,15 +225,16 @@ async function updateStatus() {
         if (data.clusters) {
             secondsSinceUpdate = 0;
             
-            // 1. Cálculos de Totales
-            const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            
-            // 2. Actualizar Textos (Mapeando totalGuilds como vimos en tu terminal)
-            document.getElementById('stat-clusters').innerText = data.clusters.length;
-            document.getElementById('stat-shards').innerText = (data.global.totalGuilds || 0).toLocaleString() + " Guilds";
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-           const uptimeGlobal = data.global.uptime || (data.clusters[0] && data.clusters[0].uptime);
-document.getElementById('res-uptime').innerText = uptimeGlobal || "152h";
+          // 1. Cálculos y Textos
+const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
+
+document.getElementById('stat-clusters').innerText = data.clusters.length;
+// Aquí quitamos el texto extra y lo dejamos limpio:
+document.getElementById('stat-shards').innerText = `${data.global.totalGuilds} / ${data.global.totalGuilds}`;
+document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+
+// Para el Uptime, usamos el del primer cluster que es el que ya tienes funcionando
+document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
 
             // 3. Gráfica
             const now = new Date();
