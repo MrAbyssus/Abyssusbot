@@ -194,6 +194,7 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
+// Inicialización de la gráfica (ya la tienes, asegúrate de que esté así)
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -204,118 +205,81 @@ ramChart = new Chart(ctx, {
             data: ramHistory,
             borderColor: '#00ffcc',
             backgroundColor: 'rgba(0, 255, 204, 0.1)',
-            borderWidth: 2,
             fill: true,
-            tension: 0.4,
-            pointRadius: 2
+            tension: 0.4
         }]
     },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: { beginAtZero: false, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297', font: { size: 10 } } },
-            x: { grid: { display: false }, ticks: { color: '#8e9297', font: { size: 10 } } }
-        },
-        plugins: { legend: { display: false } }
-    }
+    options: { responsive: true, maintainAspectRatio: false }
 });
-
-if (Notification.permission !== "granted") { Notification.requestPermission(); }
-
-function sendAlert(clusterId) {
-    if (Notification.permission === "granted") {
-        new Notification("⚠️ ALERTA: Abyssus Sentinel", {
-            body: `El Cluster ${clusterId} se ha desconectado.`,
-            icon: "img/favicon-web.png"
-        });
-    }
-}
-
-setInterval(() => {
-    secondsSinceUpdate++;
-    document.getElementById('update-timer').innerText = secondsSinceUpdate;
-}, 1000);
 
 async function updateStatus() {
     try {
-        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+        // Consultamos tu API local
+        const res = await fetch('/api/status');
         const data = await res.json();
 
-        if (data.clusters && data.clusters.length > 0) {
+        if (data.clusters) {
             secondsSinceUpdate = 0;
+            
+            // 1. Calculamos totales para el resumen
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const onlineCount = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
             
-            // Actualizar Textos de Resumen
+            // 2. Actualizamos los textos superiores
             document.getElementById('stat-clusters').innerText = data.clusters.length;
+            document.getElementById('stat-shards').innerText = data.global.totalGuilds + " Servidores";
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('res-uptime').innerText = data.clusters[0].uptime;
-            document.getElementById('stat-shards').innerText = `${onlineCount} / ${data.clusters.length}`;
+            document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "--";
 
-            // Actualizar Gráfica
+            // 3. Actualizamos la gráfica de historial
             const now = new Date();
-            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
+            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
             ramHistory.push(totalRam);
             labelHistory.push(timeLabel);
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // --- ACTUALIZAR GRID DE CLUSTERS ---
+            // 4. Dibujamos el Grid de Clusters
             const gridClusters = document.getElementById('status-grid');
-            gridClusters.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                if (status === 'offline') sendAlert(c.id);
-                let colorClass = (status === 'online') ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                return `
-                    <div class="box ${colorClass}">
-                        ${c.id}
-                        <div class="tooltip">
-                            <b>Cluster ${c.id}</b><br><br>
-                            RAM: ${c.ram} MB<br>
-                            UPTIME: ${c.uptime}<br>
-                            STATUS: ${status.toUpperCase()}
-                        </div>
-                    </div>`;
-            }).join('');
+            gridClusters.innerHTML = data.clusters.map(c => `
+                <div class="box ${c.status.toLowerCase() === 'online' ? 'online' : 'offline'}">
+                    ${c.id}
+                    <div class="tooltip">
+                        <b>Cluster ${c.id}</b><br><br>
+                        RAM: ${c.ram} MB<br>
+                        CPU: ${c.cpu}<br>
+                        STATUS: ${c.status.toUpperCase()}
+                    </div>
+                </div>`).join('');
 
-            // Dentro de tu función updateStatus...
-const allOnline = data.clusters.every(c => c.status.toLowerCase() === 'online');
-const statusText = document.getElementById('system-status-text');
-
-if (allOnline) {
-    statusText.innerText = "• Todos los sistemas están operando con normalidad.";
-    statusText.style.color = "var(--online)";
-} else {
-    statusText.innerText = "• Se han detectado problemas técnicos en algunos sectores.";
-    statusText.style.color = "var(--warning)";
-}
-
-            // --- ACTUALIZAR GRID DE SHARDS ---
+            // 5. Dibujamos el Grid de Shards (S0, S1, etc.)
             const shardsGrid = document.getElementById('shards-grid');
-            shardsGrid.innerHTML = data.clusters.map(c => {
-                const status = c.status.toLowerCase();
-                let colorClass = (status === 'online') ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                return `
-                    <div class="box ${colorClass}">
-                        S${c.id}
-                        <div class="tooltip">
-                            <b>Shard ${c.id}</b><br>
-                            Estado: ${status.toUpperCase()}<br>
-                            Latencia: -- ms
-                        </div>
-                    </div>`;
-            }).join('');
+            shardsGrid.innerHTML = data.clusters.map(c => `
+                <div class="box ${c.status.toLowerCase() === 'online' ? 'online' : 'offline'}">
+                    S${c.id}
+                    <div class="tooltip">
+                        <b>Shard ${c.id}</b><br>
+                        Estado: ${c.status.toUpperCase()}<br>
+                        Latencia: ${c.ping || '--'} ms
+                    </div>
+                </div>`).join('');
         }
     } catch (e) {
-        console.error("Fetch error");
-        document.getElementById('update-timer').innerText = "ERR";
+        console.error("Error al sincronizar:", e);
     }
 }
 
+// Timer de "Sincronizado hace X segundos"
+setInterval(() => {
+    secondsSinceUpdate++;
+    const timerElement = document.getElementById('update-timer');
+    if(timerElement) timerElement.innerText = secondsSinceUpdate;
+}, 1000);
+
+// Actualización automática cada 5 segundos
 updateStatus();
 setInterval(updateStatus, 5000);
-</script>   
+</script>
 </body>    
 </html>
 
