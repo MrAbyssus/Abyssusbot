@@ -151,7 +151,7 @@ ramChart = new Chart(ctx, {
 async function updateStatus() {
     try {
         // CAMBIO CRUCIAL: Se agregó /api/ antes de status
-        const res = await fetch('https://helicopter-smoke-frontpage-vehicle.trycloudflare.com/api/status?t=' + Date.now());
+        const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         const clusters = data.clusters || (Array.isArray(data) ? data : []);
 
