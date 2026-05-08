@@ -189,96 +189,117 @@
 </div>
 
 <script>
+// Variables globales de estado
 let secondsSinceUpdate = 0;
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// Inicialización de la gráfica (ya la tienes, asegúrate de que esté así)
-const ctx = document.getElementById('ramChart').getContext('2d');
-ramChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labelHistory,
-        datasets: [{
-            label: 'RAM Total (MB)',
-            data: ramHistory,
-            borderColor: '#00ffcc',
-            backgroundColor: 'rgba(0, 255, 204, 0.1)',
-            fill: true,
-            tension: 0.4
-        }]
-    },
-    options: { responsive: true, maintainAspectRatio: false }
-});
+// 1. Inicialización segura de la Gráfica
+function initChart() {
+    const canvas = document.getElementById('ramChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ramChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labelHistory,
+            datasets: [{
+                label: 'RAM Total (MB)',
+                data: ramHistory,
+                borderColor: '#00ffcc',
+                backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: false } }
+        }
+    });
+}
 
+// 2. Función principal de actualización
 async function updateStatus() {
     try {
-        // Consultamos tu API local
+        // MUY IMPORTANTE: Asegúrate de que esta URL sea la correcta de tu API
         const res = await fetch('/api/status');
+        if (!res.ok) throw new Error('Error en la respuesta del servidor');
         const data = await res.json();
 
-        if (data.clusters) {
+        if (data && data.clusters) {
             secondsSinceUpdate = 0;
             
-            // 1. Calculamos totales para el resumen
+            // Cálculos dinámicos
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const onlineCount = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
             
-            // 2. Actualizamos los textos superiores
+            // Actualización de textos (Resumen)
             document.getElementById('stat-clusters').innerText = data.clusters.length;
-            document.getElementById('stat-shards').innerText = data.global.totalGuilds + " Servidores";
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "--";
+            document.getElementById('stat-shards').innerText = `${onlineCount} / ${data.clusters.length}`;
+            document.getElementById('res-ram').innerText = `${totalRam.toLocaleString()} MB`;
+            document.getElementById('res-uptime').innerText = data.global.uptime || data.clusters[0].uptime || "--";
 
-            // 3. Actualizamos la gráfica de historial
+            // Actualización de la Gráfica
             const now = new Date();
-            const timeLabel = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
+            const timeLabel = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
             ramHistory.push(totalRam);
             labelHistory.push(timeLabel);
-            if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
-            ramChart.update();
+            if(ramHistory.length > 20) { ramHistory.shift(); labelHistory.shift(); }
+            if(ramChart) ramChart.update();
 
-            // 4. Dibujamos el Grid de Clusters
-            const gridClusters = document.getElementById('status-grid');
-            gridClusters.innerHTML = data.clusters.map(c => `
-                <div class="box ${c.status.toLowerCase() === 'online' ? 'online' : 'offline'}">
-                    ${c.id}
-                    <div class="tooltip">
-                        <b>Cluster ${c.id}</b><br><br>
-                        RAM: ${c.ram} MB<br>
-                        CPU: ${c.cpu}<br>
-                        STATUS: ${c.status.toUpperCase()}
-                    </div>
-                </div>`).join('');
+            // Renderizado de Grids (Clusters y Shards)
+            const clusterHTML = data.clusters.map(c => renderBox(c, `Cluster ${c.id}`)).join('');
+            const shardHTML = data.clusters.map(c => renderBox(c, `Shard ${c.id}`, `S${c.id}`)).join('');
+            
+            document.getElementById('status-grid').innerHTML = clusterHTML;
+            document.getElementById('shards-grid').innerHTML = shardHTML;
 
-            // 5. Dibujamos el Grid de Shards (S0, S1, etc.)
-            const shardsGrid = document.getElementById('shards-grid');
-            shardsGrid.innerHTML = data.clusters.map(c => `
-                <div class="box ${c.status.toLowerCase() === 'online' ? 'online' : 'offline'}">
-                    S${c.id}
-                    <div class="tooltip">
-                        <b>Shard ${c.id}</b><br>
-                        Estado: ${c.status.toUpperCase()}<br>
-                        Latencia: ${c.ping || '--'} ms
-                    </div>
-                </div>`).join('');
+            // Estado global del sistema
+            const statusText = document.getElementById('system-status-text');
+            if (onlineCount === data.clusters.length) {
+                statusText.innerText = "• Todos los sistemas están operando con normalidad.";
+                statusText.style.color = "var(--online)";
+            }
         }
     } catch (e) {
-        console.error("Error al sincronizar:", e);
+        console.error("Error crítico de actualización:", e);
+        const timerElement = document.getElementById('update-timer');
+        if(timerElement) timerElement.innerText = "ERR";
     }
 }
 
-// Timer de "Sincronizado hace X segundos"
+// Función auxiliar para crear los cuadritos (evita repetir código)
+function renderBox(c, title, label) {
+    const status = c.status.toLowerCase();
+    const colorClass = (status === 'online') ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
+    return `
+        <div class="box ${colorClass}">
+            ${label || c.id}
+            <div class="tooltip">
+                <b>${title}</b><br><br>
+                RAM: ${c.ram} MB<br>
+                CPU: ${c.cpu}<br>
+                STATUS: ${status.toUpperCase()}
+            </div>
+        </div>`;
+}
+
+// 3. Control de tiempos e inicio
 setInterval(() => {
     secondsSinceUpdate++;
-    const timerElement = document.getElementById('update-timer');
-    if(timerElement) timerElement.innerText = secondsSinceUpdate;
+    const timer = document.getElementById('update-timer');
+    if(timer) timer.innerText = secondsSinceUpdate;
 }, 1000);
 
-// Actualización automática cada 5 segundos
-updateStatus();
-setInterval(updateStatus, 5000);
+// Ejecución al cargar la página
+window.onload = () => {
+    initChart();
+    updateStatus();
+    setInterval(updateStatus, 5000);
+};
 </script>
 </body>    
 </html>
