@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abyssus Sentinel - Status Grid Pro</title>
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
     <style>
         :root {
             --bg: #16171d;
@@ -21,9 +19,9 @@
         body {
             background-color: var(--bg);
             color: var(--text-main);
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding-top: 100px;
+            padding-top: 80px;
             display: flex;
             justify-content: center;
         }
@@ -34,29 +32,27 @@
             border-bottom: 1px solid #2f3136; padding: 15px 0; z-index: 1000;
             display: flex; justify-content: center;
         }
-        .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
 
-        .container { width: 90%; max-width: 1000px; padding: 20px; display: flex; flex-direction: column; }
+        .nav-content { width: 90%; max-width: 1000px; }
+        .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; text-decoration: none; }
+
+        .container { width: 90%; max-width: 1000px; padding: 20px; }
         .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
         
         .tech-info { 
-            background: #0c0d12; padding: 15px 20px; border-radius: 5px; 
-            display: block; max-width: fit-content; margin-top: 15px; 
-            font-family: 'Courier New', monospace; border-left: 4px solid var(--accent);
+            background: #0c0d12; padding: 15px; border-radius: 5px; 
+            margin-top: 15px; font-family: monospace; border-left: 4px solid var(--accent);
         }
-        .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
-        .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; margin-bottom: 5px; }
 
-        .status-container { background: var(--panel); border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
+        .status-container { background: var(--panel); border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
         .box {
             aspect-ratio: 1/1; background: #2f3136; border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
             font-size: 0.75rem; font-weight: bold; border: 1px solid transparent;
         }
         .online { color: var(--online); border-color: var(--online); }
-        .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -64,129 +60,109 @@
 <body>
 
 <nav class="navbar">
-    <div class="nav-content">
-        <a href="#" class="nav-logo"><span>ABYSSUS</span> SENTINEL</a>
-    </div>
+    <div class="nav-content"><a href="#" class="nav-logo">ABYSSUS SENTINEL</a></div>
 </nav>
       
 <div class="container">
     <div class="section-title">Resumen</div>
-    <div class="resumen-box">
-        <div>Clusters activos: <b id="stat-clusters">--</b></div>
-        <div>Shards Online: <b id="stat-shards">-- / --</b></div> 
+    <div class="status-container">
+        <div>Clusters: <b id="stat-clusters">--</b> | Shards Online: <b id="stat-shards">-- / --</b></div> 
         <div class="tech-info">
-            <div class="tech-line"><span class="tech-label">RAM TOTAL:</span> <span id="res-ram">-- MB</span></div>
-            <div class="tech-line"><span class="tech-label">TOTAL SERVIDORES:</span> <span id="res-servidores">--</span></div>
-            <div class="tech-line"><span class="tech-label">TIEMPO ACTIVO:</span> <span id="res-uptime">--</span></div>
+            <div class="tech-line">RAM TOTAL: <span id="res-ram">-- MB</span></div>
+            <div class="tech-line">SERVIDORES: <span id="res-servidores">--</span></div>
+            <div class="tech-line">UPTIME: <span id="res-uptime">Conectando...</span></div>
         </div>
     </div>
 
-    <div class="section-title">Historial de Consumo (RAM)</div>
-    <div class="status-container" style="margin-bottom: 20px;">
-        <div style="height: 220px; width: 100%;"><canvas id="ramChart"></canvas></div>
+    <div class="section-title">Consumo de RAM</div>
+    <div class="status-container">
+        <div style="height: 200px;"><canvas id="ramChart"></canvas></div>
     </div>
 
-    <div class="section-title">Nodos de Clusters</div>
-    <div class="status-container"><div id="status-grid" class="grid"></div></div>
+    <div class="section-title">Clusters</div>
+    <div id="status-grid" class="grid status-container"></div>
 
-    <div class="section-title">Malla de Shards</div>
-    <div class="status-container" style="margin-bottom: 40px;"><div id="shards-grid" class="grid"></div></div>
+    <div class="section-title">Shards</div>
+    <div id="shards-grid" class="grid status-container"></div>
 </div>
 
 <script>
-let ramHistory = [];
-let labelHistory = [];
-let ramChart;
-
-function formatUptime(uptimeValue) {
-    if (!uptimeValue) return "--";
-    let ms = parseInt(uptimeValue);
-    if (isNaN(ms)) return uptimeValue;
-    let s = Math.floor(ms / 1000);
-    let m = Math.floor(s / 60);
-    let h = Math.floor(m / 60);
-    return h > 0 ? `${h}h ${m % 60}m` : `${m}m ${s % 60}s`;
-}
-
-// Inicializar Gráfica
-const ctx = document.getElementById('ramChart').getContext('2d');
-ramChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labelHistory,
-        datasets: [{
-            label: 'RAM (MB)',
-            data: ramHistory,
-            borderColor: '#00ffcc',
-            backgroundColor: 'rgba(0, 255, 204, 0.1)',
-            fill: true,
-            tension: 0.4,
-            pointRadius: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297' } },
-            x: { display: false }
+    // Configuración de la Gráfica
+    let ramHistory = [];
+    let labelHistory = [];
+    const ctx = document.getElementById('ramChart').getContext('2d');
+    const ramChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labelHistory,
+            datasets: [{
+                label: 'RAM',
+                data: ramHistory,
+                borderColor: '#00ffcc',
+                backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0
+            }]
         },
-        plugins: { legend: { display: false } }
-    }
-});
-
-async function updateStatus() {
-    try {
-        const miLink = 'https://volt-nhs-entering-compiled.trycloudflare.com/status'; 
-        const res = await fetch(miLink + '?t=' + Date.now());
-        const data = await res.json();
-
-        // LOG PARA TÉCNICOS: Esto te dirá en la consola exactamente qué está llegando
-        console.log("Estructura recibida:", data);
-
-        // BUSCADOR AUTOMÁTICO DE DATOS
-        // Si data es un array, lo usamos. Si tiene una propiedad que es array, usamos esa.
-        const clusters = Array.isArray(data) ? data : (data.clusters || data.shards || data.data || []);
-        
-        if (clusters.length > 0) {
-            const ramTotal = clusters.reduce((acc, c) => acc + (parseInt(c.ram || c.memory || 0)), 0);
-            const online = clusters.filter(c => c.status === 'online' || c.status === 'ready' || c.connected).length;
-
-            document.getElementById('res-ram').innerText = ramTotal + " MB";
-            document.getElementById('stat-clusters').innerText = clusters.length;
-            document.getElementById('stat-shards').innerText = `${online} / ${clusters.length}`;
-            
-            // Servidores (intentamos buscar en varias propiedades comunes)
-            const guilds = data.totalGuilds || data.guilds || (data.global ? data.global.totalGuilds : 0) || 0;
-            document.getElementById('res-servidores').innerText = guilds.toLocaleString();
-            
-            document.getElementById('res-uptime').innerText = "CONECTADO"; // Para confirmar que leyó
-
-            // Dibujar los cuadros (usamos index si no hay ID)
-            const gridHtml = clusters.map((c, i) => {
-                const isOnline = c.status === 'online' || c.status === 'ready' || c.connected;
-                return `<div class="box ${isOnline ? 'online' : 'offline'}">${c.id !== undefined ? c.id : i}</div>`;
-            }).join('');
-            
-            document.getElementById('status-grid').innerHTML = gridHtml;
-            document.getElementById('shards-grid').innerHTML = gridHtml; // Temporalmente igual para probar
-
-            // Gráfica
-            ramHistory.push(ramTotal);
-            labelHistory.push(new Date().toLocaleTimeString());
-            if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
-            ramChart.update();
-        } else {
-            document.getElementById('res-uptime').innerText = "JSON Vacío o Inválido";
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { x: { display: false }, y: { ticks: { color: '#8e9297' } } },
+            plugins: { legend: { display: false } }
         }
-    } catch (e) {
-        console.error(e);
-        document.getElementById('res-uptime').innerText = "Fallo de Estructura";
+    });
+
+    function formatUptime(ms) {
+        if (!ms || isNaN(ms)) return "Online";
+        let s = Math.floor(ms / 1000), m = Math.floor(s / 60), h = Math.floor(m / 60);
+        return h > 0 ? h + "h " + (m % 60) + "m" : m + "m " + (s % 60) + "s";
     }
-}
-// Iniciar
-setInterval(updateStatus, 5000);
-updateStatus();
+
+    async function updateStatus() {
+        try {
+            const api = 'https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now();
+            const res = await fetch(api);
+            const data = await res.json();
+
+            // Detectar la lista de clusters/shards
+            const items = data.clusters || data.shards || (Array.isArray(data) ? data : []);
+
+            if (items.length > 0) {
+                const totalRam = items.reduce((acc, c) => acc + (parseInt(c.ram || c.memory || 0)), 0);
+                const onlineCount = items.filter(c => c.status === 'online' || c.status === 'ready' || c.connected).length;
+
+                // Actualizar Textos
+                document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+                document.getElementById('stat-clusters').innerText = items.length;
+                document.getElementById('stat-shards').innerText = onlineCount + " / " + items.length;
+                document.getElementById('res-servidores').innerText = (data.totalGuilds || data.guilds || (data.global ? data.global.totalGuilds : 0) || 0).toLocaleString();
+                document.getElementById('res-uptime').innerText = formatUptime(data.uptime || (items[0] ? items[0].uptime : 0));
+
+                // Actualizar Cuadrículas
+                const gridHtml = items.map((c, i) => {
+                    const isOnline = c.status === 'online' || c.status === 'ready' || c.connected;
+                    return '<div class="box ' + (isOnline ? 'online' : 'offline') + '">' + (c.id !== undefined ? c.id : i) + '</div>';
+                }).join('');
+
+                document.getElementById('status-grid').innerHTML = gridHtml;
+                document.getElementById('shards-grid').innerHTML = gridHtml;
+
+                // Actualizar Gráfica
+                ramHistory.push(totalRam);
+                labelHistory.push(new Date().toLocaleTimeString());
+                if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
+                ramChart.update();
+            }
+        } catch (e) {
+            console.error("Error:", e);
+            document.getElementById('res-uptime').innerText = "Error de Conexión";
+        }
+    }
+
+    // Intervalo de 5 segundos
+    setInterval(updateStatus, 5000);
+    updateStatus();
 </script>
 </body>
 </html>
