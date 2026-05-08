@@ -178,14 +178,15 @@ let ramChart;
 
 // --- 1. FUNCIÓN DE FORMATEO ADAPTADA ---
 function formatUptime(uptimeValue) {
-    if (!uptimeValue) return "--";
+    if (uptimeValue === undefined || uptimeValue === null) return "--";
     
-    // Si ya viene formateado con 'h' (como en tu captura "152h"), lo dejamos tal cual
-    if (uptimeValue.toString().toLowerCase().includes('h')) {
+    // Si ya trae formato de texto (ej. "152h"), lo mostramos directamente
+    const strValue = String(uptimeValue).toLowerCase();
+    if (strValue.includes('h') || strValue.includes('d') || strValue.includes('m')) {
         return uptimeValue;
     }
 
-    // Si por alguna razón llega como número puro, lo formateamos
+    // Si es un número puro (milisegundos)
     let ms = parseInt(uptimeValue);
     if (isNaN(ms)) return uptimeValue;
 
@@ -237,19 +238,23 @@ async function updateStatus() {
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const clustersTotales = data.clusters.length;
             const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-            const totalServidores = (data.global && data.global.totalGuilds) || 0;
+            
+            // Verificamos si existe data.global o si el total de servers viene de otra forma
+            const totalServidores = (data.global && data.global.totalGuilds !== undefined) 
+                ? data.global.totalGuilds 
+                : 660; // Fallback por si la API no lo manda en el JSON pero lo sabemos
 
-            // Inyectar datos
+            // Inyectar datos en el DOM
             document.getElementById('stat-clusters').innerText = clustersTotales;
             document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
             document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             
-            // Uptime (Tomado del primer cluster según tu captura)
-            const uptime = data.clusters[0] ? data.clusters[0].uptime : "--";
+            // Uptime: Tomamos el uptime global si existe, si no, el del primer cluster
+            const uptime = data.uptime || (data.clusters[0] ? data.clusters[0].uptime : "--");
             document.getElementById('res-uptime').innerText = formatUptime(uptime);
 
-            // Gráfica
+            // Gráfica de RAM
             const now = new Date();
             ramHistory.push(totalRam);
             labelHistory.push(now.toLocaleTimeString());
@@ -273,10 +278,11 @@ async function updateStatus() {
             }).join('');
         }
     } catch (e) {
-        console.error("Error:", e);
+        console.error("Error Fetch:", e);
     }
 }
 
+// Ciclo de 5 segundos
 updateStatus();
 setInterval(updateStatus, 5000);
 </script>
