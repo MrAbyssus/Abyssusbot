@@ -2,7 +2,7 @@
     async function actualizarDashboard() {
         try {
             // MUY IMPORTANTE: La URL debe terminar en /api/status
-            const url = 'https://newsletters-seas-reason-accommodations.trycloudflare.com/status';
+            const url = 'https://helicopter-smoke-frontpage-vehicle.trycloudflare.com/status';
             
             const res = await fetch(url);
             const data = await res.json();
