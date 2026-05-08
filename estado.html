@@ -172,23 +172,33 @@
 </div>
 
 <script>
-<script>
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- 1. FUNCIÓN DE FORMATEO ---
+// --- FUNCIÓN DE TIEMPO CORREGIDA ---
 function formatUptime(uptimeValue) {
-    if (uptimeValue === undefined || uptimeValue === null) return "--";
-    const strValue = String(uptimeValue).toLowerCase();
-    if (strValue.includes('h') || strValue.includes('d') || strValue.includes('m')) {
-        return uptimeValue;
+    if (!uptimeValue || uptimeValue === "--") return "--";
+    
+    let ms;
+    const now = Date.now();
+
+    // Si el valor es un timestamp (ej. 1715123456789), restamos el tiempo actual
+    // PM2 suele mandar el "pm_uptime" que es el momento en que arrancó.
+    if (uptimeValue > 1000000000000) { 
+        ms = now - uptimeValue; 
+    } else {
+        ms = parseInt(uptimeValue);
     }
-    let ms = parseInt(uptimeValue);
-    if (isNaN(ms)) return uptimeValue;
+
+    if (isNaN(ms) || ms < 0) return "--";
+
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
+    let d = Math.floor(h / 24);
+
+    if (d > 0) return `${d}d ${h % 24}h ${m % 60}m`;
     if (h > 0) return `${h}h ${m % 60}m`;
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
@@ -228,10 +238,12 @@ async function updateStatus() {
         const data = await res.json();
 
         if (data && data.clusters) {
-            // 1. UPTIME
+            // 1. CÁLCULO DE UPTIME (CORREGIDO)
+            // Intentamos sacar el uptime del cluster 0 o del objeto global
             const clusterCero = data.clusters[0];
-            const uptimeEncontrado = data.uptime || (clusterCero && clusterCero.uptime) || "--";
-            document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
+            const rawUptime = data.uptime || (clusterCero && (clusterCero.uptime || clusterCero.pm_uptime)) || "--";
+            
+            document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
 
             // 2. RAM Y SERVIDORES
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
@@ -261,17 +273,18 @@ async function updateStatus() {
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
                 const st = c.status.toLowerCase();
                 let cl = st === 'online' ? 'online' : 'offline';
-                return `<div class="box ${cl}">S${c.id}<div class="tooltip">Shard ${c.id}<br>Estado: ${st.toUpperCase()}<br>Nodo: Cluster ${c.id}</div></div>`;
+                return `<div class="box ${cl}">S${c.id}<div class="tooltip">Shard ${c.id}<br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
             }).join('');
         }
     } catch (e) {
-        console.error(e);
+        console.error("Error en telemetría:", e);
         document.getElementById('res-uptime').innerText = "Error API";
     }
 }
 
 updateStatus();
 setInterval(updateStatus, 5000);
+</script>
 </script>
 </body>
 </html>
