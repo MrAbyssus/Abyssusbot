@@ -28,34 +28,17 @@
             justify-content: center;
         }
 
-        /* NAVBAR */
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 16, 18, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #2f3136;
-            padding: 15px 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(15, 16, 18, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2f3136; padding: 15px 0; z-index: 1000;
+            display: flex; justify-content: center;
         }
         .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
         .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
 
-        /* ESTRUCTURA PRINCIPAL */
-        .container { 
-            width: 90%; 
-            max-width: 1000px; 
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
+        .container { width: 90%; max-width: 1000px; padding: 20px; display: flex; flex-direction: column; }
         .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
-        .section-title:first-child { margin-top: 0; }
         
         .legend-list { list-style: none; padding: 0; margin-bottom: 30px; }
         .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
@@ -64,32 +47,17 @@
         .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
         .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
 
-        /* CAJAS DE INFORMACIÓN */
         .resumen-box { margin-bottom: 20px; }
         .tech-info { 
-            background: #0c0d12; 
-            padding: 15px 20px; 
-            border-radius: 5px; 
-            display: block; 
-            max-width: fit-content;
-            margin-top: 15px; 
-            font-family: 'Courier New', monospace;
-            border-left: 4px solid var(--accent);
+            background: #0c0d12; padding: 15px 20px; border-radius: 5px; 
+            display: block; max-width: fit-content; margin-top: 15px; 
+            font-family: 'Courier New', monospace; border-left: 4px solid var(--accent);
             box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
         }
         .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
         .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
 
-        /* GRÁFICA Y GRID */
-        .status-container { 
-            background: var(--panel); 
-            border-radius: 8px; 
-            padding: 25px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-            width: 100%;
-            box-sizing: border-box;
-        }
-
+        .status-container { background: var(--panel); border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
         .box {
             aspect-ratio: 1/1; background: #2f3136; border-radius: 4px;
@@ -116,13 +84,7 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="nav-content">
-        <a href="index.html" class="nav-logo">
-            <span style="color: var(--text-muted); font-weight: normal;">ABYSSUS</span> SENTINEL
-        </a>
-    </div>
-</nav>
+<nav class="navbar"><div class="nav-content"><a href="index.html" class="nav-logo"><span>ABYSSUS</span> SENTINEL</a></div></nav>
       
 <div class="container">
     <div class="section-title">Colores</div>
@@ -136,39 +98,23 @@
     <div class="resumen-box">
         <div>Clusters activos: <b id="stat-clusters">--</b></div>
         <div>Shards Online: <b id="stat-shards">-- / --</b></div> 
-        
         <div class="tech-info">
-            <div class="tech-line">
-                <span class="tech-label">RAM TOTAL:</span>
-                <span id="res-ram">-- MB</span>
-            </div>
-            <div class="tech-line">
-                <span class="tech-label">TOTAL SERVIDORES:</span>
-                <span id="res-servidores">--</span>
-            </div>
-            <div class="tech-line">
-                <span class="tech-label">TIEMPO ACTIVO:</span>
-                <span id="res-uptime">--</span>
-            </div>
+            <div class="tech-line"><span class="tech-label">RAM TOTAL:</span> <span id="res-ram">-- MB</span></div>
+            <div class="tech-line"><span class="tech-label">TOTAL SERVIDORES:</span> <span id="res-servidores">--</span></div>
+            <div class="tech-line"><span class="tech-label">TIEMPO ACTIVO:</span> <span id="res-uptime">--</span></div>
         </div>
     </div>
 
     <div class="section-title">Historial de Consumo (RAM)</div>
     <div class="status-container" style="margin-bottom: 20px;">
-        <div style="height: 220px; width: 100%;">
-            <canvas id="ramChart"></canvas>
-        </div>
+        <div style="height: 220px; width: 100%;"><canvas id="ramChart"></canvas></div>
     </div>
 
     <div class="section-title">Nodos de Clusters</div>
-    <div class="status-container">
-        <div id="status-grid" class="grid"></div>
-    </div>
+    <div class="status-container"><div id="status-grid" class="grid"></div></div>
 
     <div class="section-title">Malla de Shards</div>
-    <div class="status-container" style="margin-bottom: 40px;">
-        <div id="shards-grid" class="grid"></div>
-    </div>
+    <div class="status-container" style="margin-bottom: 40px;"><div id="shards-grid" class="grid"></div></div>
 </div>
 
 <script>
@@ -176,24 +122,6 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- 1. FUNCIÓN DE FORMATEO ---
-function formatUptime(uptimeValue) {
-    if (uptimeValue === undefined || uptimeValue === null) return "--";
-    const strValue = String(uptimeValue).toLowerCase();
-    if (strValue.includes('h') || strValue.includes('d') || strValue.includes('m')) {
-        return uptimeValue;
-    }
-    let ms = parseInt(uptimeValue);
-    if (isNaN(ms)) return uptimeValue;
-    let s = Math.floor(ms / 1000);
-    let m = Math.floor(s / 60);
-    let h = Math.floor(m / 60);
-    if (h > 0) return `${h}h ${m % 60}m`;
-    if (m > 0) return `${m}m ${s % 60}s`;
-    return `${s}s`;
-}
-
-// --- 2. INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
     type: 'line',
@@ -204,7 +132,6 @@ ramChart = new Chart(ctx, {
             data: ramHistory,
             borderColor: '#00ffcc',
             backgroundColor: 'rgba(0, 255, 204, 0.1)',
-            borderWidth: 2,
             fill: true,
             tension: 0.4,
             pointRadius: 0
@@ -221,57 +148,41 @@ ramChart = new Chart(ctx, {
     }
 });
 
-// --- 3. ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
-        const res = await fetch('https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now());
+        const res = await fetch('https://newsletters-seas-reason-accommodations.trycloudflare.com/status?t=' + Date.now());
         const data = await res.json();
+        const clusters = data.clusters || (Array.isArray(data) ? data : []);
 
-        if (data && data.clusters) {
-            // A. RASTREO DE UPTIME
-            const clusterCero = data.clusters[0];
-            const uptimeEncontrado = data.uptime || (clusterCero && clusterCero.uptime) || (data.global && data.global.uptime) || "--";
-            document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
+        if (clusters.length > 0) {
+            const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.memory || c.ram || 0)), 0);
+            const onlineCount = clusters.filter(c => (c.status || '').toLowerCase() === 'online').length;
 
-            // B. CÁLCULOS DE RED Y RAM
-            const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            const clustersTotales = data.clusters.length;
-            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-            const totalServidores = (data.global && data.global.totalGuilds) || 660;
+            document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
+            document.getElementById('stat-clusters').innerText = clusters.length;
+            document.getElementById('stat-shards').innerText = `${onlineCount} / ${clusters.length}`;
+            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 660).toLocaleString();
+            document.getElementById('res-uptime').innerText = data.uptime || "ONLINE";
 
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('stat-clusters').innerText = clustersTotales;
-            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
-            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
+            const gridHTML = clusters.map(c => {
+                const s = (c.status || 'offline').toLowerCase();
+                const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
+                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.memory || c.ram || '0'}</div></div>`;
+            }).join('');
 
-            // C. ACTUALIZAR GRÁFICA
-            const now = new Date();
+            document.getElementById('status-grid').innerHTML = gridHTML;
+            document.getElementById('shards-grid').innerHTML = gridHTML;
+
             ramHistory.push(totalRam);
-            labelHistory.push(now.toLocaleTimeString());
+            labelHistory.push(new Date().toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
-
-            // D. ACTUALIZAR GRID DE CLUSTERS
-            document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
-                let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${st}<br>RAM: ${c.ram}MB</div></div>`;
-            }).join('');
-
-            // E. ACTUALIZAR GRID DE SHARDS (CORREGIDO)
-            document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
-                let cl = st === 'online' ? 'online' : 'offline';
-                return `<div class="box ${cl}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
-            }).join('');
         }
     } catch (e) {
-        console.error("Error en la telemetría:", e);
-        document.getElementById('res-uptime').innerText = "API Error";
+        document.getElementById('res-uptime').innerText = "Reconectando...";
     }
 }
 
-// Iniciar ciclo
 updateStatus();
 setInterval(updateStatus, 5000);
 </script>
