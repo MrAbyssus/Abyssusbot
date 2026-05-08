@@ -183,10 +183,19 @@ let labelHistory = [];
 let ramChart;
 
 // --- 1. FUNCIÓN DE FORMATEO (Faltaba esta definición) ---
-function formatUptime(uptimeStr) {
-    let ms = parseInt(uptimeStr);
-    if (isNaN(ms)) return uptimeStr || "0s"; 
+function formatUptime(uptimeValue) {
+    // Si no hay nada, ponemos 0
+    if (!uptimeValue) return "0s";
 
+    // Intentamos convertir a número
+    let ms = parseInt(uptimeValue);
+
+    // Si el valor NO es un número (ej: "1h", "2d"), lo devolvemos tal cual como antes
+    if (isNaN(ms) || uptimeValue.toString().includes('h') || uptimeValue.toString().includes('m')) {
+        return uptimeValue; 
+    }
+
+    // Si SÍ es un número, hacemos la magia de los segundos/minutos
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
@@ -197,7 +206,6 @@ function formatUptime(uptimeStr) {
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
 }
-
 // --- INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
