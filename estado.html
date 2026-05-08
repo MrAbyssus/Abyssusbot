@@ -225,19 +225,28 @@ async function updateStatus() {
         if (data.clusters) {
             secondsSinceUpdate = 0;
             
-         // 1. Cálculos
+         // 1. Cálculos de estado
 const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
 const clustersTotales = data.clusters.length;
 const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
+const totalServidores = data.global.totalGuilds || 0;
 
 // 2. Inyectar en el HTML
 document.getElementById('stat-clusters').innerText = clustersTotales;
 
-// Esto te devolverá el "5 / 5" (o los que estén online)
+// Shards en formato 5 / 5
 document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
 
+// RAM con formato legible
 document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
+
+// UPTIME
 document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
+
+// EXTRA: Para que no se pierdan los servidores (660), 
+// podemos añadirlos dinámicamente al lado del contador de Shards o en una línea nueva
+// Vamos a ponerlos justo al lado de los Shards entre paréntesis para que se vea pro:
+document.getElementById('stat-shards').innerHTML = `${clustersOnline} / ${clustersTotales} <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 10px;">(${totalServidores.toLocaleString()} Servidores)</span>`;
 
             // 3. Gráfica
             const now = new Date();
