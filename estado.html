@@ -222,58 +222,50 @@ ramChart = new Chart(ctx, {
 });
 
 // --- 3. ACTUALIZACIÓN DE DATOS PRINCIPAL ---
+<script>
+// (Aquí van tus variables de Chart y ramHistory que ya tienes)
+
 async function updateStatus() {
     try {
-        const res = await fetch('https://volt-nhs-entering-compiled.trycloudflare.com/status?t=' + Date.now());
+        // CAMBIA SOLO ESTE LINK POR EL TUYO ACTUAL
+        const miLink = 'https://volt-nhs-entering-compiled.trycloudflare.com'; 
+        
+        const res = await fetch(`${miLink}/status?t=${Date.now()}`);
         const data = await res.json();
 
         if (data && data.clusters) {
-            // A. RASTREO DE UPTIME
-            const clusterCero = data.clusters[0];
-            const uptimeEncontrado = data.uptime || (clusterCero && clusterCero.uptime) || (data.global && data.global.uptime) || "--";
-            document.getElementById('res-uptime').innerText = formatUptime(uptimeEncontrado);
-
-            // B. CÁLCULOS DE RED Y RAM
+            // Actualiza los textos de tu resumen
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            const clustersTotales = data.clusters.length;
-            const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-            const totalServidores = (data.global && data.global.totalGuilds) || 660;
+            document.getElementById('res-ram').innerText = totalRam + " MB";
+            document.getElementById('stat-clusters').innerText = data.clusters.length;
+            document.getElementById('stat-shards').innerText = `${data.clusters.filter(c => c.status === 'online').length} / ${data.clusters.length}`;
+            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
+            document.getElementById('res-uptime').innerText = formatUptime(data.uptime || data.clusters[0]?.uptime);
 
-            document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('stat-clusters').innerText = clustersTotales;
-            document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
-            document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
+            // Actualiza los cuadros de Clusters
+            document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
+                const cl = c.status === 'online' ? 'online' : 'offline';
+                return `<div class="box ${cl}">${c.id}</div>`;
+            }).join('');
 
-            // C. ACTUALIZAR GRÁFICA
-            const now = new Date();
+            // Actualiza los cuadros de Shards
+            document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
+                return `<div class="box ${c.status === 'online' ? 'online' : 'offline'}">S${c.id}</div>`;
+            }).join('');
+            
+            // Actualiza la gráfica
             ramHistory.push(totalRam);
-            labelHistory.push(now.toLocaleTimeString());
+            labelHistory.push(new Date().toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
-
-            // D. ACTUALIZAR GRID DE CLUSTERS
-            document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
-                let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${st}<br>RAM: ${c.ram}MB</div></div>`;
-            }).join('');
-
-            // E. ACTUALIZAR GRID DE SHARDS (CORREGIDO)
-            document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status.toLowerCase();
-                let cl = st === 'online' ? 'online' : 'offline';
-                return `<div class="box ${cl}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
-            }).join('');
         }
     } catch (e) {
-        console.error("Error en la telemetría:", e);
-        document.getElementById('res-uptime').innerText = "API Error";
+        console.error("Error:", e);
+        document.getElementById('res-uptime').innerText = "Error de Conexión";
     }
 }
-
-// Iniciar ciclo
-updateStatus();
 setInterval(updateStatus, 5000);
+updateStatus();
 </script>
 </body>
 </html>
