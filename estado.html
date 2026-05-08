@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-      <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abyssus Sentinel - Status Grid Pro</title>
     <link rel="icon" href="img/favicon.ico">
@@ -44,9 +44,6 @@
         }
         .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
         .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
-        .nav-links { display: flex; gap: 25px; }
-        .nav-links a { color: #949ba4; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
-        .nav-links a.active { color: var(--accent); }
 
         /* ESTRUCTURA PRINCIPAL */
         .container { 
@@ -119,14 +116,12 @@
 </head>
 <body>
 
-<title>Abyssus Sentinel | Network Status</title>
-
 <nav class="navbar">
     <div class="nav-content">
         <a href="index.html" class="nav-logo">
             <span style="color: var(--text-muted); font-weight: normal;">ABYSSUS</span> SENTINEL
         </a>
-        </div>
+    </div>
 </nav>
       
 <div class="container">
@@ -139,24 +134,24 @@
 
     <div class="section-title">Resumen</div>
     <div class="resumen-box">
-    <div>Clusters activos: <b id="stat-clusters">--</b></div>
-    <div>Shards Online: <b id="stat-shards">-- / --</b></div> 
-    
-    <div class="tech-info">
-        <div class="tech-line">
-            <span class="tech-label">RAM TOTAL:</span>
-            <span id="res-ram">-- MB</span>
-        </div>
-        <div class="tech-line">
-            <span class="tech-label">TOTAL SERVIDORES:</span>
-            <span id="res-servidores">--</span>
-        </div>
-        <div class="tech-line">
-            <span class="tech-label">TIEMPO ACTIVO:</span>
-            <span id="res-uptime">--</span>
+        <div>Clusters activos: <b id="stat-clusters">--</b></div>
+        <div>Shards Online: <b id="stat-shards">-- / --</b></div> 
+        
+        <div class="tech-info">
+            <div class="tech-line">
+                <span class="tech-label">RAM TOTAL:</span>
+                <span id="res-ram">-- MB</span>
+            </div>
+            <div class="tech-line">
+                <span class="tech-label">TOTAL SERVIDORES:</span>
+                <span id="res-servidores">--</span>
+            </div>
+            <div class="tech-line">
+                <span class="tech-label">TIEMPO ACTIVO:</span>
+                <span id="res-uptime">--</span>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="section-title">Historial de Consumo (RAM)</div>
     <div class="status-container" style="margin-bottom: 20px;">
@@ -177,35 +172,32 @@
 </div>
 
 <script>
-let secondsSinceUpdate = 0;
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// --- 1. FUNCIÓN DE FORMATEO (Faltaba esta definición) ---
+// --- 1. FUNCIÓN DE FORMATEO ADAPTADA ---
 function formatUptime(uptimeValue) {
-    // Si no hay nada, ponemos 0
-    if (!uptimeValue) return "0s";
-
-    // Intentamos convertir a número
-    let ms = parseInt(uptimeValue);
-
-    // Si el valor NO es un número (ej: "1h", "2d"), lo devolvemos tal cual como antes
-    if (isNaN(ms) || uptimeValue.toString().includes('h') || uptimeValue.toString().includes('m')) {
-        return uptimeValue; 
+    if (!uptimeValue) return "--";
+    
+    // Si ya viene formateado con 'h' (como en tu captura "152h"), lo dejamos tal cual
+    if (uptimeValue.toString().toLowerCase().includes('h')) {
+        return uptimeValue;
     }
 
-    // Si SÍ es un número, hacemos la magia de los segundos/minutos
+    // Si por alguna razón llega como número puro, lo formateamos
+    let ms = parseInt(uptimeValue);
+    if (isNaN(ms)) return uptimeValue;
+
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
-    let d = Math.floor(h / 24);
 
-    if (d > 0) return `${d}d ${h % 24}h ${m % 60}m`;
     if (h > 0) return `${h}h ${m % 60}m`;
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
 }
+
 // --- INICIALIZAR GRÁFICA ---
 const ctx = document.getElementById('ramChart').getContext('2d');
 ramChart = new Chart(ctx, {
@@ -237,27 +229,25 @@ ramChart = new Chart(ctx, {
 // --- ACTUALIZACIÓN DE DATOS PRINCIPAL ---
 async function updateStatus() {
     try {
-        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status');
+        const res = await fetch('https://shoes-lamb-busy-anytime.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
 
-        if (data.clusters) {
-            secondsSinceUpdate = 0;
-            
-            // Cálculos de estado
+        if (data && data.clusters) {
+            // Cálculos
             const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
             const clustersTotales = data.clusters.length;
             const clustersOnline = data.clusters.filter(c => c.status.toLowerCase() === 'online').length;
-            const totalServidores = data.global.totalGuilds || 0;
+            const totalServidores = (data.global && data.global.totalGuilds) || 0;
 
-            // Inyectar en los IDs
+            // Inyectar datos
             document.getElementById('stat-clusters').innerText = clustersTotales;
             document.getElementById('stat-shards').innerText = `${clustersOnline} / ${clustersTotales}`;
             document.getElementById('res-servidores').innerText = totalServidores.toLocaleString();
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
             
-            // Uptime con la función de formateo
-            const rawUptime = data.clusters[0].uptime; 
-            document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
+            // Uptime (Tomado del primer cluster según tu captura)
+            const uptime = data.clusters[0] ? data.clusters[0].uptime : "--";
+            document.getElementById('res-uptime').innerText = formatUptime(uptime);
 
             // Gráfica
             const now = new Date();
@@ -266,45 +256,27 @@ async function updateStatus() {
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
 
-            // Grid de Clusters
+            // Grid Clusters
             const gridClusters = document.getElementById('status-grid');
             gridClusters.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
                 let colorClass = status === 'online' ? 'online' : (status === 'connecting' ? 'warning' : 'offline');
-                return `
-                    <div class="box ${colorClass}">
-                        ${c.id}
-                        <div class="tooltip">
-                            <b>Cluster ${c.id}</b><br>
-                            <span style="color:var(--accent)">CPU: ${c.cpu || '0%'}</span><br>
-                            RAM: ${c.ram} MB<br>
-                            Estado: ${status.toUpperCase()}
-                        </div>
-                    </div>`;
+                return `<div class="box ${colorClass}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>CPU: ${c.cpu || '0%'}<br>RAM: ${c.ram} MB</div></div>`;
             }).join('');
 
-            // Grid de Shards
+            // Grid Shards
             const shardsGrid = document.getElementById('shards-grid');
             shardsGrid.innerHTML = data.clusters.map(c => {
                 const status = c.status.toLowerCase();
                 let colorClass = status === 'online' ? 'online' : 'offline';
-                return `
-                    <div class="box ${colorClass}">
-                        S${c.id}
-                        <div class="tooltip">
-                            <b>Shard ${c.id}</b><br>
-                            ID Nodo: Cluster ${c.id}<br>
-                            CPU: ${c.cpu || '0%'}
-                        </div>
-                    </div>`;
+                return `<div class="box ${colorClass}">S${c.id}<div class="tooltip"><b>Shard ${c.id}</b><br>Nodo: Cluster ${c.id}</div></div>`;
             }).join('');
         }
     } catch (e) {
-        console.error("Error en Fetch:", e);
+        console.error("Error:", e);
     }
 }
 
-// Iniciar ciclo
 updateStatus();
 setInterval(updateStatus, 5000);
 </script>
