@@ -138,54 +138,56 @@ ramChart = new Chart(ctx, {
 async function updateStatus() {
     try {
         const miLink = 'https://volt-nhs-entering-compiled.trycloudflare.com/status'; 
+        const res = await fetch(miLink + '?t=' + Date.now());
         
-        // Usamos una petición más agresiva con headers de JSON
-        const res = await fetch(miLink, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
+        if (!res.ok) throw new Error("Status: " + res.status);
 
-        if (!res.ok) throw new Error("Error en respuesta");
+        const rawData = await res.json();
+        console.log("DATOS RECIBIDOS:", rawData); // MIRA ESTO EN F12
 
-        const data = await res.json();
-        
-        // DEBUG: Esto imprimirá los datos en tu consola (F12) para que veas que llegan
-        console.log("Datos recibidos:", data);
+        // Intentamos detectar si la data viene en 'clusters', en 'data' o es el array directo
+        const data = rawData.clusters || rawData.data || (Array.isArray(rawData) ? rawData : null);
 
-        if (data && data.clusters) {
-            // 1. RESUMEN
-            const totalRam = data.clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-            const onlineCount = data.clusters.filter(c => c.status === 'online').length;
+        if (data) {
+            const onlineClusters = data.filter(c => c.status === 'online' || c.status === 'ready');
+            const totalRam = data.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
 
             document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-            document.getElementById('stat-clusters').innerText = data.clusters.length;
-            document.getElementById('stat-shards').innerText = `${onlineCount} / ${data.clusters.length}`;
-            document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-            document.getElementById('res-uptime').innerText = formatUptime(data.uptime || data.clusters[0]?.uptime);
+            document.getElementById('stat-clusters').innerText = data.length;
+            document.getElementById('stat-shards').innerText = `${onlineClusters.length} / ${data.length}`;
+            
+            // Si el bot no manda guilds, ponemos 0
+            const guilds = rawData.global?.totalGuilds || rawData.totalGuilds || 0;
+            document.getElementById('res-servidores').innerText = guilds.toLocaleString();
+            
+            // Tiempo activo
+            const uptime = rawData.uptime || (data[0] ? data[0].uptime : 0);
+            document.getElementById('res-uptime').innerText = formatUptime(uptime);
 
-            // 2. GRID DE CLUSTERS
-            document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
-                const cl = (c.status === 'online') ? 'online' : 'offline';
+            // Dibujar Grids
+            const gridFunc = (c) => {
+                const st = (c.status || '').toLowerCase();
+                const cl = (st === 'online' || st === 'ready') ? 'online' : 'offline';
                 return `<div class="box ${cl}">${c.id}</div>`;
-            }).join('');
+            };
 
-            // 3. GRID DE SHARDS
-            document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const cl = (c.status === 'online') ? 'online' : 'offline';
+            document.getElementById('status-grid').innerHTML = data.map(gridFunc).join('');
+            document.getElementById('shards-grid').innerHTML = data.map(c => {
+                const st = (c.status || '').toLowerCase();
+                const cl = (st === 'online' || st === 'ready') ? 'online' : 'offline';
                 return `<div class="box ${cl}">S${c.id}</div>`;
             }).join('');
-            
-            // 4. GRÁFICA
+
+            // Gráfica
             ramHistory.push(totalRam);
             labelHistory.push(new Date().toLocaleTimeString());
             if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
+        } else {
+            throw new Error("Formato de JSON irreconocible");
         }
     } catch (e) {
-        console.error("Fallo el fetch:", e);
+        console.error("ERROR TÉCNICO:", e);
         document.getElementById('res-uptime').innerText = "Fallo de Lectura";
     }
 }
