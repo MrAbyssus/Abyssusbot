@@ -242,7 +242,12 @@ document.getElementById('res-servidores').innerText = totalServidores.toLocaleSt
 
 // RAM y Uptime
 document.getElementById('res-ram').innerText = totalRam.toLocaleString() + " MB";
-document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
+// Busca esta línea:
+// document.getElementById('res-uptime').innerText = data.clusters[0].uptime || "0h";
+
+// Y cámbiala por esta:
+const rawUptime = data.clusters[0].uptime; // El valor que viene del bot
+document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
 
             // 3. Gráfica
             const now = new Date();
