@@ -28,7 +28,6 @@
             justify-content: center;
         }
 
-        /* NAVBAR */
         .navbar {
             position: fixed;
             top: 0;
@@ -45,7 +44,6 @@
         .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
         .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
 
-        /* ESTRUCTURA PRINCIPAL */
         .container { 
             width: 90%; 
             max-width: 1000px; 
@@ -64,7 +62,6 @@
         .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
         .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
 
-        /* CAJAS DE INFORMACIÓN */
         .resumen-box { margin-bottom: 20px; }
         .tech-info { 
             background: #0c0d12; 
@@ -80,7 +77,6 @@
         .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
         .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
 
-        /* GRÁFICA Y GRID */
         .status-container { 
             background: var(--panel); 
             border-radius: 8px; 
@@ -148,7 +144,7 @@
             </div>
             <div class="tech-line">
                 <span class="tech-label">TIEMPO ACTIVO:</span>
-                <span id="res-uptime">Sincronizando...</span>
+                <span id="res-uptime">Esperando datos...</span>
             </div>
         </div>
     </div>
@@ -176,24 +172,25 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// LÓGICA DE TIEMPO DEFINITIVA
 function formatUptime(val) {
-    if (!val || val === "--") return "No disponible";
+    if (val === undefined || val === null || val === "--") return "Sincronizando...";
     
+    // Si la API ya manda un texto tipo "1h 20m", lo usamos tal cual
+    if (typeof val === 'string' && isNaN(val)) return val;
+
     let ms;
     const now = Date.now();
-    const n = Number(val);
+    const num = Number(val);
 
-    if (!isNaN(n)) {
-        // Si es un Timestamp (ej. PM2 devuelve cuándo empezó)
-        if (n > 1000000000000) {
-            ms = now - n;
-        } else {
-            // Si son milisegundos ya calculados
-            ms = n;
-        }
+    if (num > 1000000000000) {
+        // Es un timestamp de inicio (milisegundos)
+        ms = now - num;
+    } else if (num > 1000000000) {
+        // Es un timestamp de inicio (segundos)
+        ms = now - (num * 1000);
     } else {
-        return val; // Si ya es un string formateado
+        // Es una duración ya calculada
+        ms = num;
     }
 
     if (ms < 0) ms = 0;
@@ -243,9 +240,12 @@ async function updateStatus() {
         const data = await res.json();
 
         if (data && data.clusters) {
-            // Búsqueda del dato de uptime en la respuesta de la API
-            const c0 = data.clusters[0];
-            const rawUptime = data.uptime || (c0 && (c0.pm_uptime || c0.uptime)) || "--";
+            // BUSCAR EL UPTIME POR TODOS LADOS
+            let rawUptime = data.uptime || 
+                            (data.global && data.global.uptime) || 
+                            (data.clusters[0] && (data.clusters[0].pm_uptime || data.clusters[0].uptime)) || 
+                            "--";
+            
             document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
 
             // RAM Y STATS
@@ -268,18 +268,17 @@ async function updateStatus() {
             document.getElementById('status-grid').innerHTML = data.clusters.map(c => {
                 const st = c.status ? c.status.toLowerCase() : 'offline';
                 let cl = st === 'online' ? 'online' : (st === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu || '0%'}</div></div>`;
+                return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB</div></div>`;
             }).join('');
 
             // GRID SHARDS
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
-                const st = c.status ? c.status.toLowerCase() : 'offline';
-                let cl = st === 'online' ? 'online' : 'offline';
-                return `<div class="box ${cl}">S${c.id}<div class="tooltip">Shard ${c.id}<br>Nodo: Cluster ${c.id}<br>Estado: ${st.toUpperCase()}</div></div>`;
+                const st = c.status ? c.status.toLowerCase() : 'online';
+                return `<div class="box ${st}">S${c.id}<div class="tooltip">Shard ${c.id}</div></div>`;
             }).join('');
         }
     } catch (e) {
-        console.error("Error en telemetría:", e);
+        console.error("Error:", e);
     }
 }
 
