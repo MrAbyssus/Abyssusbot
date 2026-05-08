@@ -1,53 +1,29 @@
 <script>
-    // Variable para evitar múltiples peticiones simultáneas si el servidor va lento
-    let estaCargando = false;
-
     async function actualizarDashboard() {
-        if (estaCargando) return;
-        estaCargando = true;
-
         try {
-            // Usamos ruta relativa para que funcione con cualquier URL de Cloudflare
-            // Si esto falla, cambia '/status' por la URL completa actual
-            const url = '/status'; 
+            // MUY IMPORTANTE: La URL debe terminar en /api/status
+            const url = 'https://volt-nhs-entering-compiled.trycloudflare.com/status';
             
             const res = await fetch(url);
-            
-            if (!res.ok) throw new Error('Error en la respuesta del servidor');
-            
             const data = await res.json();
 
-            const lista = document.getElementById('lista-clusters');
-            const estadoConexion = document.getElementById('conexion-estado');
-
-            if (data && data.clusters) {
+            const lista = document.getElementById('lista-clusters'); // Asegúrate que este ID exista
+            
+            if (data.clusters) {
                 lista.innerHTML = data.clusters.map(c => `
-                    <div style="background:#1a1a1a; padding:15px; margin:8px; border-radius:8px; border-left: 5px solid #00ffff; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                        <h4 style="margin:0; color:#00ffff; font-family: monospace; letter-spacing: 1px;">CLUSTER ${c.id}</h4>
-                        <p style="margin:5px 0 0 0; font-size:13px; color: #bbb;">
-                            ESTADO: <span style="color:${c.status === 'online' ? '#00ff00' : '#ff4444'}">${c.status.toUpperCase()}</span>
-                        </p>
+                    <div style="background:#222; padding:10px; margin:5px; border-radius:5px; border-left: 4px solid #0ff;">
+                        <h4 style="margin:0; color:#0ff;">CLUSTER ${c.id}</h4>
+                        <p style="margin:0; font-size:14px;">ESTADO: ${c.status.toUpperCase()}</p>
                     </div>
                 `).join('');
                 
-                if (estadoConexion) {
-                    estadoConexion.innerHTML = '<span style="color:#00ff00; font-weight:bold;">🟢 SISTEMA ONLINE</span>';
-                }
+                document.getElementById('conexion-estado').innerHTML = '<span style="color:#00ff00">🟢 CONECTADO</span>';
             }
         } catch (e) {
-            console.error("Error al actualizar dashboard:", e);
-            const estadoConexion = document.getElementById('conexion-estado');
-            if (estadoConexion) {
-                estadoConexion.innerHTML = '<span style="color:#ff4444; font-weight:bold;">🔴 ERROR DE CONEXIÓN</span>';
-            }
-        } finally {
-            estaCargando = false;
+            document.getElementById('conexion-estado').innerHTML = '<span style="color:red">🔴 DESCONECTADO</span>';
         }
     }
-
-    // Actualiza cada 5 segundos
     setInterval(actualizarDashboard, 5000);
-    
-    // Primera carga al abrir la página
-    document.addEventListener('DOMContentLoaded', actualizarDashboard);
+    actualizarDashboard();
 </script>
+
