@@ -176,24 +176,34 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 
-// 1. FUNCIÓN DE TIEMPO (Calcula diferencia si es Timestamp o formatea si es texto)
+// --- CORRECCIÓN DEFINITIVA DE TIEMPO ACTIVO ---
 function formatUptime(uptimeValue) {
-    if (!uptimeValue || uptimeValue === "--") return "--";
+    if (!uptimeValue || uptimeValue === "--") return "Calculando...";
     
     let ms;
-    // Si la API manda un timestamp de inicio (ej. de PM2)
-    if (uptimeValue > 1000000000000) {
-        ms = Date.now() - uptimeValue;
+    const now = Date.now();
+
+    // 1. Si recibimos un string tipo "2h 30m" de la API, lo dejamos pasar directamente
+    if (typeof uptimeValue === 'string' && (uptimeValue.includes('h') || uptimeValue.includes('m'))) {
+        return uptimeValue;
+    }
+
+    // 2. Si es un número gigante (Timestamp de PM2: ej. 1715123456789)
+    if (Number(uptimeValue) > 1000000000000) {
+        ms = now - Number(uptimeValue);
     } else {
+        // 3. Si son milisegundos ya calculados
         ms = parseInt(uptimeValue);
     }
-    
-    if (isNaN(ms) || ms < 0) return uptimeValue;
+
+    if (isNaN(ms) || ms < 0) return "--";
 
     let s = Math.floor(ms / 1000);
     let m = Math.floor(s / 60);
     let h = Math.floor(m / 60);
+    let d = Math.floor(h / 24);
 
+    if (d > 0) return `${d}d ${h % 24}h ${m % 60}m`;
     if (h > 0) return `${h}h ${m % 60}m`;
     if (m > 0) return `${m}m ${s % 60}s`;
     return `${s}s`;
@@ -234,7 +244,7 @@ async function updateStatus() {
         const data = await res.json();
 
         if (data && data.clusters) {
-            // UPTIME
+            // BUSCAR UPTIME (Prioridad: global > cluster0 > pm_uptime)
             const c0 = data.clusters[0];
             const rawUptime = data.uptime || (c0 && (c0.pm_uptime || c0.uptime)) || "--";
             document.getElementById('res-uptime').innerText = formatUptime(rawUptime);
@@ -262,7 +272,7 @@ async function updateStatus() {
                 return `<div class="box ${cl}">${c.id}<div class="tooltip">Cluster ${c.id}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu || '0%'}</div></div>`;
             }).join('');
 
-            // GRID SHARDS (CORREGIDO Y ACTIVO)
+            // GRID SHARDS
             document.getElementById('shards-grid').innerHTML = data.clusters.map(c => {
                 const st = c.status.toLowerCase();
                 let cl = st === 'online' ? 'online' : 'offline';
