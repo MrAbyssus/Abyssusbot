@@ -44,7 +44,7 @@ Solo Invitalo - [https://top.gg/bot/680897280433324081/invite](https://top.gg/bo
 
 ---
 
-## 🔒 Aviso de Privacidad Legal
+## 🔒 Aviso de Privacidad 
 
 Abyssus Bot ha sido diseñado con un principio fundamental: **la privacidad del usuario es intocable**.
 
