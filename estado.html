@@ -225,11 +225,11 @@ function startCountdown() {
         timeLeft -= 0.1;
         
         if (timeLeft <= 0) {
-            timeLeft = 5;
+            timeLeft = 3;
             updateStatus();
         }
 
-        const percentage = ((5 - timeLeft) / 5) * 100;
+        const percentage = ((3 - timeLeft) / 3) * 100;
         if (bar) bar.style.width = percentage + "%";
         if (timerText) timerText.innerText = Math.ceil(timeLeft);
     }, 100);
