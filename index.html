@@ -326,7 +326,7 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
 </div>
 
 <script>
-    // Función para animar el conteo de números
+    // Esta función crea el efecto de "ruleta" en los números
     function animateCount(element, start, end, duration) {
         if (start === end) return;
         let startTimestamp = null;
@@ -334,7 +334,10 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             const current = Math.floor(progress * (end - start) + start);
+            
+            // Formateamos con el + y comas para que se vea igual al diseño
             element.innerText = "+" + current.toLocaleString();
+            
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             }
@@ -344,23 +347,24 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
 
     async function actualizarDashboard() {
         try {
+            // El Date.now() es clave para que Cloudflare no te de datos viejos
             const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
             const data = await res.json();
             
-            const lista = document.getElementById('clusters-lista');
             const countSrv = document.getElementById('count-servidores');
+            const lista = document.getElementById('clusters-lista');
 
+            // 1. Animación del contador principal
             if (data.global && countSrv) {
                 const nuevoTotal = data.global.totalGuilds || 0;
-                // Obtenemos el valor actual quitando el "+" y las comas
                 const valorActual = parseInt(countSrv.innerText.replace(/[+,]/g, '')) || 0;
                 
-                // Si el número cambió, lo animamos
                 if (nuevoTotal !== valorActual) {
-                    animateCount(countSrv, valorActual, nuevoTotal, 1500);
+                    animateCount(countSrv, valorActual, nuevoTotal, 1000); // 1 segundo de animación
                 }
             }
 
+            // 2. Actualización de los Clusters
             if (data.clusters && lista) {
                 const globalUptime = data.global?.uptime || '0m';
                 lista.innerHTML = data.clusters.map(c => `
@@ -386,12 +390,13 @@ footer a:hover{ color:#fff; text-shadow:0 0 8px rgba(56,189,248,0.6); }
                 `).join('');
             }
         } catch (e) {
-            console.log("Error cargando monitoreo", e);
+            console.log("Error en el monitor:", e);
         }
     }
     
- setInterval(actualizarDashboard, 3000);
-    actualizarDashboard();
+    // Ejecución cada 3 segundos
+    setInterval(actualizarDashboard, 3000);
+    actualizarDashboard(); // Carga inicial
 </script>
  
 <section class="features">
