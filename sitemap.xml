@@ -24,14 +24,6 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- 📜 Changelog -->
-  <url>
-    <loc>https://mrabyssus.github.io/Abyssusbot/changelog.html</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
   <!-- 🔐 Privacidad -->
   <url>
     <loc>https://mrabyssus.github.io/Abyssusbot/privacidad.html</loc>
