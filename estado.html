@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abyssus Bot - Status Grid Pro</title>
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
     <style>
         :root {
             --bg: #16171d;
@@ -21,67 +19,51 @@
         body {
             background-color: var(--bg);
             color: var(--text-main);
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding-top: 100px;
+            padding-top: 80px;
             display: flex;
             justify-content: center;
         }
 
+        /* Navbar / Titulo */
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%;
             background: rgba(15, 16, 18, 0.8); backdrop-filter: blur(10px);
             border-bottom: 1px solid #2f3136; padding: 15px 0; z-index: 1000;
             display: flex; justify-content: center;
         }
-        .nav-content { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-content { width: 90%; max-width: 1000px; }
         .nav-logo { color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; font-size: 1.1rem; }
 
         .container { width: 90%; max-width: 1000px; padding: 20px; display: flex; flex-direction: column; }
         .section-title { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; }
         
-        .legend-list { list-style: none; padding: 0; margin-bottom: 30px; }
-        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
-        .icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 12px; }
-        .icon-online { border: 1px solid var(--online); color: var(--online); }
-        .icon-warning { border: 1px solid var(--warning); color: var(--warning); }
-        .icon-offline { border: 1px solid var(--offline); color: var(--offline); }
-
-        .resumen-box { margin-bottom: 20px; }
+        /* Cuadros de Info */
         .tech-info { 
             background: #0c0d12; padding: 15px 20px; border-radius: 5px; 
             display: block; max-width: fit-content; margin-top: 15px; 
             font-family: 'Courier New', monospace; border-left: 4px solid var(--accent);
-            box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
         }
-        .tech-line { display: flex; gap: 15px; color: var(--accent); font-weight: bold; }
+        .tech-line { display: flex; gap: 15px; color: var(--text-main); font-weight: bold; margin-bottom: 4px; }
         .tech-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
 
-        /* Estilos del Contador de Actualización */
-        .refresh-bar-container {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-top: 20px;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .refresh-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+        #sistema-status, #discord-status { font-weight: bold; }
+        .status-ok { color: var(--online); }
+        .status-ko { color: var(--offline); }
+        .status-warn { color: var(--warning); }
+
         .refresh-text {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             text-align: right;
-            margin-top: 5px;
+            margin-top: 10px;
             text-transform: uppercase;
         }
 
         .status-container { background: var(--panel); border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
+        
         .box {
             aspect-ratio: 1/1; background: #2f3136; border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
@@ -99,7 +81,6 @@
             position: absolute; z-index: 100; bottom: 125%; left: 50%;
             margin-left: -80px; opacity: 0; transition: opacity 0.2s;
             font-size: 0.75rem; border: 1px solid #333; pointer-events: none;
-            line-height: 1.4;
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
@@ -109,34 +90,37 @@
 
 <nav class="navbar">
     <div class="nav-content">
-        <a href="index.html" class="nav-logo">
+        <a href="#" class="nav-logo">
             <span style="color: var(--text-muted); font-weight: normal;">ABYSSUS</span> BOT
         </a>
     </div>
 </nav>
-      
-<div class="container">
-    <div class="section-title">Colores</div>
-    <ul class="legend-list">
-        <li class="legend-item"><span class="icon icon-online">✔</span> Sistema operando correctamente.</li>
-        <li class="legend-item"><span class="icon icon-warning">⚠</span> Latencia alta o reconectando.</li>
-        <li class="legend-item"><span class="icon icon-offline">✖</span> Módulo fuera de línea.</li>
-    </ul>
 
-    <div class="section-title">Resumen</div>
+<div class="container">
+    <div class="section-title">Resumen del Sistema</div>
     <div class="resumen-box">
         <div>Clusters activos: <b id="stat-clusters">--</b></div>
         <div>Shards Online: <b id="stat-shards">-- / --</b></div> 
         <div class="tech-info">
+            <div class="tech-line">
+                <span class="tech-label">ESTADO:</span> 
+                <span id="sistema-status" class="status-ok">SISTEMA OPERATIVO</span>
+            </div>
             <div class="tech-line"><span class="tech-label">RAM TOTAL:</span> <span id="res-ram">-- MB</span></div>
             <div class="tech-line"><span class="tech-label">TOTAL SERVIDORES:</span> <span id="res-servidores">--</span></div>
             <div class="tech-line"><span class="tech-label">TIEMPO ACTIVO:</span> <span id="res-uptime">--</span></div>
+            <div class="tech-line"><span class="tech-label">LATENCIA API:</span> <span id="res-ping">-- ms</span></div>
         </div>
-        <div class="refresh-bar-container">
-            <div id="refresh-bar" class="refresh-bar-fill"></div>
-        </div>
-        <div class="refresh-text">Próxima actualización en: <span id="refresh-timer">5</span>s</div>
     </div>
+
+    <div class="section-title">Estado de Servicios Externos</div>
+    <div class="tech-info" style="border-left-color: #5865F2;">
+        <div class="tech-line">
+            <span class="tech-label">DISCORD STATUS:</span> 
+            <span id="discord-status">CARGANDO...</span>
+        </div>
+    </div>
+    <div class="refresh-text">Actualización en: <span id="refresh-timer">3</span>s</div>
 
     <div class="section-title">Historial de Consumo (RAM)</div>
     <div class="status-container" style="margin-bottom: 20px;">
@@ -156,10 +140,11 @@ let labelHistory = [];
 let ramChart;
 let timeLeft = 3;
 
-const bar = document.getElementById('refresh-bar');
 const timerText = document.getElementById('refresh-timer');
-
+const statusText = document.getElementById('sistema-status');
+const discordText = document.getElementById('discord-status');
 const ctx = document.getElementById('ramChart').getContext('2d');
+
 ramChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -185,26 +170,58 @@ ramChart = new Chart(ctx, {
     }
 });
 
+function formatUptime(ms) {
+    if (!ms || isNaN(ms)) return ms;
+    let totalSeconds = Math.floor(ms / 1000);
+    let hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+    return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+async function fetchDiscordStatus() {
+    try {
+        const res = await fetch('https://srh84nwv69s6.statuspage.io/api/v2/status.json');
+        const data = await res.json();
+        if (data.status.indicator === 'none') {
+            discordText.innerText = "OPERATIVO";
+            discordText.className = "status-ok";
+        } else {
+            discordText.innerText = data.status.description.toUpperCase();
+            discordText.className = "status-warn";
+        }
+    } catch (e) {
+        discordText.innerText = "ERROR AL CONSULTAR";
+    }
+}
+
 async function updateStatus() {
+    const startTime = Date.now();
+    fetchDiscordStatus();
+
     try {
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
-        const clusters = data.clusters || (Array.isArray(data) ? data : []);
+        const ping = Date.now() - startTime;
+        document.getElementById('res-ping').innerText = ping + " ms";
 
+        const clusters = data.clusters || [];
         if (clusters.length > 0) {
-            const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || c.memory || 0)), 0);
-            const onlineCount = clusters.filter(c => (c.status || '').toLowerCase() === 'online').length;
+            statusText.innerText = "SISTEMA OPERATIVO";
+            statusText.className = "status-ok";
 
+            const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
             document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
             document.getElementById('stat-clusters').innerText = clusters.length;
-            document.getElementById('stat-shards').innerText = `${onlineCount} / ${clusters.length}`;
+            document.getElementById('stat-shards').innerText = `${clusters.filter(c => (c.status || '').toLowerCase() === 'online').length} / ${clusters.length}`;
             document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-            document.getElementById('res-uptime').innerText = data.global?.uptime || "ONLINE";
+            document.getElementById('res-uptime').innerText = formatUptime(data.global?.uptime);
 
             const gridHTML = clusters.map(c => {
                 const s = (c.status || 'offline').toLowerCase();
                 const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.ram}MB<br>CPU: ${c.cpu}</div></div>`;
+                return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>Cluster ${c.id}</b><br>Estado: ${s}<br>RAM: ${c.ram}MB</div></div>`;
             }).join('');
 
             document.getElementById('status-grid').innerHTML = gridHTML;
@@ -216,26 +233,19 @@ async function updateStatus() {
             ramChart.update();
         }
     } catch (e) {
-        document.getElementById('res-uptime').innerText = "Reconectando...";
+        statusText.innerText = "OFFLINE";
+        statusText.className = "status-ko";
     }
 }
 
 function startCountdown() {
     setInterval(() => {
         timeLeft -= 0.1;
-        
-        if (timeLeft <= 0) {
-            timeLeft = 3;
-            updateStatus();
-        }
-
-        const percentage = ((3 - timeLeft) / 3) * 100;
-        if (bar) bar.style.width = percentage + "%";
+        if (timeLeft <= 0) { timeLeft = 3; updateStatus(); }
         if (timerText) timerText.innerText = Math.ceil(timeLeft);
     }, 100);
 }
 
-// Iniciar procesos
 updateStatus();
 startCountdown();
 </script>
