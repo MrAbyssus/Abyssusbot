@@ -96,15 +96,25 @@
 </head>
 <body>
 
-<nav>
-        <a href="#" class="nav-logo">Abyssus <span>Sentinel</span></a>
-        <ul class="nav-links">
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/index.html">Inicio</a></li>
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/commands.html">Comandos</a></li>
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/estado.html">Estado de Red</a></li>
-        </ul>
-        <div class="staff-access" id="login-trigger" onclick="handleLogin()">Staff Login</div>
-    </nav>
+<nav class="nav">
+  <div class="nav-container">
+    <div class="logo">
+      <img src="img/logo.jpg" alt="Abyssus Logo">
+      <span>Abyssus Bot</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="commands.html">Comandos</a>
+      <a href="staffteam.html">Staff</a>  
+      <a href="estado.html">Estado de Red</a>
+    </div>
+    <a href="https://discord.com/oauth2/authorize?client_id=680897280433324081&redirect_uri=https://abyssus-auth.onrender.com/callback&response_type=code&scope=identify%20guilds"
+       class="discord-btn">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="18">
+      Dashboard
+    </a>
+  </div>
+</nav>
 
 <div class="header">
     <h1>📜 <span>Comandos</span></h1>
