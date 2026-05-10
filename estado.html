@@ -39,7 +39,6 @@
 
         .refresh-text { font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-top: 10px; }
         
-        /* Contenedor de Gráfica Reforzado */
         .chart-container { 
             background: var(--panel); 
             border-radius: 8px; 
@@ -112,7 +111,6 @@
 </div>
 
 <script>
-// Variables Globales
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
@@ -135,11 +133,9 @@ function addLog(msg, type = '') {
     logBox.prepend(entry);
 }
 
-// Inicialización de la gráfica mejorada
 function initChart() {
     const ctx = document.getElementById('ramChart');
     if (!ctx) return;
-    
     ramChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -158,38 +154,19 @@ function initChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false, // Desactivar animaciones para evitar bugs de renderizado
+            animation: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { 
-                    beginAtZero: false,
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' }, 
-                    ticks: { color: '#8e9297', font: { size: 10 } } 
-                },
+                y: { beginAtZero: false, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297', font: { size: 10 } } },
                 x: { display: false }
             }
         }
     });
 }
 
-function formatUptime(val) {
-    let num = parseFloat(val);
-    if (isNaN(num)) return "Conectando...";
-    let totalSeconds = num > 1000000 ? Math.floor(num / 1000) : Math.floor(num);
-    let h = Math.floor(totalSeconds / 3600);
-    let m = Math.floor((totalSeconds % 3600) / 60);
-    let s = totalSeconds % 60;
-    let res = [];
-    if (h > 0) res.push(`${h}h`);
-    if (m > 0) res.push(`${m}m`);
-    res.push(`${s}s`);
-    return res.join(' ');
-}
-
 async function update() {
     const start = Date.now();
     try {
-        // Discord Status
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
@@ -197,7 +174,6 @@ async function update() {
                 discordText.className = d.status.indicator === 'none' ? "status-ok" : "status-warn";
             }).catch(() => {});
 
-        // API Bot
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
@@ -208,7 +184,6 @@ async function update() {
         const clusters = data.clusters || [];
         const dead = clusters.filter(c => c.status?.toLowerCase() !== 'online');
         
-        // Watchdog Logic
         if (dead.length !== lastDeadCount) {
             addLog(dead.length > lastDeadCount ? `ALERTA: ${dead.length} shards caídos.` : "INFO: Shards recuperados.", dead.length > lastDeadCount ? 'err' : 'ok');
             lastDeadCount = dead.length;
@@ -219,14 +194,15 @@ async function update() {
         shardStatText.innerText = `${clusters.length - dead.length} / ${clusters.length}`;
         shardStatText.className = dead.length > 0 ? "watchdog-alert" : "";
 
-        // UI Stats
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-        document.getElementById('res-uptime').innerText = formatUptime(data.global?.uptime);
+        
+        // CORRECCIÓN AQUÍ: Se eliminó formatUptime para usar el valor directo de la API
+        document.getElementById('res-uptime').innerText = data.global?.uptime || "Conectando...";
+        
         document.getElementById('stat-clusters').innerText = clusters.length;
 
-        // Renderizado de Mallas
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
@@ -236,21 +212,18 @@ async function update() {
         document.getElementById('status-grid').innerHTML = gridHTML;
         document.getElementById('shards-grid').innerHTML = gridHTML;
 
-        // Actualizar Gráfica
         if (ramChart) {
             ramHistory.push(totalRam);
             labelHistory.push("");
             if(ramHistory.length > 40) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
         }
-
     } catch (e) {
         statusText.innerText = "OFFLINE";
         statusText.className = "status-ko";
     }
 }
 
-// Iniciar todo cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
     addLog("Dashboard iniciado.");
