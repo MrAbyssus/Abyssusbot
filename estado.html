@@ -64,7 +64,9 @@
         .log-err { color: var(--offline); }
         .log-ok { color: var(--online); }
 
-        .box .tooltip { visibility: hidden; width: 160px; background: #000; color: #fff; text-align: left; border-radius: 4px; padding: 10px; position: absolute; z-index: 100; bottom: 125%; left: 50%; margin-left: -80px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; border: 1px solid #333; pointer-events: none; }
+        /* TOOLTIP RECUADRO NEGRO */
+        .box .tooltip { visibility: hidden; width: 160px; background: #000; color: #fff; text-align: left; border-radius: 4px; padding: 10px; position: absolute; z-index: 100; bottom: 125%; left: 50%; margin-left: -80px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; border: 1px solid #333; pointer-events: none; line-height: 1.4; }
+        .box .tooltip b { color: var(--accent); }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -197,16 +199,23 @@ async function update() {
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-        
-        // CORRECCIÓN AQUÍ: Se eliminó formatUptime para usar el valor directo de la API
         document.getElementById('res-uptime').innerText = data.global?.uptime || "Conectando...";
-        
         document.getElementById('stat-clusters').innerText = clusters.length;
 
+        // ACTUALIZACIÓN DE LAS MALLAS CON EL TOOLTIP DETALLADO
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-            return `<div class="box ${cl}">${c.id}<div class="tooltip">ID: ${c.id}<br>Estado: ${s}<br>RAM: ${c.ram}MB</div></div>`;
+            return `
+                <div class="box ${cl}">
+                    ${c.id}
+                    <div class="tooltip">
+                        <b>Cluster #${c.id}</b><br>
+                        Estado: ${s.toUpperCase()}<br>
+                        Servidores: ${c.guilds || 0}<br>
+                        RAM: ${c.ram} MB
+                    </div>
+                </div>`;
         }).join('');
 
         document.getElementById('status-grid').innerHTML = gridHTML;
