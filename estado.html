@@ -23,7 +23,7 @@
         .nav-logo { color: white; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; text-decoration: none; font-size: 1.5rem; }
         .nav-logo span { color: var(--accent); }
 
-        .container { width: 95%; max-width: 1000px; padding: 20px; display: flex; flex-direction: column; }
+        .container { width: 90%; max-width: 1000px; padding: 20px; display: flex; flex-direction: column; }
         .section-title { font-size: 1.1rem; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 1px solid #2f3136; padding-bottom: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         
         .tech-info { background: #0c0d12; padding: 15px 20px; border-radius: 5px; display: block; max-width: fit-content; margin-top: 10px; font-family: 'Courier New', monospace; border-left: 4px solid var(--accent); }
@@ -50,13 +50,13 @@
         }
 
         .status-container { background: var(--panel); border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box; margin-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
         
         .box { aspect-ratio: 1/1; background: #2f3136; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; position: relative; cursor: pointer; transition: 0.1s; border: 1px solid transparent; }
-        .box:hover { transform: scale(1.15); z-index: 10; border: 1px solid white; }
-        .online { color: var(--online); border-color: var(--online); background: rgba(67, 181, 129, 0.1); }
-        .warning { color: var(--warning); border-color: var(--warning); background: rgba(250, 166, 26, 0.1); }
-        .offline { color: var(--offline); border-color: var(--offline); background: rgba(240, 71, 71, 0.1); }
+        .box:hover { transform: scale(1.2); z-index: 10; border: 1px solid white; }
+        .online { color: var(--online); border-color: var(--online); }
+        .warning { color: var(--warning); border-color: var(--warning); }
+        .offline { color: var(--offline); border-color: var(--offline); }
 
         .audit-log { background: #050505; border-radius: 6px; height: 140px; overflow-y: auto; padding: 15px; font-family: 'Courier New', monospace; font-size: 0.85rem; border: 1px solid #222; }
         .log-entry { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 3px; }
@@ -72,45 +72,45 @@
 <body>
 
 <nav class="navbar">
-    <div class="nav-content"><a href="#" class="nav-logo">ABYSSUS <span>BOT</span></a></div>
+    <div class="nav-content"><a href="https://mrabyssus.github.io/Abyssusbot/index.html" class="nav-logo">ABYSSUS <span>BOT</span></a></div>
 </nav>
 
 <div class="container">
-    <div class="section-title">Resumen de Sistema</div>
+    <div class="section-title">Panel de Control</div>
     <div class="resumen-box">
+        <div>Clusters: <b id="stat-clusters">--</b> | Shards: <b id="stat-shards">-- / --</b></div> 
         <div class="tech-info">
-            <div class="tech-line"><span class="tech-label">ESTADO API:</span> <span id="sistema-status">CONECTANDO...</span></div>
-            <div class="tech-line"><span class="tech-label">RAM TOTAL:</span> <span id="res-ram">-- MB</span></div>
+            <div class="tech-line"><span class="tech-label">ESTADO:</span> <span id="sistema-status">CONECTANDO...</span></div>
+            <div class="tech-line"><span class="tech-label">RAM:</span> <span id="res-ram">-- MB</span></div>
             <div class="tech-line"><span class="tech-label">SERVIDORES:</span> <span id="res-servidores">--</span></div>
-            <div class="tech-line"><span class="tech-label">UPTIME VPS:</span> <span id="res-uptime">--</span></div>
-            <div class="tech-line"><span class="tech-label">LATENCIA API:</span> <span id="res-ping">-- ms</span></div>
+            <div class="tech-line"><span class="tech-label">TIEMPO ACTIVO:</span> <span id="res-uptime">Cargando...</span></div>
+            <div class="tech-line"><span class="tech-label">PING:</span> <span id="res-ping">-- ms</span></div>
         </div>
     </div>
 
-    <div class="section-title">Servicios Externos</div>
+    <div class="section-title">Servicios & Watchdog</div>
     <div class="tech-info" style="border-left-color: var(--discord); min-width: 320px;">
-        <div class="tech-line"><span class="tech-label">DISCORD API:</span> <span id="discord-status">...</span></div>
+        <div class="tech-line"><span class="tech-label">DISCORD:</span> <span id="discord-status">...</span></div>
         <div class="tech-line"><span class="tech-label">INCIDENTES:</span> <span id="watchdog-status" class="status-ok">0 DETECTADOS</span></div>
     </div>
-    <div class="refresh-text">Próxima actualización en: <span id="refresh-timer">3</span>s</div>
+    <div class="refresh-text">Refresco en: <span id="refresh-timer">3</span>s</div>
 
-    <div class="section-title">Consumo de RAM (Tiempo Real)</div>
+    <div class="section-title">Monitor de RAM</div>
     <div class="chart-container">
         <canvas id="ramChart"></canvas>
     </div>
 
-    <div class="section-title">Malla de Clusters (PM2)</div>
+    <div class="section-title">Malla de Clusters</div>
     <div class="status-container"><div id="status-grid" class="grid"></div></div>
 
-    <div class="section-title">Historial de Eventos</div>
+    <div class="section-title">Malla de Shards</div>
+    <div class="status-container"><div id="shards-grid" class="grid"></div></div>
+
+    <div class="section-title">Historial (Audit Log)</div>
     <div class="audit-log" id="audit-log"></div>
 </div>
 
 <script>
-// --- CONFIGURACIÓN ---
-const VPS_IP = "TU_IP_DEL_VPS"; // <--- CAMBIA ESTO POR TU IP REAL
-// ---------------------
-
 let ramHistory = [];
 let labelHistory = [];
 let ramChart;
@@ -122,6 +122,7 @@ const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
 const discordText = document.getElementById('discord-status');
 const watchdogText = document.getElementById('watchdog-status');
+const shardStatText = document.getElementById('stat-shards');
 
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
@@ -130,11 +131,11 @@ function addLog(msg, type = '') {
     let colorClass = type === 'err' ? 'log-err' : (type === 'ok' ? 'log-ok' : '');
     entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
     logBox.prepend(entry);
-    if(logBox.children.length > 20) logBox.lastChild.remove();
 }
 
 function initChart() {
     const ctx = document.getElementById('ramChart');
+    if (!ctx) return;
     ramChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -145,7 +146,7 @@ function initChart() {
                 borderColor: '#00ffcc',
                 backgroundColor: 'rgba(0, 255, 204, 0.1)',
                 fill: true,
-                tension: 0.4,
+                tension: 0.3,
                 pointRadius: 0,
                 borderWidth: 2
             }]
@@ -156,7 +157,7 @@ function initChart() {
             animation: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297' } },
+                y: { beginAtZero: false, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8e9297', font: { size: 10 } } },
                 x: { display: false }
             }
         }
@@ -166,18 +167,14 @@ function initChart() {
 async function update() {
     const start = Date.now();
     try {
-        // Estado de Discord
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
-                discordText.innerText = d.status.description.toUpperCase();
+                discordText.innerText = (d.status.description).toUpperCase();
                 discordText.className = d.status.indicator === 'none' ? "status-ok" : "status-warn";
             }).catch(() => {});
 
-        // Estado del Bot (Tu VPS)
-        const res = await fetch(`http://${VPS_IP}:3030/api/status?t=` + Date.now());
-        if (!res.ok) throw new Error("Offline");
-        
+        const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
         document.getElementById('res-ping').innerText = (Date.now() - start) + " ms";
@@ -185,44 +182,53 @@ async function update() {
         statusText.className = "status-ok";
 
         const clusters = data.clusters || [];
-        const dead = clusters.filter(c => c.status !== 'online');
+        const dead = clusters.filter(c => c.status?.toLowerCase() !== 'online');
         
         if (dead.length !== lastDeadCount) {
-            addLog(dead.length > lastDeadCount ? `ALERTA: Cluster caído detectado.` : "SISTEMA: Todos los clusters operativos.", dead.length > lastDeadCount ? 'err' : 'ok');
+            addLog(dead.length > lastDeadCount ? `ALERTA: ${dead.length} shards caídos.` : "INFO: Shards recuperados.", dead.length > lastDeadCount ? 'err' : 'ok');
             lastDeadCount = dead.length;
         }
 
-        watchdogText.innerText = dead.length > 0 ? `${dead.length} CAÍDOS` : "0 DETECTADOS";
+        watchdogText.innerText = dead.length > 0 ? `${dead.length} DETECTADOS` : "0 DETECTADOS";
         watchdogText.className = dead.length > 0 ? "watchdog-alert" : "status-ok";
+        shardStatText.innerText = `${clusters.length - dead.length} / ${clusters.length}`;
+        shardStatText.className = dead.length > 0 ? "watchdog-alert" : "";
 
-        const totalRam = clusters.reduce((acc, c) => acc + (parseInt(c.ram) || 0), 0);
-        document.getElementById('res-ram').innerText = totalRam + " MB";
+        const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
+        document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-        document.getElementById('res-uptime').innerText = data.global?.uptime || "--";
+        
+        // CORRECCIÓN AQUÍ: Se eliminó formatUptime para usar el valor directo de la API
+        document.getElementById('res-uptime').innerText = data.global?.uptime || "Conectando...";
+        
+        document.getElementById('stat-clusters').innerText = clusters.length;
 
         const gridHTML = clusters.map(c => {
-            const cl = c.status === 'online' ? 'online' : 'offline';
-            return `<div class="box ${cl}">${c.id}<div class="tooltip">ID: ${c.id}<br>Estado: ${c.status}<br>RAM: ${c.ram}MB<br>PING: ${c.ping}ms</div></div>`;
+            const s = (c.status || 'offline').toLowerCase();
+            const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
+            return `<div class="box ${cl}">${c.id}<div class="tooltip">ID: ${c.id}<br>Estado: ${s}<br>RAM: ${c.ram}MB</div></div>`;
         }).join('');
 
         document.getElementById('status-grid').innerHTML = gridHTML;
+        document.getElementById('shards-grid').innerHTML = gridHTML;
 
         if (ramChart) {
             ramHistory.push(totalRam);
             labelHistory.push("");
-            if(ramHistory.length > 30) { ramHistory.shift(); labelHistory.shift(); }
+            if(ramHistory.length > 40) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
         }
     } catch (e) {
-        statusText.innerText = "OFFLINE (SIN CONEXIÓN)";
+        statusText.innerText = "OFFLINE";
         statusText.className = "status-ko";
-        addLog("ERROR: No se pudo conectar con el VPS.", "err");
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
+    addLog("Dashboard iniciado.");
     update();
+    
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { timeLeft = 3; update(); }
