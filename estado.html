@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Bot - Estado de Red</title>
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <title>Abyssus Bot | Dashboard</title>
     <style>
         :root {
             --bg: #16171d;
@@ -66,9 +64,28 @@
         .log-err { color: var(--offline); }
         .log-ok { color: var(--online); }
 
-        /* TOOLTIP RECUADRO NEGRO */
-        .box .tooltip { visibility: hidden; width: 160px; background: #000; color: #fff; text-align: left; border-radius: 4px; padding: 10px; position: absolute; z-index: 100; bottom: 125%; left: 50%; margin-left: -80px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; border: 1px solid #333; pointer-events: none; line-height: 1.4; }
-        .box .tooltip b { color: var(--accent); }
+        /* RECUADRO NEGRO (TOOLTIP) */
+        .box .tooltip { 
+            visibility: hidden; 
+            width: 160px; 
+            background: #000; 
+            color: #fff; 
+            text-align: left; 
+            border-radius: 4px; 
+            padding: 10px; 
+            position: absolute; 
+            z-index: 100; 
+            bottom: 125%; 
+            left: 50%; 
+            margin-left: -80px; 
+            opacity: 0; 
+            transition: opacity 0.2s; 
+            font-size: 0.75rem; 
+            border: 1px solid #333; 
+            pointer-events: none;
+            line-height: 1.4;
+        }
+        .box .tooltip b { color: var(--accent); display: block; margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 2px; }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -104,10 +121,10 @@
         <canvas id="ramChart"></canvas>
     </div>
 
-    <div class="section-title">Malla de Clusters</div>
+    <div class="section-title">Estado Clusters</div>
     <div class="status-container"><div id="status-grid" class="grid"></div></div>
 
-    <div class="section-title">Malla de Shards</div>
+    <div class="section-title">Estado Shards</div>
     <div class="status-container"><div id="shards-grid" class="grid"></div></div>
 
     <div class="section-title">Historial (Audit Log)</div>
@@ -135,6 +152,7 @@ function addLog(msg, type = '') {
     let colorClass = type === 'err' ? 'log-err' : (type === 'ok' ? 'log-ok' : '');
     entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
     logBox.prepend(entry);
+    if(logBox.children.length > 20) logBox.lastChild.remove();
 }
 
 function initChart() {
@@ -171,6 +189,7 @@ function initChart() {
 async function update() {
     const start = Date.now();
     try {
+        // Discord API Status
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
@@ -178,6 +197,7 @@ async function update() {
                 discordText.className = d.status.indicator === 'none' ? "status-ok" : "status-warn";
             }).catch(() => {});
 
+        // Abyssus API Status
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
@@ -204,7 +224,7 @@ async function update() {
         document.getElementById('res-uptime').innerText = data.global?.uptime || "Conectando...";
         document.getElementById('stat-clusters').innerText = clusters.length;
 
-        // ACTUALIZACIÓN DE LAS MALLAS CON EL TOOLTIP DETALLADO
+        // Generación de mallas con el recuadro negro detallado
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
@@ -212,10 +232,10 @@ async function update() {
                 <div class="box ${cl}">
                     ${c.id}
                     <div class="tooltip">
-                        <b>Cluster #${c.id}</b><br>
-                        Estado: ${s.toUpperCase()}<br>
-                        Servidores: ${c.guilds || 0}<br>
-                        RAM: ${c.ram} MB
+                        <b>DETALLES CLUSTER #${c.id}</b>
+                        • Estado: ${s.toUpperCase()}<br>
+                        • Servidores: ${c.guilds || 0}<br>
+                        • RAM: ${c.ram} MB
                     </div>
                 </div>`;
         }).join('');
@@ -237,7 +257,7 @@ async function update() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
-    addLog("Dashboard iniciado.");
+    addLog("Dashboard sincronizado correctamente.", "ok");
     update();
     
     setInterval(() => {
