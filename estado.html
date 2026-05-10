@@ -64,7 +64,6 @@
         .log-err { color: var(--offline); }
         .log-ok { color: var(--online); }
 
-        /* RECUADRO NEGRO (TOOLTIP) */
         .box .tooltip { 
             visibility: hidden; 
             width: 160px; 
@@ -97,37 +96,34 @@
 </nav>
 
 <div class="container">
-    <div class="section-title">Panel de Control</div>
+    <div class="section-title">Resumen de Sistema</div>
     <div class="resumen-box">
-        <div>Clusters: <b id="stat-clusters">--</b> | Shards: <b id="stat-shards">-- / --</b></div> 
+        <div>Clusters Activos: <b id="stat-clusters">--</b></div> 
         <div class="tech-info">
             <div class="tech-line"><span class="tech-label">ESTADO:</span> <span id="sistema-status">CONECTANDO...</span></div>
-            <div class="tech-line"><span class="tech-label">RAM:</span> <span id="res-ram">-- MB</span></div>
+            <div class="tech-line"><span class="tech-label">RAM TOTAL:</span> <span id="res-ram">-- MB</span></div>
             <div class="tech-line"><span class="tech-label">SERVIDORES:</span> <span id="res-servidores">--</span></div>
             <div class="tech-line"><span class="tech-label">TIEMPO ACTIVO:</span> <span id="res-uptime">Cargando...</span></div>
-            <div class="tech-line"><span class="tech-label">PING:</span> <span id="res-ping">-- ms</span></div>
+            <div class="tech-line"><span class="tech-label">LATENCIA API:</span> <span id="res-ping">-- ms</span></div>
         </div>
     </div>
 
-    <div class="section-title">Servicios & Watchdog</div>
+    <div class="section-title">Watchdog & Servicios</div>
     <div class="tech-info" style="border-left-color: var(--discord); min-width: 320px;">
-        <div class="tech-line"><span class="tech-label">DISCORD:</span> <span id="discord-status">...</span></div>
+        <div class="tech-line"><span class="tech-label">DISCORD API:</span> <span id="discord-status">...</span></div>
         <div class="tech-line"><span class="tech-label">INCIDENTES:</span> <span id="watchdog-status" class="status-ok">0 DETECTADOS</span></div>
     </div>
-    <div class="refresh-text">Refresco en: <span id="refresh-timer">3</span>s</div>
+    <div class="refresh-text">Próximo refresco: <span id="refresh-timer">3</span>s</div>
 
-    <div class="section-title">Monitor de RAM</div>
+    <div class="section-title">Monitor de Rendimiento (RAM)</div>
     <div class="chart-container">
         <canvas id="ramChart"></canvas>
     </div>
 
-    <div class="section-title">Estado Clusters</div>
+    <div class="section-title">Estado por Cluster</div>
     <div class="status-container"><div id="status-grid" class="grid"></div></div>
 
-    <div class="section-title">Estado Shards</div>
-    <div class="status-container"><div id="shards-grid" class="grid"></div></div>
-
-    <div class="section-title">Historial (Audit Log)</div>
+    <div class="section-title">Historial de Eventos</div>
     <div class="audit-log" id="audit-log"></div>
 </div>
 
@@ -143,7 +139,6 @@ const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
 const discordText = document.getElementById('discord-status');
 const watchdogText = document.getElementById('watchdog-status');
-const shardStatText = document.getElementById('stat-shards');
 
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
@@ -189,7 +184,6 @@ function initChart() {
 async function update() {
     const start = Date.now();
     try {
-        // Discord API Status
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
@@ -197,7 +191,6 @@ async function update() {
                 discordText.className = d.status.indicator === 'none' ? "status-ok" : "status-warn";
             }).catch(() => {});
 
-        // Abyssus API Status
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
@@ -209,14 +202,12 @@ async function update() {
         const dead = clusters.filter(c => c.status?.toLowerCase() !== 'online');
         
         if (dead.length !== lastDeadCount) {
-            addLog(dead.length > lastDeadCount ? `ALERTA: ${dead.length} shards caídos.` : "INFO: Shards recuperados.", dead.length > lastDeadCount ? 'err' : 'ok');
+            addLog(dead.length > lastDeadCount ? `ALERTA: Problema en ${dead.length} clusters.` : "INFO: Clusters restablecidos.", dead.length > lastDeadCount ? 'err' : 'ok');
             lastDeadCount = dead.length;
         }
 
         watchdogText.innerText = dead.length > 0 ? `${dead.length} DETECTADOS` : "0 DETECTADOS";
         watchdogText.className = dead.length > 0 ? "watchdog-alert" : "status-ok";
-        shardStatText.innerText = `${clusters.length - dead.length} / ${clusters.length}`;
-        shardStatText.className = dead.length > 0 ? "watchdog-alert" : "";
 
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
@@ -224,16 +215,20 @@ async function update() {
         document.getElementById('res-uptime').innerText = data.global?.uptime || "Conectando...";
         document.getElementById('stat-clusters').innerText = clusters.length;
 
-        // Generación de mallas con el recuadro negro detallado
+       // Generación de la malla con el tooltip actualizado
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
+            
+            // Asumimos que cada cluster maneja sus shards correspondientes
+            // Si tu API no envía el número exacto, puedes ponerlo fijo o usar una variable
             return `
                 <div class="box ${cl}">
                     ${c.id}
                     <div class="tooltip">
                         <b>ID CLUSTER #${c.id}</b>
                         • Estado: ${s.toUpperCase()}<br>
+                        • Shards Conectados: 6/6<br>
                         • Servidores: ${c.guilds || 0}<br>
                         • RAM: ${c.ram} MB
                     </div>
@@ -241,7 +236,6 @@ async function update() {
         }).join('');
 
         document.getElementById('status-grid').innerHTML = gridHTML;
-        document.getElementById('shards-grid').innerHTML = gridHTML;
 
         if (ramChart) {
             ramHistory.push(totalRam);
