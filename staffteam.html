@@ -7,7 +7,7 @@
     <link rel="icon" href="img/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
     <style>
-        /* ===== TUS ESTILOS ORIGINALES ===== */
+        /* ===== RESET & BASE ===== */
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth;}
         
@@ -105,25 +105,26 @@
     <main class="staff-grid">
         <div class="staff-card">
             <div class="avatar-container">
-                <div class="edit-badge" onclick="uploadToCloud('img-1')">SUBIR</div>
+                <div class="edit-badge" onclick="uploadToCloud('img-1')">EDITAR</div>
                 <img src="img/a9b6c0de4cad5ca60b9678a67da948dc.webp" id="img-1" class="staff-avatar">
             </div>
             <h2 class="staff-name">Mr.Abyssus</h2>
             <span class="staff-role">CTO & Founder</span>
-            <p class="staff-bio">Desarrollador principal de Abyssus Bot</p>
+            <p class="staff-bio">Desarrollador principal y arquitecto de sistemas de Abyssus Bot.</p>
         </div>
 
         <div class="staff-card">
-    <div class="avatar-container">
-        <div class="edit-badge" onclick="uploadToCloud('img-2')">EDITAR</div>
-        <img src="img/hiken.jpg" id="img-2" class="staff-avatar">
-    </div>
-    <h2 class="staff-name">HIKEN D RASEC</h2>
-    <span class="staff-role" style="border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
-        Sponsor & Co-Founder
-    </span>
-    <p class="staff-bio">Responsable de la infraestructura y sostenibilidad del proyecto. Garantiza la operatividad 24/7 de nuestros sistemas.</p>
-</div>
+            <div class="avatar-container">
+                <div class="edit-badge" onclick="uploadToCloud('img-2')">EDITAR</div>
+                <img src="img/hiken.jpg" id="img-2" class="staff-avatar">
+            </div>
+            <h2 class="staff-name">HIKEN D RASEC</h2>
+            <span class="staff-role" style="border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+                Sponsor & Co-Founder
+            </span>
+            <p class="staff-bio">Responsable de la infraestructura y sostenibilidad del proyecto. Garantiza la operatividad 24/7 de nuestros sistemas.</p>
+        </div>
+    </main>
 
     <input type="file" id="file-helper" style="display:none" accept="image/*">
 
@@ -180,7 +181,7 @@
                     if (result.success) {
                         const cloudUrl = result.data.url;
                         imgElement.src = cloudUrl;
-                        localStorage.setItem(imgId, cloudUrl); // Aquí se guarda
+                        localStorage.setItem(imgId, cloudUrl);
                         alert("Subida con éxito");
                     }
                 } catch (error) {
@@ -192,14 +193,11 @@
             fileInput.click();
         }
 
-        // EL ÚNICO CAMBIO REAL: Carga forzada al final
         window.addEventListener('load', () => {
             if (sessionStorage.getItem('isStaff')) {
                 document.getElementById('app').classList.add('logged-in');
                 document.getElementById('login-trigger').innerText = "Cerrar Sesión";
             }
-            
-            // Forzamos que las imágenes de LocalStorage pisen a las del HTML
             const saved1 = localStorage.getItem('img-1');
             const saved2 = localStorage.getItem('img-2');
             if (saved1) document.getElementById('img-1').src = saved1;
