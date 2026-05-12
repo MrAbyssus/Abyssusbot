@@ -213,63 +213,57 @@
 
 <main>
 
-    <!-- Responsable -->
     <section class="card fade-in">
-        <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-        <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa como responsable del manejo de los registros (logs) dentro de su comunidad.</p>
-    </section>
+    <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
+    <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa como responsable del manejo de los registros (logs) dentro de su comunidad.</p>
+</section>
 
-    <!-- Datos Recolectados -->
-    <section class="card fade-in">
-        <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
-        <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
-        <ul>
-            <li><strong>Identificadores:</strong> ID único de Discord de usuarios, servidores y canales.</li>
-            <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (usado en tablas de niveles y economía).</li>
-            <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo de <code>modlogs</code> es activado por un administrador).</li>
-        </ul>
-    </section>
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
+    <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
+    <ul>
+        <li><strong>Identificadores:</strong> ID único de Discord de usuarios, servidores y canales.</li>
+        <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (usado en registros de niveles y economía).</li>
+        <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo de <code>modlogs</code> es activado por un administrador).</li>
+    </ul>
+</section>
 
-    <!-- Dashboard -->
-    <section class="card fade-in" style="border-left: 4px solid var(--accent);">
-        <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-        <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p>
-        <ul>
-            <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña de Discord.</li>
-            <li><strong>Cookies:</strong> Usamos cookies técnicas estrictamente necesarias para mantener tu sesión iniciada de forma segura.</li>
-            <li><strong>Servidores:</strong> Leemos la lista de servidores donde tienes permisos para mostrarte cuáles puedes configurar.</li>
-        </ul>
-    </section>
+<section class="card fade-in" style="border-left: 4px solid var(--accent);">
+    <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
+    <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p>
+    <ul>
+        <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros y cifrados para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña de Discord.</li>
+        <li><strong>Cookies:</strong> Usamos cookies técnicas estrictamente necesarias para mantener tu sesión iniciada de forma segura.</li>
+        <li><strong>Servidores:</strong> Leemos la lista de servidores donde tienes permisos para mostrarte cuáles puedes configurar.</li>
+    </ul>
+</section>
 
-    <!-- Seguridad -->
-    <section class="card fade-in">
-        <h2><i class="fa-solid fa-shield-halved"></i> Seguridad del Almacenamiento</h2>
-        <p>Los datos se guardan en bases de datos protegidas y archivos de configuración estructurados:</p>
-        <ul>
-            <li><code>economia.json</code> - Registra saldos y transacciones virtuales del juego.</li>
-            <li><code>levels.json</code> - Almacena experiencia y rangos ganados por actividad.</li>
-            <li><code>config.json</code> - Guarda los ajustes personalizados de cada servidor.</li>
-        </ul>
-    </section>
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad del Almacenamiento</h2>
+    <p>Los datos se guardan en sistemas de almacenamiento protegidos y estructuras de configuración optimizadas:</p>
+    <ul>
+        <li><strong>Sistema de Economía:</strong> Registra saldos y transacciones virtuales del juego.</li>
+        <li><strong>Sistema de Niveles:</strong> Almacena experiencia y rangos ganados por actividad.</li>
+        <li><strong>Configuraciones:</strong> Guarda los ajustes personalizados de cada comunidad.</li>
+    </ul>
+</section>
 
-    <!-- Control de Registros y Purga -->
-    <section class="card fade-in">
-        <h2><i class="fa-solid fa-erasing-lines"></i> Control de Registros y Purga</h2>
-        <p>Abyssus Bot incluye herramientas de gestión de datos de nivel administrativo para garantizar la privacidad institucional:</p>
-        <ul>
-            <li><strong>Eliminación Bajo Demanda (Purga):</strong> Mediante el comando <code>/modlogs borrar</code>, los administradores pueden ejecutar una purga que elimina <strong>todos</strong> los registros de moderación del servidor de manera definitiva.</li>
-            <li><strong>Destrucción de Datos:</strong> Una vez ejecutado el borrado, la información es eliminada del objeto raíz en nuestra base de datos (<code>modlogs.json</code>), haciendo que la recuperación sea imposible.</li>
-            <li><strong>Transparencia:</strong> Los usuarios pueden consultar su propio historial mediante <code>/modlogs usuario</code> antes de cualquier proceso de limpieza institucional.</li>
-            <li><strong>Derecho al Olvido:</strong> Garantizamos la eliminación de datos de servidores que expulsen al bot o permanezcan inactivos por más de 90 días durante nuestras ventanas de mantenimiento.</li>
-        </ul>
-    </section>
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-erasing-lines"></i> Control de Registros y Purga</h2>
+    <p>Abyssus Bot garantiza la privacidad institucional mediante herramientas de gestión de datos de nivel administrativo:</p>
+    <ul>
+        <li><strong>Eliminación Bajo Demanda:</strong> Los administradores pueden ejecutar una purga que elimina los registros de moderación del servidor. Esta acción es definitiva y responsabilidad exclusiva de la administración del servidor.</li>
+        <li><strong>Destrucción de Datos:</strong> Una vez ejecutado el borrado, la información es eliminada de nuestros sistemas de almacenamiento, haciendo que la recuperación sea imposible.</li>
+        <li><strong>Transparencia:</strong> Los usuarios pueden consultar su propio historial mediante comandos de usuario antes de cualquier proceso de limpieza institucional.</li>
+        <li><strong>Derecho al Olvido:</strong> Garantizamos la eliminación de datos de servidores que expulsen al bot o permanezcan inactivos por más de 90 días durante nuestras ventanas de mantenimiento.</li>
+    </ul>
+</section>
 
-    <!-- Contacto -->
-    <section class="card fade-in">
-        <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
-        <p>Para consultas sobre privacidad, soporte o cualquier duda:</p>
-        <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
-    </section>
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
+    <p>Para consultas sobre privacidad, soporte o cualquier duda:</p>
+    <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
+</section>
 
 </main>
 
