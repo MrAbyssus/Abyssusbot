@@ -45,7 +45,6 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
 html{scroll-behavior:smooth;}
 
 body{
@@ -65,7 +64,6 @@ body{
   border-bottom:1px solid rgba(255,255,255,0.06);
   z-index:1000;
 }
-
 .nav-container{
   max-width:1200px;
   margin:auto;
@@ -74,7 +72,6 @@ body{
   align-items:center;
   justify-content:space-between;
 }
-
 .logo{
   display:flex;
   align-items:center;
@@ -82,26 +79,22 @@ body{
   font-weight:800;
   font-size:1.3rem;
 }
-
 .logo span{
   background:linear-gradient(90deg,#38bdf8,#6366f1);
   -webkit-background-clip:text;
   color:transparent;
 }
-
 .logo img{
   width:36px;
   height:36px;
   border-radius:8px;
   animation:pulseLogo 2.5s infinite ease-in-out;
 }
-
 @keyframes pulseLogo{
   0%{ transform:scale(1); box-shadow:0 0 0 rgba(56,189,248,0); }
   50%{ transform:scale(1.08); box-shadow:0 0 20px rgba(56,189,248,0.6); }
   100%{ transform:scale(1); box-shadow:0 0 0 rgba(56,189,248,0); }
 }
-
 .nav-links a{
   color:#aaa;
   margin:0 15px;
@@ -110,9 +103,7 @@ body{
   position:relative;
   transition:.3s;
 }
-
 .nav-links a:hover{color:#fff;}
-
 .nav-links a::after{
   content:"";
   position:absolute;
@@ -123,7 +114,6 @@ body{
   background:linear-gradient(90deg,#38bdf8,#6366f1);
   transition:.3s;
 }
-
 .nav-links a:hover::after{ width:100%; }
 
 .discord-btn{
@@ -140,9 +130,7 @@ body{
   box-shadow:0 4px 20px rgba(88,101,242,0.35);
   transition:.25s;
 }
-
 .discord-btn img{ filter:brightness(0) invert(1); }
-
 .discord-btn:hover{
   transform:translateY(-2px) scale(1.03);
   box-shadow:0 8px 30px rgba(88,101,242,0.6);
@@ -157,19 +145,15 @@ body{
   text-align:center;
   padding: 40px 20px; 
 }
-
 .hero h2{ font-size:3rem; font-weight:800; }
-
 .hero span{
   background:linear-gradient(90deg,#38bdf8,#6366f1);
   -webkit-background-clip:text;
   color:transparent;
 }
-
 .hero p{ margin-top:15px; color:#aaa; font-size:1.1rem; }
 
 .buttons{margin-top:30px;}
-
 .btn{
   padding:14px 26px;
   border-radius:10px;
@@ -178,23 +162,22 @@ body{
   margin:10px;
   display:inline-block;
   transition:.3s;
+  cursor: pointer;
 }
-
 .btn-primary{
   background:linear-gradient(135deg,#6366f1,#38bdf8);
   color:#fff;
+  border: none;
 }
-
 .btn-primary:hover{
   transform:translateY(-3px);
   box-shadow:0 10px 25px rgba(99,102,241,0.4);
 }
-
-.btn-secondary{ background:rgba(255,255,255,0.05); color:#fff; }
+.btn-secondary{ background:rgba(255,255,255,0.05); color:#fff; border: 1px solid rgba(255,255,255,0.1); }
 .btn-secondary:hover{ background:rgba(255,255,255,0.1); }
 
 /* FEATURES */
-.features{ padding:120px 20px; text-align:center; }
+.features{ padding:80px 20px; text-align:center; }
 .features h2{ font-size:2.2rem; margin-bottom:50px; }
 .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px; max-width:1100px; margin:auto; }
 .card{ background:rgba(255,255,255,0.04); padding:25px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); transition:.3s; }
@@ -248,6 +231,57 @@ body{
 }
 @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* ===== SECCIÓN PREMIUM INTEGRADA ===== */
+.premium-section {
+    padding: 100px 20px;
+    max-width: 1100px;
+    margin: auto;
+    text-align: center;
+}
+.premium-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+.price-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 20px;
+    width: 350px;
+    position: relative;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+.price-card.featured {
+    border: 2px solid #6366f1;
+    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent);
+    transform: scale(1.05);
+}
+.badge-premium {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.price-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+.price-card .price { font-size: 2.5rem; font-weight: 800; margin: 20px 0; }
+.price-card .price span { font-size: 1rem; color: #aaa; }
+
+.price-list { list-style: none; text-align: left; margin-bottom: 30px; flex-grow: 1; }
+.price-list li { margin: 12px 0; color: #ccc; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+.price-list li::before { content: "✓"; color: #38bdf8; font-weight: bold; }
+
 /* CTA ANIMATED STYLES */
 .cta-animated {
     text-align: center;
@@ -256,7 +290,6 @@ body{
     position: relative;
     overflow: hidden;
 }
-
 .wumpus-container {
     margin-bottom: 25px;
     height: 120px;
@@ -264,27 +297,22 @@ body{
     justify-content: center;
     align-items: center;
 }
-
 .wumpus-img {
     width: 120px;
     height: auto;
     animation: floatWumpus 3s infinite ease-in-out;
     filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
 }
-
 @keyframes floatWumpus {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-20px) rotate(5deg); }
 }
-
 .cta-animated h2 {
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 10px;
     color: #fff;
 }
-
-/* Botón estilo Discord Pro */
 .btn-discord-pro {
     display: inline-flex;
     align-items: center;
@@ -299,15 +327,13 @@ body{
     box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
     transition: all 0.3s ease;
 }
-
 .btn-discord-pro:hover {
     background: #4752C4;
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
 }
-
-.btn-discord-pro img { filter: brightness(0) invert(1); transition: transform 0.3s ease; }
-.btn-discord-pro:hover img { transform: scale(1.1) rotate(-5deg); }
+.btn-discord-pro svg { transition: transform 0.3s ease; }
+.btn-discord-pro:hover svg { transform: scale(1.1) rotate(-5deg); }
 
 </style>
 </head>
@@ -469,6 +495,45 @@ body{
       <p>Optimizado sin caídas.</p>
     </div>
   </div>
+</section>
+
+<section class="premium-section">
+    <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Lleva tu servidor al nivel <span>Abyssus VIP</span></h2>
+    <p style="color: #aaa;">Funciones exclusivas de inteligencia, seguridad táctica y economía blindada.</p>
+
+    <div class="premium-grid">
+        <div class="price-card">
+            <h3>Versión Base</h3>
+            <div class="price">Gratis</div>
+            <ul class="price-list">
+                <li>+200 Comandos de economía</li>
+                <li>Moderación estándar</li>
+                <li>Dashboard Web (✅ Monitor)</li>
+                <li>Acceso a Comandos Básicos</li>
+                <li>Muestra de 3 usos en IA/Links</li>
+            </ul>
+            <a href="https://discord.com/oauth2/authorize?client_id=680897280433324081&scope=bot%20applications.commands&permissions=8" class="btn btn-secondary" style="width: 100%;">Añadir Bot</a>
+        </div>
+
+        <div class="price-card featured">
+            <div class="badge-premium">Sistemas de Élite</div>
+            <h3>Premium / VIP</h3>
+            <div class="price">Donación <span>/ mensual</span></div>
+            <ul class="price-list">
+                <li style="color: #fff; font-weight: 600;">IA Avanzada (/ia npc, /ia historia)</li>
+                <li style="color: #fff; font-weight: 600;">Seguridad Táctica (Ghostkick / Lockdown)</li>
+                <li style="color: #fff; font-weight: 600;">Escaneo Estricto de Enlaces Phishing</li>
+                <li>Economía Blindada (Caja fuerte VIP)</li>
+                <li>Transferencias directas Premium</li>
+                <li>Insignia VIP exclusiva en el Perfil</li>
+                <li>Soporte Prioritario con Detectives</li>
+            </ul>
+            <a href="https://discord.gg/qegCgXX99z" class="btn btn-primary" style="width: 100%; border-radius: 10px;">Conseguir Premium</a>
+            <p style="font-size: 0.75rem; color: #777; margin-top: 15px; font-style: italic;">
+                * Desbloqueable mediante donación o recompensas por invitar miembros a la comunidad oficial.
+            </p>
+        </div>
+    </div>
 </section>
 
 <section class="cta-animated">
