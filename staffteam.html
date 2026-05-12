@@ -44,96 +44,27 @@
             height: 70px;
         }
 
-        .nav-logo {
-            font-weight: 800;
-            font-size: 1.3rem;
-            color: #fff;
-            text-decoration: none;
-            background: linear-gradient(90deg,#38bdf8,#6366f1);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
+        .nav-logo { font-weight: 800; font-size: 1.3rem; text-decoration: none; background: linear-gradient(90deg,#38bdf8,#6366f1); -webkit-background-clip: text; color: transparent; }
         .nav-links { display: flex; gap: 25px; list-style: none; }
-        .nav-links a {
-            text-decoration: none;
-            color: #aaa;
-            font-size: 14px;
-            transition: 0.3s;
-        }
+        .nav-links a { text-decoration: none; color: #aaa; font-size: 14px; transition: 0.3s; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 10px var(--accent-glow); }
 
-        .staff-access {
-            font-size: 12px;
-            color: #777;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            padding: 6px 15px;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
+        .staff-access { font-size: 12px; color: #777; cursor: pointer; border: 1px solid var(--border); padding: 6px 15px; border-radius: 8px; transition: 0.3s; }
         .staff-access:hover { border-color: var(--accent); color: var(--accent); }
 
         /* ===== HEADER ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            padding: 0 20px;
-        }
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg,#38bdf8,#6366f1);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
+        .header { text-align: center; margin-bottom: 60px; padding: 0 20px; }
+        .header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(90deg,#38bdf8,#6366f1); -webkit-background-clip: text; color: transparent; }
         .header p { color: #949ba4; font-size: 1.1rem; }
 
         /* ===== STAFF GRID ===== */
-        .staff-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            width: 90%;
-            max-width: 1100px;
-            margin-bottom: 50px;
-        }
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 90%; max-width: 1100px; margin-bottom: 50px; }
+        .staff-card { background: var(--card-bg); border: 1px solid var(--border); padding: 40px; border-radius: 16px; text-align: center; position: relative; backdrop-filter: blur(5px); transition: 0.3s; }
+        .staff-card:hover { transform: translateY(-5px); border-color: var(--accent); }
 
-        .staff-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 40px;
-            border-radius: 16px;
-            text-align: center;
-            position: relative;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-        .staff-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .avatar-container { width: 130px; height: 130px; margin: 0 auto 25px; position: relative; }
+        .staff-avatar { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent); object-fit: cover; padding: 5px; background: rgba(0,0,0,0.2); }
 
-        .avatar-container {
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 25px;
-            position: relative;
-        }
-
-        .staff-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--accent);
-            object-fit: cover;
-            padding: 5px;
-            background: rgba(0,0,0,0.2);
-        }
-
-        /* Badge de editar oculto por ahora ya que requiere backend para persistencia global */
         .edit-badge {
             position: absolute;
             top: 0; right: 0;
@@ -143,38 +74,17 @@
             font-weight: 800;
             padding: 5px 10px;
             border-radius: 20px;
-            display: none;
+            display: none; /* Se muestra al loguear */
             cursor: pointer;
-            box-shadow: 0 0 15px var(--accent-glow);
+            z-index: 10;
         }
         .logged-in .edit-badge { display: block; }
 
-        .staff-name { font-size: 1.6rem; margin-bottom: 8px; letter-spacing: -0.5px; }
-        
-        .staff-role { 
-            color: var(--accent); 
-            font-size: 0.75rem; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: rgba(56, 189, 248, 0.1);
-            padding: 5px 15px;
-            border-radius: 30px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
+        .staff-name { font-size: 1.6rem; margin-bottom: 8px; }
+        .staff-role { color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; background: rgba(56, 189, 248, 0.1); padding: 5px 15px; border-radius: 30px; margin-bottom: 20px; display: inline-block; }
+        .staff-bio { color: #949ba4; font-size: 0.95rem; line-height: 1.6; }
 
-        .staff-bio { 
-            color: #949ba4; 
-            font-size: 0.95rem; 
-            line-height: 1.6; 
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 40px;
-            color: #444;
-            font-size: 0.8rem;
-        }
+        footer { margin-top: auto; padding: 40px; color: #444; font-size: 0.8rem; }
     </style>
 </head>
 <body id="app">
@@ -182,45 +92,45 @@
     <nav>
         <a href="#" class="nav-logo">Abyssus <span>Bot</span></a>
         <ul class="nav-links">
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/index.html">Inicio</a></li>
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/commands.html">Comandos</a></li>
-             <li><a href="https://mrabyssus.github.io/Abyssusbot/staffteam.html">Staff</a></li>
-            <li><a href="https://mrabyssus.github.io/Abyssusbot/estado.html">Estado de Red</a></li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="commands.html">Comandos</a></li>
+            <li><a href="staffteam.html">Staff</a></li>
+            <li><a href="estado.html">Estado</a></li>
         </ul>
         <div class="staff-access" id="login-trigger" onclick="handleLogin()">Staff Login</div>
     </nav>
 
     <header class="header">
         <h1>Staff Team</h1>
-        <p>Las mentes encargadas de mantener el abismo en línea.</p>
+        <p>Control de acceso Sentinel para el equipo de desarrollo.</p>
     </header>
 
     <main class="staff-grid">
         <div class="staff-card">
             <div class="avatar-container">
-                <img src="https://github.com/mr-abyssus.png" id="img-1" class="staff-avatar" onerror="this.src='img/staff1.png'">
+                <div class="edit-badge" onclick="changeAvatar('img-1')">LINK</div>
+                <img src="https://github.com/mr-abyssus.png" id="img-1" class="staff-avatar">
             </div>
             <h2 class="staff-name">mr.abyssus</h2>
-            <span class="staff-role">Chief Technology Officer</span>
-            <p class="staff-bio">Fundador y arquitecto de sistemas. Lidera el desarrollo técnico y la escalabilidad del bot.</p>
+            <span class="staff-role">CTO & Founder</span>
+            <p class="staff-bio">Arquitecto principal de Abyssus v3.0.</p>
         </div>
 
         <div class="staff-card">
             <div class="avatar-container">
-                <img src="img/staff2.png" id="img-2" class="staff-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/1.png'">
+                <div class="edit-badge" onclick="changeAvatar('img-2')">LINK</div>
+                <img src="https://cdn.discordapp.com/embed/avatars/1.png" id="img-2" class="staff-avatar">
             </div>
-            <h2 class="staff-name">Nombre Staff</h2>
-            <span class="staff-role">Key Collaborator</span>
-            <p class="staff-bio">Gestión estratégica y expansión. Encargado de alianzas y crecimiento de la comunidad.</p>
+            <h2 class="staff-name">Staff</h2>
+            <span class="staff-role">Collaborator</span>
+            <p class="staff-bio">Gestión de comunidad y alianzas estratégicas.</p>
         </div>
     </main>
 
-    <footer>
-        &copy; 2026 Abyssus Project &bull; Sentinel Dashboard System
-    </footer>
+    <footer>&copy; 2026 Abyssus Project</footer>
 
     <script>
-        const SECRET_HASH = "fdd047455865a920451314e7d5d3e0b566ca0dc718ae47632f986f0d7fa2087e"; 
+        const SECRET_HASH = "fdd047455865a920451314e7d5d3e0b566ca0dc718ae47632f986f0d7fa2087e";
 
         async function hashPassword(password) {
             const encoder = new TextEncoder();
@@ -233,16 +143,12 @@
         async function handleLogin() {
             const app = document.getElementById('app');
             if (app.classList.contains('logged-in')) {
-                if(confirm("¿Cerrar sesión de staff?")) {
-                    sessionStorage.removeItem('isStaff');
-                    location.reload();
-                }
+                sessionStorage.removeItem('isStaff');
+                location.reload();
                 return;
             }
-
             const pass = prompt("Clave de Staff:");
             if (!pass) return;
-
             const hashedInput = await hashPassword(pass.trim());
             if (hashedInput === SECRET_HASH) {
                 app.classList.add('logged-in');
@@ -253,11 +159,26 @@
             }
         }
 
+        // NUEVA FUNCIÓN: Cambia la imagen por URL (esto sí es compartible si usas el link correcto)
+        function changeAvatar(id) {
+            const newUrl = prompt("Pega el LINK (URL) de la nueva imagen:", document.getElementById(id).src);
+            if (newUrl && newUrl.startsWith('http')) {
+                document.getElementById(id).src = newUrl;
+                // Guardamos en LocalStorage para que a TI se te quede guardado
+                localStorage.setItem(id, newUrl);
+                alert("Imagen actualizada localmente. Para que sea permanente para todos, debes actualizar el código con este nuevo link.");
+                console.log(`Nuevo link para ${id}: ${newUrl}`);
+            }
+        }
+
         window.onload = () => {
             if (sessionStorage.getItem('isStaff')) {
                 document.getElementById('app').classList.add('logged-in');
                 document.getElementById('login-trigger').innerText = "Cerrar Sesión";
             }
+            // Cargar lo que haya en memoria local
+            if (localStorage.getItem('img-1')) document.getElementById('img-1').src = localStorage.getItem('img-1');
+            if (localStorage.getItem('img-2')) document.getElementById('img-2').src = localStorage.getItem('img-2');
         };
     </script>
 </body>
