@@ -29,7 +29,7 @@
             align-items: center;
         }
 
-        /* ===== NAV (Sentinel Style) ===== */
+        /* ===== NAV ===== */
         nav {
             position:fixed;
             top:0;
@@ -133,6 +133,7 @@
             background: rgba(0,0,0,0.2);
         }
 
+        /* Badge de editar oculto por ahora ya que requiere backend para persistencia global */
         .edit-badge {
             position: absolute;
             top: 0; right: 0;
@@ -197,8 +198,7 @@
     <main class="staff-grid">
         <div class="staff-card">
             <div class="avatar-container">
-                <div class="edit-badge" onclick="triggerUpload('img-1')">EDITAR</div>
-                <img src="https://github.com/mr-abyssus.png" id="img-1" class="staff-avatar">
+                <img src="https://github.com/mr-abyssus.png" id="img-1" class="staff-avatar" onerror="this.src='img/staff1.png'">
             </div>
             <h2 class="staff-name">mr.abyssus</h2>
             <span class="staff-role">Chief Technology Officer</span>
@@ -207,16 +207,13 @@
 
         <div class="staff-card">
             <div class="avatar-container">
-                <div class="edit-badge" onclick="triggerUpload('img-2')">EDITAR</div>
-                <img src="https://cdn.discordapp.com/embed/avatars/1.png" id="img-2" class="staff-avatar">
+                <img src="img/staff2.png" id="img-2" class="staff-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/1.png'">
             </div>
-            <h2 class="staff-name">Nombre</h2>
+            <h2 class="staff-name">Nombre Staff</h2>
             <span class="staff-role">Key Collaborator</span>
             <p class="staff-bio">Gestión estratégica y expansión. Encargado de alianzas y crecimiento de la comunidad.</p>
         </div>
     </main>
-
-    <input type="file" id="file-input" style="display: none;" accept="image/*">
 
     <footer>
         &copy; 2026 Abyssus Project &bull; Sentinel Dashboard System
@@ -256,30 +253,11 @@
             }
         }
 
-        function triggerUpload(id) {
-            window.activeId = id;
-            document.getElementById('file-input').click();
-        }
-
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById(window.activeId).src = event.target.result;
-                    localStorage.setItem(window.activeId, event.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
         window.onload = () => {
             if (sessionStorage.getItem('isStaff')) {
                 document.getElementById('app').classList.add('logged-in');
                 document.getElementById('login-trigger').innerText = "Cerrar Sesión";
             }
-            if (localStorage.getItem('img-1')) document.getElementById('img-1').src = localStorage.getItem('img-1');
-            if (localStorage.getItem('img-2')) document.getElementById('img-2').src = localStorage.getItem('img-2');
         };
     </script>
 </body>
