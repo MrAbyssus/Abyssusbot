@@ -133,7 +133,7 @@
 
     <script>
         const SECRET_HASH = "fdd047455865a920451314e7d5d3e0b566ca0dc718ae47632f986f0d7fa2087e";
-        const IMGBB_API_KEY = "2f4b50d69d88e8bb8762c71e4f68783b"; // <--- REEMPLAZA ESTO
+        const IMGBB_API_KEY = "2f4b50d69d88e8bb8762c71e4f68783b"; 
 
         async function hashPassword(password) {
             const encoder = new TextEncoder();
@@ -160,7 +160,6 @@
             } else { alert("Clave incorrecta."); }
         }
 
-        // FUNCIÓN DE SUBIDA REAL A LA NUBE
         function uploadToCloud(imgId) {
             const fileInput = document.getElementById('file-helper');
             
@@ -169,7 +168,7 @@
                 if (!file) return;
 
                 const imgElement = document.getElementById(imgId);
-                imgElement.style.opacity = "0.3"; // Indicador de carga
+                imgElement.style.opacity = "0.3"; 
 
                 const formData = new FormData();
                 formData.append("image", file);
@@ -184,28 +183,35 @@
                     if (result.success) {
                         const cloudUrl = result.data.url;
                         imgElement.src = cloudUrl;
-                        localStorage.setItem(imgId, cloudUrl);
-                        alert("¡Subida con éxito!\n\nLink generado: " + cloudUrl);
-                        console.log(`Link para ${imgId}: ${cloudUrl}`);
+                        localStorage.setItem(imgId, cloudUrl); // Guarda la persistencia
+                        alert("¡Imagen en la nube!\n\nLink: " + cloudUrl);
                     } else {
-                        alert("Error en la API de ImgBB.");
+                        alert("Error en ImgBB: " + result.error.message);
                     }
                 } catch (error) {
-                    alert("Error de red al subir.");
+                    alert("Error de conexión.");
                 } finally {
                     imgElement.style.opacity = "1";
+                    fileInput.value = ""; // Limpia el input para permitir subir la misma foto si se desea
                 }
             };
             fileInput.click();
         }
 
+        // CARGA PRIORITARIA
         window.onload = () => {
+            // 1. Restaurar sesión
             if (sessionStorage.getItem('isStaff')) {
                 document.getElementById('app').classList.add('logged-in');
                 document.getElementById('login-trigger').innerText = "Cerrar Sesión";
             }
-            if (localStorage.getItem('img-1')) document.getElementById('img-1').src = localStorage.getItem('img-1');
-            if (localStorage.getItem('img-2')) document.getElementById('img-2').src = localStorage.getItem('img-2');
+            
+            // 2. Restaurar imágenes de la nube (Sobrescriben a las de GitHub)
+            const savedImg1 = localStorage.getItem('img-1');
+            const savedImg2 = localStorage.getItem('img-2');
+            
+            if (savedImg1) document.getElementById('img-1').src = savedImg1;
+            if (savedImg2) document.getElementById('img-2').src = savedImg2;
         };
     </script>
 </body>
