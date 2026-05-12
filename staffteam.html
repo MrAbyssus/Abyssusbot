@@ -5,36 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abyssus Bot | Staff Team</title>
     <style>
-        /* Estilo fiel a tu captura */
+        /* CSS Estilo Abyssus */
         *{margin:0;padding:0;box-sizing:border-box}
         body{
             font-family:'Inter', sans-serif;
-            background: radial-gradient(circle at top,#0f172a,#020617);
+            background: #020617;
             color:#fff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             padding-top: 100px;
         }
         .staff-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            gap: 20px;
             width: 90%;
             max-width: 1000px;
         }
         .staff-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             text-align: center;
-            transition: 0.3s;
+            position: relative;
         }
-        .staff-card:hover { border-color: #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.2); }
-        
-        .avatar-wrapper {
+        .avatar-container {
             width: 120px;
             height: 120px;
             margin: 0 auto 20px;
@@ -44,101 +41,110 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 3px solid #38bdf8;
+            border: 2px solid #38bdf8;
             object-fit: cover;
-            /* Si la imagen principal falla, mostramos esta gris por defecto */
-            background-color: #1e293b; 
+            background: #111;
         }
-        .btn-edit {
+        .edit-btn {
             position: absolute;
-            bottom: 0; right: 0;
+            top: 0; right: 0;
             background: #38bdf8;
             color: #000;
-            padding: 4px 8px;
-            border-radius: 10px;
             font-size: 10px;
-            font-weight: bold;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 20px;
             cursor: pointer;
-            display: none;
+            display: none; /* Solo se ve al loguear */
         }
-        .logged-in .btn-edit { display: block; }
-        
-        .staff-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
-        .staff-role { color: #38bdf8; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; }
-        .login-btn { position: fixed; top: 20px; right: 20px; opacity: 0.3; cursor: pointer; }
+        .logged-in .edit-btn { display: block; }
+        .staff-name { font-size: 1.5rem; margin-bottom: 10px; }
+        .staff-role { color: #38bdf8; font-size: 0.8rem; letter-spacing: 1px; }
+        .login-trigger { position: fixed; top: 20px; right: 20px; cursor: pointer; opacity: 0.3; }
     </style>
 </head>
 <body id="app">
 
-    <div class="login-btn" onclick="handleLogin()">Staff Access</div>
+    <div class="login-trigger" onclick="handleLogin()">Staff Login</div>
 
     <div class="staff-grid">
         <div class="staff-card">
-            <div class="avatar-wrapper">
-                <img id="p-1" class="staff-avatar" src="https://github.com/mr-abyssus.png">
-                <div class="btn-edit" onclick="changeImg('p-1')">EDITAR</div>
+            <div class="avatar-container">
+                <div class="edit-btn" onclick="startUpload('img-1')">SUBIR</div>
+                <img id="img-1" class="staff-avatar" src="https://github.com/mr-abyssus.png">
             </div>
-            <div class="staff-name">mr.abyssus</div>
-            <div class="staff-role">CHIEF TECHNOLOGY OFFICER</div>
+            <h2 class="staff-name">mr.abyssus</h2>
+            <p class="staff-role">CHIEF TECHNOLOGY OFFICER</p>
         </div>
 
         <div class="staff-card">
-            <div class="avatar-wrapper">
-                <img id="p-2" class="staff-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png">
-                <div class="btn-edit" onclick="changeImg('p-2')">EDITAR</div>
+            <div class="avatar-container">
+                <div class="edit-btn" onclick="startUpload('img-2')">SUBIR</div>
+                <img id="img-2" class="staff-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png">
             </div>
-            <div class="staff-name">HIKEN D RASEC</div>
-            <div class="staff-role">KEY COLLABORATOR</div>
+            <h2 class="staff-name">HIKEN D RASEC</h2>
+            <p class="staff-role">KEY COLLABORATOR</p>
         </div>
     </div>
 
+    <input type="file" id="file-selector" style="display:none" accept="image/*">
+
     <script>
-        const API_KEY = "2f4b50d69d88e8bb8762c71e4f68783b";
+        const IMGBB_KEY = "2f4b50d69d88e8bb8762c71e4f68783b";
 
-        // 1. CARGAR IMÁGENES AL INSTANTE
-        function loadStorage() {
-            if(localStorage.getItem('p-1')) document.getElementById('p-1').src = localStorage.getItem('p-1');
-            if(localStorage.getItem('p-2')) document.getElementById('p-2').src = localStorage.getItem('p-2');
-            if(sessionStorage.getItem('staff')) document.getElementById('app').classList.add('logged-in');
-        }
-
-        // 2. FUNCIÓN PARA SUBIR
-        function changeImg(id) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.onchange = async e => {
-                const file = e.target.files[0];
-                const fd = new FormData();
-                fd.append("image", file);
-                
-                document.getElementById(id).style.opacity = "0.5";
-                
-                try {
-                    const res = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
-                        method: "POST",
-                        body: fd
-                    });
-                    const data = await response = await res.json();
-                    if(data.success) {
-                        const newUrl = data.data.url;
-                        document.getElementById(id).src = newUrl;
-                        localStorage.setItem(id, newUrl);
-                    }
-                } catch (err) { alert("Error al subir"); }
-                document.getElementById(id).style.opacity = "1";
-            };
-            input.click();
-        }
+        // Al cargar la página, restauramos todo
+        window.onload = () => {
+            if (localStorage.getItem('img-1')) document.getElementById('img-1').src = localStorage.getItem('img-1');
+            if (localStorage.getItem('img-2')) document.getElementById('img-2').src = localStorage.getItem('img-2');
+            if (sessionStorage.getItem('staff-auth')) document.getElementById('app').classList.add('logged-in');
+        };
 
         function handleLogin() {
-            const p = prompt("Password:");
-            if(p === "tu_password_aqui") { // Cámbialo por tu clave
+            const p = prompt("Clave:");
+            // Aquí puedes poner tu hash, por ahora lo dejo simple para que no te falle
+            if (p === "tu_clave_aqui") { 
                 document.getElementById('app').classList.add('logged-in');
-                sessionStorage.setItem('staff', 'true');
+                sessionStorage.setItem('staff-auth', 'true');
             }
         }
 
-        loadStorage();
+        function startUpload(targetId) {
+            const fileInput = document.getElementById('file-selector');
+            
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const img = document.getElementById(targetId);
+                img.style.opacity = "0.3";
+
+                const formData = new FormData();
+                formData.append("image", file);
+
+                try {
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const finalUrl = data.data.url;
+                        img.src = finalUrl;
+                        localStorage.setItem(targetId, finalUrl);
+                        alert("¡Imagen subida! Link: " + finalUrl);
+                    } else {
+                        alert("Error de ImgBB: " + data.error.message);
+                    }
+                } catch (err) {
+                    alert("Error de conexión");
+                } finally {
+                    img.style.opacity = "1";
+                    fileInput.value = ""; // Reset del input
+                }
+            };
+            fileInput.click();
+        }
     </script>
 </body>
 </html>
