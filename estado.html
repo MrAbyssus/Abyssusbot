@@ -115,7 +115,7 @@
         <div class="section-title">Estado Global del Sistema</div>
         <div class="tech-grid">
             <div class="tech-item"><b>Estado</b><span id="sistema-status">CONECTANDO</span></div>
-            <div class="tech-item"><b>Uptime Global</b><span id="res-uptime">00d 00h 00m 00s</span></div>
+            <div class="tech-item"><b>Uptime Global</b><span id="res-uptime">00d 00h 00m</span></div>
             <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
             <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span></div>
             <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span></div>
@@ -152,18 +152,15 @@ let ramChart;
 let timeLeft = 3;
 let lastPingTime = 0; 
 let lastClustersState = []; 
-let globalUptimeMs = 0; // Memoria para el cronómetro fluido
 
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
 const discordText = document.getElementById('discord-status');
 
-// --- SOPORTE PARA FORMATOS DE TEXTO (EJ: "120h") ---
 function parseUptime(value) {
     if (typeof value === 'number') return value;
     if (typeof value !== 'string') return 0;
-
     const val = parseFloat(value);
     if (value.includes('d')) return val * 86400000;
     if (value.includes('h')) return val * 3600000;
@@ -173,15 +170,14 @@ function parseUptime(value) {
 }
 
 function formatUptime(ms) {
-    if (isNaN(ms) || ms <= 0) return "00d 00h 00m 00s";
+    if (isNaN(ms) || ms <= 0) return "00d 00h 00m";
     let s = Math.floor(ms / 1000);
     const d = Math.floor(s / (3600 * 24));
     s %= (3600 * 24);
     const h = Math.floor(s / 3600);
     s %= 3600;
     const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m ${sec.toString().padStart(2, '0')}s`;
+    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m`;
 }
 
 function addLog(msg, type = '') {
@@ -252,10 +248,10 @@ async function update() {
         statusText.innerText = "ONLINE";
         statusText.style.color = "#00ffcc";
 
-        // --- ACTUALIZACIÓN DE UPTIME GLOBAL ---
+        // --- ACTUALIZACIÓN ESTÁTICA DEL UPTIME (SIN SEGUNDOS) ---
         if (data.global && data.global.uptime) {
-            globalUptimeMs = parseUptime(data.global.uptime);
-            document.getElementById('res-uptime').innerText = formatUptime(globalUptimeMs);
+            const apiUptime = parseUptime(data.global.uptime);
+            document.getElementById('res-uptime').innerText = formatUptime(apiUptime);
         }
 
         const clusters = data.clusters || [];
@@ -308,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initChart();
     update();
     
+    // Intervalo de refresco visual del timer (3s)
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { 
@@ -315,12 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
             update(); 
         }
         timerText.innerText = Math.ceil(timeLeft);
-
-        // Cronómetro fluido (+100ms cada décima de segundo)
-        if (globalUptimeMs > 0 && statusText.innerText === "ONLINE") {
-            globalUptimeMs += 100;
-            document.getElementById('res-uptime').innerText = formatUptime(globalUptimeMs);
-        }
     }, 100);
 });
 </script>
