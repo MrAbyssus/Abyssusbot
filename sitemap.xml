@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Página de Inicio -->
   <url>
-    <loc>https://mrabyssus.github.io/Abyssusbot/</loc>
-    <lastmod>2026-05-09</lastmod>
+    <loc>https://mrabyssus.github.io/Abyssusbot/index.html</loc>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Lista de Comandos -->
   <url>
     <loc>https://mrabyssus.github.io/Abyssusbot/commands.html</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Monitor de Estado / Telemetría -->
+  <url>
+    <loc>https://mrabyssus.github.io/Abyssusbot/estado.html</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>always</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Equipo del Staff -->
+  <url>
+    <loc>https://mrabyssus.github.io/Abyssusbot/staffteam.html</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Políticas de Privacidad -->
   <url>
     <loc>https://mrabyssus.github.io/Abyssusbot/privacidad.html</loc>
     <lastmod>2026-05-09</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
+
 </urlset>
