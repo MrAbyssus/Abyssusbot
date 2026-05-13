@@ -115,6 +115,7 @@
         <div class="section-title">Estado Global del Sistema</div>
         <div class="tech-grid">
             <div class="tech-item"><b>Estado</b><span id="sistema-status">CONECTANDO</span></div>
+            <div class="tech-item"><b>Uptime Global</b><span id="res-uptime">00d 00h 00m 00s</span></div>
             <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
             <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span></div>
             <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span></div>
@@ -149,13 +150,39 @@ let ramHistory = [];
 let labelHistory = [];
 let ramChart;
 let timeLeft = 3;
-let lastDeadCount = 0;
-let lastPingTime = 0; // Para medir la estabilidad de red
+let lastPingTime = 0; 
+let lastClustersState = []; 
+let globalUptimeMs = 0; // Memoria para el cronómetro fluido
 
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
 const discordText = document.getElementById('discord-status');
+
+// --- SOPORTE PARA FORMATOS DE TEXTO (EJ: "120h") ---
+function parseUptime(value) {
+    if (typeof value === 'number') return value;
+    if (typeof value !== 'string') return 0;
+
+    const val = parseFloat(value);
+    if (value.includes('d')) return val * 86400000;
+    if (value.includes('h')) return val * 3600000;
+    if (value.includes('m')) return val * 60000;
+    if (value.includes('s')) return val * 1000;
+    return val; 
+}
+
+function formatUptime(ms) {
+    if (isNaN(ms) || ms <= 0) return "00d 00h 00m 00s";
+    let s = Math.floor(ms / 1000);
+    const d = Math.floor(s / (3600 * 24));
+    s %= (3600 * 24);
+    const h = Math.floor(s / 3600);
+    s %= 3600;
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m ${sec.toString().padStart(2, '0')}s`;
+}
 
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
@@ -200,13 +227,9 @@ function initChart() {
     });
 }
 
-// Añade esta variable al inicio de tu <script> para que el sistema tenga memoria
-let lastClustersState = []; 
-
 async function update() {
     const start = Date.now();
     try {
-        // Discord API Status (Se mantiene igual)
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
@@ -215,14 +238,12 @@ async function update() {
                 discordText.style.color = (hasIncident || d.status.indicator !== 'none') ? "#ffb86c" : "#00ffcc";
             }).catch(() => { discordText.innerText = "ERROR"; });
 
-        // Abyssus API Status
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
         
-        // 1. UTILIDAD REAL: Monitor de estabilidad de conexión
         if (lastPingTime > 0 && currentPing > lastPingTime + 150) {
             addLog(`Inestabilidad de red: Pico de +${currentPing - lastPingTime}ms`, 'warn');
         }
@@ -231,24 +252,27 @@ async function update() {
         statusText.innerText = "ONLINE";
         statusText.style.color = "#00ffcc";
 
+        // --- ACTUALIZACIÓN DE UPTIME GLOBAL ---
+        if (data.global && data.global.uptime) {
+            globalUptimeMs = parseUptime(data.global.uptime);
+            document.getElementById('res-uptime').innerText = formatUptime(globalUptimeMs);
+        }
+
         const clusters = data.clusters || [];
         
-        // 2. UTILIDAD REAL: Detección inteligente de cambios (No precodiado)
         if (lastClustersState.length > 0) {
-            clusters.forEach((c, i) => {
+            clusters.forEach((c) => {
                 const prev = lastClustersState.find(p => p.id === c.id);
                 if (prev && prev.status !== c.status) {
                     const tipo = c.status.toLowerCase() === 'online' ? 'ok' : 'err';
-                    addLog(`Cluster #${c.id} cambió de estado: ${c.status.toUpperCase()}`, tipo);
+                    addLog(`Cluster #${c.id} cambió a ${c.status.toUpperCase()}`, tipo);
                 }
             });
         } else {
-            // Primer log basado en datos reales del servidor
-            addLog(`Enlace exitoso: ${clusters.length} clusters detectados en red.`, "ok");
+            addLog(`Enlace exitoso: ${clusters.length} clusters detectados.`, "ok");
         }
-        lastClustersState = JSON.parse(JSON.stringify(clusters)); // Guardamos el estado actual
+        lastClustersState = JSON.parse(JSON.stringify(clusters));
 
-        // Actualización de UI (RAM, Servidores, etc)
         const dead = clusters.filter(c => (c.status || '').toLowerCase() !== 'online');
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         
@@ -256,7 +280,6 @@ async function update() {
         document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
         document.getElementById('stat-clusters').innerText = `${clusters.length - dead.length} / ${clusters.length}`;
 
-        // Renderizado de la Malla
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
@@ -283,7 +306,6 @@ async function update() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
-    // Quitamos el log "precodiado" de bienvenida y dejamos que update() haga el primer log real
     update();
     
     setInterval(() => {
@@ -293,6 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
             update(); 
         }
         timerText.innerText = Math.ceil(timeLeft);
+
+        // Cronómetro fluido (+100ms cada décima de segundo)
+        if (globalUptimeMs > 0 && statusText.innerText === "ONLINE") {
+            globalUptimeMs += 100;
+            document.getElementById('res-uptime').innerText = formatUptime(globalUptimeMs);
+        }
     }, 100);
 });
 </script>
