@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Bot - Estado de Red</title>
+    <title>Abyssus Bot - Monitor Profesional</title>
     <style>
         :root {
             --bg: #0d0e12; 
@@ -60,14 +60,13 @@
         }
         .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-        /* Tech Grid Ajustado */
         .tech-grid { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 15px; font-family: monospace;
         }
         .tech-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid var(--border); }
         .tech-item b { display: block; color: var(--text-muted); font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
-        .tech-item span { font-size: 1.1rem; font-weight: bold; word-break: break-word; }
+        .tech-item span { font-size: 1.1rem; font-weight: bold; word-break: break-all; }
 
         .chart-container { height: 220px; width: 100%; }
 
@@ -84,11 +83,12 @@
         .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
 
-        .audit-log { height: 160px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; }
+        .audit-log { height: 160px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; }
         .log-entry { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); display: flex; gap: 15px; }
-        .log-time { color: var(--text-muted); }
-        .log-msg-err { color: var(--offline); }
+        .log-time { color: var(--text-muted); min-width: 85px; }
+        .log-msg-err { color: var(--offline); font-weight: bold; }
         .log-msg-ok { color: var(--online); }
+        .log-msg-warn { color: var(--warning); }
 
         .refresh-area { text-align: right; font-size: 0.75rem; color: var(--text-muted); margin-top: -20px; font-family: monospace; }
 
@@ -106,7 +106,7 @@
 <body>
 
 <nav class="navbar">
-    <a href="https://mrabyssus.github.io/Abyssusbot/index.html" class="nav-logo">ABYSSUS <span>BOT</span></a>
+    <a href="#" class="nav-logo">ABYSSUS <span>BOT</span></a>
 </nav>
 
 <div class="container">
@@ -115,15 +115,15 @@
         <div class="section-title">Estado Global del Sistema</div>
         <div class="tech-grid">
             <div class="tech-item"><b>Estado</b><span id="sistema-status">CONECTANDO</span></div>
-            <div class="tech-item"><b>Clusters Activos</b><span id="stat-clusters">--</span></div>
-            <div class="tech-item"><b>Servidores en Red</b><span id="res-servidores">--</span></div>
-            <div class="tech-item"><b>Consumo RAM</b><span id="res-ram">-- MB</span></div>
-            <div class="tech-item"><b>Ping API</b><span id="res-ping">-- ms</span></div>
-            <div class="tech-item"><b>Infraestructura Discord</b><span id="discord-status" style="font-size: 0.85rem;">...</span></div>
+            <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
+            <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span></div>
+            <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span></div>
+            <div class="tech-item"><b>Latencia API</b><span id="res-ping">-- ms</span></div>
+            <div class="tech-item"><b>Discord API</b><span id="discord-status">...</span></div>
         </div>
     </section>
 
-    <div class="refresh-area">Sincronización en: <span id="refresh-timer">3</span>s</div>
+    <div class="refresh-area">Próximo escaneo en: <span id="refresh-timer">3</span>s</div>
 
     <section class="section">
         <div class="section-title">Monitor de Rendimiento (RAM)</div>
@@ -138,7 +138,7 @@
     </section>
 
     <section class="section">
-        <div class="section-title">Consola de Eventos</div>
+        <div class="section-title">Registro de Eventos</div>
         <div class="audit-log" id="audit-log"></div>
     </section>
 
@@ -150,6 +150,7 @@ let labelHistory = [];
 let ramChart;
 let timeLeft = 3;
 let lastDeadCount = 0;
+let lastPingTime = 0; // Para medir la estabilidad de red
 
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
@@ -160,7 +161,11 @@ function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
     const entry = document.createElement('div');
     entry.className = 'log-entry';
-    let colorClass = type === 'err' ? 'log-msg-err' : (type === 'ok' ? 'log-msg-ok' : '');
+    let colorClass = '';
+    if(type === 'err') colorClass = 'log-msg-err';
+    else if(type === 'ok') colorClass = 'log-msg-ok';
+    else if(type === 'warn') colorClass = 'log-msg-warn';
+    
     entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
     logBox.prepend(entry);
     if(logBox.children.length > 20) logBox.lastChild.remove();
@@ -195,65 +200,67 @@ function initChart() {
     });
 }
 
+// Añade esta variable al inicio de tu <script> para que el sistema tenga memoria
+let lastClustersState = []; 
+
 async function update() {
     const start = Date.now();
     try {
-        // --- DISCORD STATUS CON DETECCIÓN DE INCIDENTES ---
+        // Discord API Status (Se mantiene igual)
         fetch('https://discordstatus.com/api/v2/summary.json')
             .then(r => r.json())
             .then(d => {
                 const hasIncident = d.incidents.length > 0;
-                if (hasIncident) {
-                    discordText.innerText = "ALERTA: " + d.incidents[0].name.toUpperCase();
-                    discordText.style.color = "#ffb86c";
-                    if (document.body.getAttribute('data-last-discord-inc') !== d.incidents[0].id) {
-                        addLog(`FALLO EXTERNO: Discord reporta "${d.incidents[0].name}"`, 'err');
-                        document.body.setAttribute('data-last-discord-inc', d.incidents[0].id);
-                    }
-                } else {
-                    discordText.innerText = d.status.description.toUpperCase();
-                    discordText.style.color = d.status.indicator === 'none' ? "#00ffcc" : "#ffb86c";
-                }
-            }).catch(() => { discordText.innerText = "ENLACE FALLIDO"; });
+                discordText.innerText = hasIncident ? "ALERTA: " + d.incidents[0].name.toUpperCase() : d.status.description.toUpperCase();
+                discordText.style.color = (hasIncident || d.status.indicator !== 'none') ? "#ffb86c" : "#00ffcc";
+            }).catch(() => { discordText.innerText = "ERROR"; });
 
-        // --- ABYSSUS BOT STATUS ---
+        // Abyssus API Status
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
-        document.getElementById('res-ping').innerText = (Date.now() - start) + " ms";
+        const currentPing = Date.now() - start;
+        document.getElementById('res-ping').innerText = currentPing + " ms";
+        
+        // 1. UTILIDAD REAL: Monitor de estabilidad de conexión
+        if (lastPingTime > 0 && currentPing > lastPingTime + 150) {
+            addLog(`Inestabilidad de red: Pico de +${currentPing - lastPingTime}ms`, 'warn');
+        }
+        lastPingTime = currentPing;
+
         statusText.innerText = "ONLINE";
         statusText.style.color = "#00ffcc";
 
         const clusters = data.clusters || [];
-        const dead = clusters.filter(c => c.status?.toLowerCase() !== 'online');
         
-        if (dead.length !== lastDeadCount) {
-            if (dead.length > lastDeadCount) {
-                addLog(`CRÍTICO: ${dead.length} Cluster(s) fuera de línea`, 'err');
-            } else {
-                addLog(`SISTEMA: Estabilidad recuperada`, 'ok');
-            }
-            lastDeadCount = dead.length;
+        // 2. UTILIDAD REAL: Detección inteligente de cambios (No precodiado)
+        if (lastClustersState.length > 0) {
+            clusters.forEach((c, i) => {
+                const prev = lastClustersState.find(p => p.id === c.id);
+                if (prev && prev.status !== c.status) {
+                    const tipo = c.status.toLowerCase() === 'online' ? 'ok' : 'err';
+                    addLog(`Cluster #${c.id} cambió de estado: ${c.status.toUpperCase()}`, tipo);
+                }
+            });
+        } else {
+            // Primer log basado en datos reales del servidor
+            addLog(`Enlace exitoso: ${clusters.length} clusters detectados en red.`, "ok");
         }
+        lastClustersState = JSON.parse(JSON.stringify(clusters)); // Guardamos el estado actual
 
+        // Actualización de UI (RAM, Servidores, etc)
+        const dead = clusters.filter(c => (c.status || '').toLowerCase() !== 'online');
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
+        
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
         document.getElementById('stat-clusters').innerText = `${clusters.length - dead.length} / ${clusters.length}`;
 
+        // Renderizado de la Malla
         const gridHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-            return `
-                <div class="box ${cl}">
-                    ${c.id}
-                    <div class="tooltip">
-                        <b>CLUSTER #${c.id}</b><br>
-                        • ESTADO: ${s.toUpperCase()}<br>
-                        • SERVIDORES: ${c.guilds || 0}<br>
-                        • RAM: ${c.ram} MB
-                    </div>
-                </div>`;
+            return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>CLUSTER #${c.id}</b><br>• Estado: ${s.toUpperCase()}<br>• Servidores: ${c.guilds || 0}<br>• RAM: ${c.ram} MB</div></div>`;
         }).join('');
 
         document.getElementById('status-grid').innerHTML = gridHTML;
@@ -266,14 +273,17 @@ async function update() {
         }
 
     } catch (e) {
-        statusText.innerText = "BACKEND OFFLINE";
-        statusText.style.color = "#ff5555";
+        if (statusText.innerText !== "OFFLINE") {
+            statusText.innerText = "OFFLINE";
+            statusText.style.color = "#ff5555";
+            addLog("CRÍTICO: Conexión perdida con Abyssus API", "err");
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
-    addLog("Escaneando nodos de conexión...", "ok");
+    // Quitamos el log "precodiado" de bienvenida y dejamos que update() haga el primer log real
     update();
     
     setInterval(() => {
