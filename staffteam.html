@@ -23,14 +23,15 @@
             font-family:'Inter', sans-serif;
             background: radial-gradient(circle at top,#0f172a,#020617);
             color:#fff;
-            padding-top:120px;
+            padding-top:100px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
-        /* ===== NAV ===== */
+        /* ===== NAV (Optimizado para móvil) ===== */
         .nav{
           position:fixed; top:0; width:100%; backdrop-filter:blur(14px);
           background:rgba(15,23,42,0.6); border-bottom:1px solid rgba(255,255,255,0.06);
@@ -48,8 +49,8 @@
         .nav-links a:hover { color: #fff; }
 
         /* ===== HEADER ===== */
-        .header { text-align: center; margin-bottom: 60px; padding: 0 20px; }
-        .header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(90deg,#38bdf8,#6366f1); -webkit-background-clip:text; color:transparent; }
+        .header { text-align: center; margin-bottom: 40px; padding: 0 20px; }
+        .header h1 { font-size: clamp(2.5rem, 10vw, 3rem); font-weight: 800; margin-bottom: 10px; background: linear-gradient(90deg,#38bdf8,#6366f1); -webkit-background-clip:text; color:transparent; }
         .header p { color: #949ba4; font-size: 1.1rem; }
 
         /* ===== GRID & CARDS ===== */
@@ -78,7 +79,6 @@
 
         .staff-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
         
-        /* Discord User Tag */
         .discord-tag {
             display: inline-block;
             font-size: 0.85rem;
@@ -99,11 +99,44 @@
             margin-bottom: 20px;
             font-weight: 700;
             color: #38bdf8;
+            border-radius: 8px; /* Para los badges con fondo */
         }
 
         .staff-bio { color: #949ba4; font-size: 0.95rem; line-height: 1.6; }
 
         footer { margin-top: auto; padding: 40px; color: #444; font-size: 0.8rem; text-align: center; }
+
+        /* ============================================= */
+        /* AJUSTES PARA CELULAR (SIN ROMPER NADA)        */
+        /* ============================================= */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 15px;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scrollbar-width: none;
+                gap: 20px;
+            }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-links a { white-space: nowrap; font-size: 13px; }
+
+            body { padding-top: 140px; }
+
+            .staff-grid {
+                grid-template-columns: 1fr; /* Una sola columna en móvil */
+                width: 95%;
+            }
+
+            .staff-card {
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -116,8 +149,8 @@
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="commands.html">Comandos</a></li>
-                <li><a href="staffteam.html" style="color:#fff;">Staff</a></li>
-                <a href="network.html">Network</a>
+                <li><a href="staffteam.html" style="color:#fff; font-weight: 800;">Staff</a></li>
+                <li><a href="network.html">Network</a></li>
                 <li><a href="estado.html">Estado</a></li>
             </ul>
         </div>
@@ -125,45 +158,39 @@
 
     <header class="header">
         <h1>Staff Team</h1>
-        <p>Staff detrás de Abyssus Bot.</p>
+        <p>El equipo detrás de Abyssus Bot.</p>
     </header>
 
     <main class="staff-grid">
-       <!-- Mr.Abyssus -->
-<div class="staff-card" style="border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
-    <div class="avatar-container">
-        <!-- El borde del avatar también resalta -->
-        <img src="img/perfil.jpg" class="staff-avatar" style="border-color: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow));">
-    </div>
-    <h2 class="staff-name">Mr.Abyssus</h2>
-    <div class="discord-tag">@mr.abyssus</div>
-    
-    <!-- Badge Distintivo con Degradado -->
-    <span class="staff-role" style="
-        background: linear-gradient(90deg, #0ea5e9, #6366f1);
-        color: #fff;
-        border: none;
-        font-weight: 800;
-        box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-        padding: 6px 20px;
-    ">CTO & Founder</span>
-    
-    <p class="staff-bio">Desarrollador principal y arquitecto de sistemas. Liderando la visión técnica y el desarrollo del core de Abyssus Bot.</p>
-</div>
+        <div class="staff-card" style="border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
+            <div class="avatar-container">
+                <img src="img/perfil.jpg" class="staff-avatar" style="border-color: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow));">
+            </div>
+            <h2 class="staff-name">Mr.Abyssus</h2>
+            <div class="discord-tag">@mr.abyssus</div>
+            
+            <span class="staff-role" style="
+                background: linear-gradient(90deg, #0ea5e9, #6366f1);
+                color: #fff;
+                border: none;
+                font-weight: 800;
+                box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+                padding: 6px 20px;
+            ">CTO & Founder</span>
+            
+            <p class="staff-bio">Desarrollador principal y arquitecto de sistemas. Liderando la visión técnica y el desarrollo del core de Abyssus Bot.</p>
+        </div>
 
-        <!-- Hiken -->
         <div class="staff-card">
             <div class="avatar-container">
                 <img src="img/hiken.jpg" class="staff-avatar">
             </div>
             <h2 class="staff-name">HIKEN D RASEC</h2>
             <div class="discord-tag">@hiken_rasec</div>
-            <span class="staff-role" style="border: 1px solid #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">Co-Founder & Partner</span>
+            <span class="staff-role" style="border: 1px solid #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">Co-Founder & Partner</span>
             <p class="staff-bio">Cofundador de Abyssus. Figura clave en la creación del proyecto y pilar fundamental en la comunidad desde sus inicios.</p>
         </div>
-    </main>
 
-    <!-- Vacante / Próximamente -->
         <div class="staff-card" style="border: 2px dashed rgba(255, 255, 255, 0.1); background: transparent;">
             <div class="avatar-container" style="display: flex; align-items: center; justify-content: center;">
                 <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: rgba(255,255,255,0.2);">
@@ -175,6 +202,7 @@
             <span class="staff-role" style="border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); background: transparent;">Hiring...</span>
             <p class="staff-bio" style="font-style: italic; color: #444;">¿Tienes lo que se necesita para formar parte del equipo de Abyssus? Mantente atento a nuestras convocatorias de Staff.</p>
         </div>
+    </main>
 
     <footer>&copy; 2026 Abyssus Project</footer>
 
