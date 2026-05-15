@@ -6,6 +6,7 @@
     <title>Abyssus Bot - Comandos</title>
     <link rel="icon" href="img/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #38bdf8;
@@ -20,56 +21,65 @@
             background: radial-gradient(circle at top, #0f172a, #020617);
             color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-       nav {
+        /* ===== NAV (Optimizado) ===== */
+        nav {
             position: fixed; 
             top: 0; 
             width: 100%; 
             backdrop-filter: blur(12px);
             background: rgba(15, 23, 42, 0.8); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            height: 70px;    /* Le damos una altura fija */
-            display: flex; 
-            align-items: center; 
             z-index: 1000;
+            padding: 10px 0;
         }
 
-        /* Esta clase es la que hace la magia del centrado */
         .nav-container {
             width: 100%;
-            max-width: 1100px; /* Esto hace que mida lo mismo que tus comandos */
-            margin: 0 auto;    /* Esto centra la caja en la pantalla */
-            padding: 0 20px;   /* Espacio para que no toque los bordes en el móvil */
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
-            justify-content: space-between; /* Logo a un lado, links al otro */
+            justify-content: space-between;
             align-items: center;
         }
 
         nav h1 { font-weight: 800; color: var(--accent); font-size: 1.5rem; }
+        nav .links { display: flex; align-items: center; }
         nav .links a { color: #ccc; text-decoration: none; margin-left: 20px; transition: .3s; font-size: 0.9rem; }
         nav .links a:hover { color: #fff; }
 
-        .header { text-align: center; padding-top: 130px; margin-bottom: 20px; }
-        .header h1 { font-size: 2.5rem; font-weight: 800; }
+        /* ===== HEADER ===== */
+        .header { text-align: center; padding-top: 130px; margin-bottom: 20px; padding-left: 20px; padding-right: 20px; }
+        .header h1 { font-size: clamp(2rem, 8vw, 2.5rem); font-weight: 800; }
         .header span { background: linear-gradient(90deg, #38bdf8, #6366f1); -webkit-background-clip: text; color: transparent; }
         .header p { color: var(--text-muted); margin-top: 10px; }
 
+        /* ===== CONTROLES ===== */
         .controls { max-width: 1100px; margin: 0 auto 30px; padding: 0 20px; }
         .search-box { width: 100%; max-width: 500px; margin: 0 auto 20px; }
         .search-box input {
             width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-            background: rgba(255,255,255,0.05); color: #fff; outline: none; transition: .3s;
+            background: rgba(255,255,255,0.05); color: #fff; outline: none; transition: .3s; font-size: 16px; /* Evita zoom en iOS */
         }
         .search-box input:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
 
-        .categories { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .categories { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
         .category {
             padding: 8px 20px; border-radius: 20px; background: var(--bg-card);
             cursor: pointer; transition: .3s; font-size: 0.85rem; border: 1px solid transparent;
+            white-space: nowrap;
         }
         .category:hover, .category.active { background: var(--accent); color: #000; font-weight: 600; }
 
+        /* ===== GRID & CARDS ===== */
         .commands-grid {
             max-width: 1100px; margin: auto; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -80,6 +90,7 @@
             background: var(--bg-card); border-radius: 12px; padding: 18px;
             border: 1px solid rgba(255, 255, 255, 0.05); transition: .3s;
             display: flex; flex-direction: column; justify-content: space-between;
+            cursor: pointer;
         }
         .command-card:hover {
             transform: translateY(-5px); border-color: var(--accent);
@@ -88,10 +99,47 @@
         .cmd-name { font-family: 'monospace'; font-weight: 600; color: var(--accent); font-size: 1.1rem; }
         .cmd-desc { font-size: 0.85rem; color: #ccc; margin: 10px 0; line-height: 1.4; }
         .cmd-tag { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        
-        .copy-hint { font-size: 0.65rem; color: var(--accent); opacity: 0.6; margin-top: 5px; }
 
         footer { text-align: center; padding: 40px; color: #555; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+
+        /* ============================================= */
+        /* AJUSTES PARA CELULAR (SIN ROMPER NADA)        */
+        /* ============================================= */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .nav .links {
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: 5px;
+                scrollbar-width: none;
+            }
+            .nav .links::-webkit-scrollbar { display: none; }
+            .nav .links a { margin: 0 10px; margin-left: 0; white-space: nowrap; }
+
+            .header { padding-top: 150px; }
+
+            .categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 10px;
+                scrollbar-width: none;
+            }
+            .categories::-webkit-scrollbar { display: none; }
+            
+            .commands-grid {
+                grid-template-columns: 1fr; /* Una columna para que sea fácil leer */
+                padding: 10px 20px;
+            }
+            
+            .command-card {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -101,7 +149,7 @@
         <h1>Abyssus</h1>
         <div class="links">
             <a href="index.html">Inicio</a>
-            <a href="commands.html">Comandos</a>
+            <a href="commands.html" style="color: #fff; font-weight: 800;">Comandos</a>
             <a href="staffteam.html">Staff</a>
             <a href="network.html">Network</a>
             <a href="estado.html">Estado de Red</a>
@@ -116,19 +164,19 @@
 
 <div class="controls">
     <div class="search-box">
-        <input type="text" id="search" placeholder="Buscar comando (ej: ban, multas, nsfw...)">
+        <input type="text" id="search" placeholder="Buscar comando (ej: ban, multas...)">
     </div>
     <div class="categories">
-    <div class="category active" data-cat="all" onclick="filter('all', this)">Todos</div>
-    <div class="category" data-cat="vip" onclick="filter('vip', this)">👑 VIP Premium</div>
-    <div class="category" data-cat="moderacion" onclick="filter('moderacion', this)">Moderación</div>
-    <div class="category" data-cat="economia" onclick="filter('economia', this)">Economía</div>
-    <div class="category" data-cat="diversion" onclick="filter('diversion', this)">Diversión</div>
-    <div class="category" data-cat="interaccion" onclick="filter('interaccion', this)">Interacción</div>
-    <div class="category" data-cat="configuracion" onclick="filter('configuracion', this)">Configuración</div>
-    <div class="category" data-cat="utilidad" onclick="filter('utilidad', this)">Utilidad</div>
-    <div class="category" data-cat="nsfw" onclick="filter('nsfw', this)">NSFW</div>
-</div>
+        <div class="category active" data-cat="all" onclick="filter('all', this)">Todos</div>
+        <div class="category" data-cat="vip" onclick="filter('vip', this)">👑 VIP Premium</div>
+        <div class="category" data-cat="moderacion" onclick="filter('moderacion', this)">Moderación</div>
+        <div class="category" data-cat="economia" onclick="filter('economia', this)">Economía</div>
+        <div class="category" data-cat="diversion" onclick="filter('diversion', this)">Diversión</div>
+        <div class="category" data-cat="interaccion" onclick="filter('interaccion', this)">Interacción</div>
+        <div class="category" data-cat="configuracion" onclick="filter('configuracion', this)">Configuración</div>
+        <div class="category" data-cat="utilidad" onclick="filter('utilidad', this)">Utilidad</div>
+        <div class="category" data-cat="nsfw" onclick="filter('nsfw', this)">NSFW</div>
+    </div>
 </div>
 
 <div class="commands-grid" id="commands-container"></div>
@@ -139,8 +187,7 @@
 
 <script>
    const comandos = [
-
-       // --- ACCESO VIP PREMIUM (POR DONACIÓN) ---
+        // (Tu lista de comandos se mantiene idéntica)
         { n: "/vip boost", d: "🚀 Potencia tu reputación durante 1 hora (Exclusivo Donadores)", c: "vip" },
         { n: "/vip ghostkick", d: "👻 Expulsión invisible sin dejar rastro en el historial", c: "vip" },
         { n: "/vip lockdown", d: "🔒 Bloqueo de máxima seguridad para canales críticos", c: "vip" },
@@ -153,8 +200,6 @@
         { n: "/caja-premium retirar", d: "📤 Extrae fondos de tu caja fuerte privada", c: "vip" },
         { n: "/caja-premium transferir", d: "🔁 Envío directo de fondos entre cuentas Premium", c: "vip" },
         { n: "/enlace", d: "🔍 Escáner avanzado de seguridad para enlaces externos", c: "vip" },
-       
-        // --- MODERACIÓN & STAFF ---
         { n: "/multas toggle", d: "💸 Configura el sistema de multas en tiempo real", c: "moderacion" },
         { n: "/multas set", d: "Cambiar monto de multa por infracción", c: "moderacion" },
         { n: "/multas ver", d: "Ver configuración actual de multas", c: "moderacion" },
@@ -185,8 +230,6 @@
         { n: "/autoroles asignar", d: "🎯 Asigna el rol automático manualmente", c: "moderacion" },
         { n: "/ayuda", d: "Solicita asistencia inmediata en el servidor", c: "moderacion" },
         { n: "/serverstats desactivar", d: "Desactiva los canales automáticos de estadísticas", c: "moderacion" },
-
-        // --- ECONOMÍA ---
         { n: "/balance", d: "Consulta tu saldo actual de AbyCoins", c: "economia" },
         { n: "/daily", d: "Reclama tu recompensa diaria gratuita", c: "economia" },
         { n: "/work", d: "Realiza trabajos para ganar monedas", c: "economia" },
@@ -207,8 +250,6 @@
         { n: "/leaderboard", d: "📊 Ranking local de los más ricos del servidor", c: "economia" },
         { n: "/rob", d: "Intenta robar dinero a otro usuario (con riesgo)", c: "economia" },
         { n: "/pay", d: "Envía monedas de forma rápida a un amigo", c: "economia" },
-
-        // --- DIVERSIÓN & JUEGOS ---
         { n: "/roleta", d: "🎡 Prueba tu suerte en la ruleta con castigos", c: "diversion" },
         { n: "/chismosos", d: "🗣️ Inventa rumores falsos para entretener", c: "diversion" },
         { n: "/sabio", d: "🧘 Frases filosóficas totalmente absurdas", c: "diversion" },
@@ -228,8 +269,6 @@
         { n: "/ttt reto", d: "❌ Reta a un usuario a Tres en Raya", c: "diversion" },
         { n: "/ttt random", d: "⭕ Partida rápida de Tres en Raya", c: "diversion" },
         { n: "/ttt ranking", d: "🏆 Ranking de los mejores jugadores de TTT", c: "diversion" },
-
-        // --- INTERACCIONES & EMOCIONES ---
         { n: "/angry", d: "💢 Expresa tu enfado en el chat", c: "interaccion" },
         { n: "/blush", d: "😊 Te sonrojas por algo que dijeron", c: "interaccion" },
         { n: "/bored", d: "🥱 Avisa a todos que estás aburrido/a", c: "interaccion" },
@@ -244,16 +283,12 @@
         { n: "/shrug", d: "🤷 ¯\\_(ツ)_/¯ No tienes idea", c: "interaccion" },
         { n: "/smile", d: "🙂 Muestras una sonrisa amable", c: "interaccion" },
         { n: "/thinking", d: "🤔 Piensas profundamente", c: "interaccion" },
-
-        // --- MASCOTAS (PETS) ---
         { n: "/pet invocar", d: "✨ Invoca una criatura emocional", c: "configuracion" },
         { n: "/pet jugar", d: "🎾 Interactúa emocionalmente con tu mascota", c: "configuracion" },
         { n: "/pet alimentar", d: "🍎 Alimenta a tu mascota", c: "configuracion" },
         { n: "/pet estado", d: "📊 Consulta el estado de tu mascota", c: "configuracion" },
         { n: "/pet fusionar", d: "🌀 Fusiona tu mascota (Entidad desconocida)", c: "configuracion" },
         { n: "/pet liberar", d: "🍃 Libera a tu mascota", c: "configuracion" },
-
-        // --- CONFIGURACIÓN DE BIENVENIDAS ---
         { n: "/setwelcome canal", d: "📍 Canal donde se enviarán las bienvenidas", c: "configuracion" },
         { n: "/setwelcome titulo", d: "📝 Título del embed de bienvenida", c: "configuracion" },
         { n: "/setwelcome mensaje", d: "💬 Mensaje principal de la bienvenida", c: "configuracion" },
@@ -263,8 +298,6 @@
         { n: "/setwelcome rol", d: "🎭 Rol automático al unirse", c: "configuracion" },
         { n: "/setwelcome desactivar", d: "❌ Elimina toda la configuración", c: "configuracion" },
         { n: "/setwelcome eliminarcanal", d: "🗑️ Elimina solo el canal de bienvenida", c: "configuracion" },
-
-        // --- NIVELES & UTILIDAD ---
         { n: "/configniveles", d: "⚙️ Configura el sistema de niveles y XP", c: "configuracion" },
         { n: "/rank", d: "🎖️ Muestra tu tarjeta de nivel y XP actual", c: "utilidad" },
         { n: "/nivel leaderboard", d: "🏆 Ranking global de niveles", c: "utilidad" },
@@ -275,8 +308,6 @@
         { n: "/embedgenerador", d: "🛠️ Genera mensajes embed personalizados", c: "utilidad" },
         { n: "/truckersmp", d: "🎮 Consulta información de TruckersMP", c: "utilidad" },
         { n: "/invite", d: "🔗 Enlace oficial para invitar al bot", c: "utilidad" },
-
-        // --- NSFW ---
         { n: "/nsfw cambiar", d: "🔞 Activa/Desactiva el estado NSFW del canal", c: "nsfw" },
         { n: "/nsfw listar", d: "📋 Muestra todos los canales NSFW", c: "nsfw" },
         { n: "/nsfw reset", d: "🧹 Limpia toda la configuración NSFW", c: "nsfw" }
@@ -300,7 +331,7 @@
                     </div>
                     <div>
                         <span class="cmd-tag">${cmd.c}</span>
-                        <div class="copy-hint" style="font-size:0.6rem; color:var(--accent); opacity:0.6;">Click para copiar</div>
+                        <div class="copy-hint" style="font-size:0.65rem; color:var(--accent); opacity:0.6; margin-top: 8px;">Toca para copiar</div>
                     </div>
                 </div>`;
         });
@@ -308,7 +339,7 @@
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
-        // Opcional: Podrías añadir un aviso visual aquí
+        // Pequeño feedback visual opcional: alert("Copiado: " + text);
     }
 
     function filter(cat, el) {
@@ -323,8 +354,8 @@
         render(cat, e.target.value);
     });
 
-    // Carga inicial
     render();
 </script>
 </body>
 </html>
+
