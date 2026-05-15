@@ -25,7 +25,7 @@
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; 
-            padding: 100px 0 50px 0; 
+            padding: 80px 0 30px 0; /* Ajustado para móvil */
             display: flex; 
             justify-content: center; 
         }
@@ -35,70 +35,90 @@
             background: rgba(10, 11, 15, 0.9); 
             backdrop-filter: blur(10px); 
             border-bottom: 1px solid var(--border); 
-            padding: 20px 0; z-index: 1000; 
+            padding: 15px 0; z-index: 1000; 
             display: flex; justify-content: center;
         }
 
         .nav-logo { 
             color: white; font-weight: 900; text-transform: uppercase; 
-            letter-spacing: 5px; text-decoration: none; font-size: 1.4rem;
+            letter-spacing: 3px; text-decoration: none; font-size: 1.1rem;
+        }
+        @media (min-width: 600px) {
+            .nav-logo { letter-spacing: 5px; font-size: 1.4rem; }
+            body { padding: 100px 0 50px 0; }
         }
         .nav-logo span { color: var(--online); }
 
-        .container { width: 90%; max-width: 900px; display: flex; flex-direction: column; gap: 30px; }
+        .container { width: 95%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+        @media (min-width: 600px) { .container { width: 90%; gap: 30px; } }
 
         .section {
             background: var(--panel);
             border-radius: 12px;
-            padding: 25px;
+            padding: 15px;
             border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
+        @media (min-width: 600px) { .section { padding: 25px; } }
 
         .section-title { 
-            font-size: 0.8rem; font-weight: 800; margin-bottom: 20px; 
+            font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; 
             color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
             display: flex; align-items: center; gap: 10px;
         }
+        @media (min-width: 600px) { .section-title { font-size: 0.8rem; margin-bottom: 20px; } }
         .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
         .clear-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            font-size: 0.65rem;
-            padding: 4px 10px;
+            font-size: 0.6rem;
+            padding: 4px 8px;
             border-radius: 4px;
             cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: bold;
         }
-        .clear-btn:hover { background: var(--offline); color: white; border-color: transparent; }
 
         .tech-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 15px; font-family: monospace;
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+            gap: 10px; font-family: monospace;
         }
-        .tech-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid var(--border); position: relative; }
-        .tech-item b { display: block; color: var(--text-muted); font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
-        .tech-item span { font-size: 1.1rem; font-weight: bold; word-break: break-all; }
+        @media (min-width: 600px) {
+            .tech-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        }
+
+        .tech-item { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--border); position: relative; }
+        .tech-item b { display: block; color: var(--text-muted); font-size: 0.6rem; margin-bottom: 5px; text-transform: uppercase; }
+        .tech-item span { font-size: 0.9rem; font-weight: bold; word-break: break-all; }
+        @media (min-width: 600px) {
+            .tech-item { padding: 15px; }
+            .tech-item b { font-size: 0.7rem; }
+            .tech-item span { font-size: 1.1rem; }
+        }
         
-        /* Tendencia */
         .trend { font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
         .trend-up { color: var(--online); }
         .trend-down { color: var(--offline); }
 
-        .chart-container { height: 220px; width: 100%; }
+        .chart-container { height: 180px; width: 100%; }
+        @media (min-width: 600px) { .chart-container { height: 220px; } }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 12px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas en móvil pequeño */
+            gap: 8px; 
+        }
+        @media (min-width: 400px) { .grid { grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 12px; } }
+
         .box { 
             aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.03); 
             border-radius: 6px; display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem; font-weight: bold; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem; font-weight: bold; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
             position: relative; cursor: pointer;
         }
+        @media (min-width: 600px) { .box { font-size: 0.9rem; } }
         .box:hover { transform: translateY(-5px); border-color: var(--online); background: rgba(51, 255, 0, 0.1); }
 
         .box.online::after {
@@ -116,26 +136,28 @@
         .offline { color: var(--offline); border-color: var(--offline); }
 
         .audit-log { 
-            height: 160px; overflow-y: auto; font-family: 'Consolas', monospace; 
-            font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;
+            height: 150px; overflow-y: auto; font-family: 'Consolas', monospace; 
+            font-size: 0.75rem; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;
             scroll-behavior: smooth;
         }
-        .log-entry { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); display: flex; gap: 15px; }
-        .log-time { color: var(--text-muted); min-width: 85px; }
+        @media (min-width: 600px) { .audit-log { height: 160px; font-size: 0.85rem; } }
+        .log-entry { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); display: flex; gap: 10px; }
+        .log-time { color: var(--text-muted); min-width: 70px; }
         .log-msg-err { color: var(--offline); font-weight: bold; }
         .log-msg-ok { color: var(--online); }
         .log-msg-warn { color: var(--warning); }
 
-        .refresh-area { text-align: right; font-size: 0.75rem; color: var(--text-muted); margin-top: -20px; font-family: monospace; }
+        .refresh-area { text-align: right; font-size: 0.7rem; color: var(--text-muted); margin-top: -15px; font-family: monospace; }
 
         .box .tooltip { 
-            visibility: hidden; width: 160px; background: #000; color: #fff; 
-            border-radius: 6px; padding: 12px; position: absolute; z-index: 100; 
-            bottom: 130%; left: 50%; transform: translateX(-50%); opacity: 0; 
-            transition: 0.2s; font-size: 0.75rem; border: 1px solid var(--online); 
+            visibility: hidden; width: 130px; background: #000; color: #fff; 
+            border-radius: 6px; padding: 10px; position: absolute; z-index: 100; 
+            bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; 
+            transition: 0.2s; font-size: 0.65rem; border: 1px solid var(--online); 
             box-shadow: 0 10px 20px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.4;
         }
-        .box:hover .tooltip { visibility: visible; opacity: 1; }
+        @media (min-width: 600px) { .box .tooltip { width: 160px; font-size: 0.75rem; } }
+        .box:hover .tooltip, .box:active .tooltip { visibility: visible; opacity: 1; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -148,22 +170,22 @@
 <div class="container">
     
     <section class="section">
-        <div class="section-title">Estado Global del Sistema</div>
+        <div class="section-title">Estado del Sistema</div>
         <div class="tech-grid">
             <div class="tech-item"><b>Estado</b><span id="sistema-status">CONECTANDO</span></div>
-            <div class="tech-item"><b>Uptime Global</b><span id="res-uptime">00d 00h 00m</span></div>
+            <div class="tech-item"><b>Uptime</b><span id="res-uptime">00d 00h</span></div>
             <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
-            <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span><small id="trend-guilds" class="trend"></small></div>
+            <div class="tech-item"><b>Servers</b><span id="res-servidores">--</span><small id="trend-guilds" class="trend"></small></div>
             <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span><small id="trend-ram" class="trend"></small></div>
-            <div class="tech-item"><b>Latencia API</b><span id="res-ping">-- ms</span></div>
-            <div class="tech-item"><b>Discord API</b><span id="discord-status">...</span></div>
+            <div class="tech-item"><b>API Ping</b><span id="res-ping">-- ms</span></div>
+            <div class="tech-item" style="grid-column: span 2;"><b>Discord API</b><span id="discord-status">...</span></div>
         </div>
     </section>
 
-    <div class="refresh-area">Próximo escaneo en: <span id="refresh-timer">3</span>s</div>
+    <div class="refresh-area">Próximo scan: <span id="refresh-timer">3</span>s</div>
 
     <section class="section">
-        <div class="section-title">Monitor de Rendimiento (RAM)</div>
+        <div class="section-title">Monitor RAM</div>
         <div class="chart-container">
             <canvas id="ramChart"></canvas>
         </div>
@@ -176,7 +198,7 @@
 
     <section class="section">
         <div class="section-title">
-            Registro de Eventos
+            Logs
             <button class="clear-btn" onclick="clearLogs()" style="margin-left: 10px;">Limpiar 🗑️</button>
         </div>
         <div class="audit-log" id="audit-log"></div>
@@ -211,21 +233,19 @@ function parseUptime(value) {
 }
 
 function formatUptime(ms) {
-    if (isNaN(ms) || ms <= 0) return "00d 00h 00m";
+    if (isNaN(ms) || ms <= 0) return "00d 00h";
     let s = Math.floor(ms / 1000);
     const d = Math.floor(s / (3600 * 24));
     s %= (3600 * 24);
     const h = Math.floor(s / 3600);
-    s %= 3600;
-    const m = Math.floor(s / 60);
-    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m`;
+    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h`;
 }
 
 function addLog(msg, type = '') {
-    const time = new Date().toLocaleTimeString();
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     const entryData = { time, msg, type };
     let storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
-    storedLogs.push(entryData); // Push al final para orden cronológico
+    storedLogs.push(entryData);
     if(storedLogs.length > 50) storedLogs.shift(); 
     localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
     renderLogs(true);
@@ -240,10 +260,7 @@ function renderLogs(shouldScroll = false) {
         else if(log.type === 'warn') colorClass = 'log-msg-warn';
         return `<div class="log-entry"><span class="log-time">[${log.time}]</span> <span class="${colorClass}">${log.msg}</span></div>`;
     }).join('');
-    
-    if(shouldScroll) {
-        logBox.scrollTop = logBox.scrollHeight;
-    }
+    if(shouldScroll) logBox.scrollTop = logBox.scrollHeight;
 }
 
 function clearLogs() {
