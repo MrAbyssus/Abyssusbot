@@ -213,24 +213,26 @@
         </div>
     </div>
 
-    <script>
-      const aliados = [
-    {
-        nombre: "La Cueva Fresqui 🐻🥣",
-        descripcion: "¡Tu nuevo hogar y nodo principal de Abyssus! Una comunidad acogedora con eventos épicos, staff atento y beneficios para boosters. ¡Donde Polar aprueba tu estancia y los Cueva-hermanos te esperan! 🐼❄️",
-        link: "https://discord.gg/yqyVfTbU9e"
+   <script>
+    // 1. Definimos la lista correctamente (corregido corchetes y llaves)
+    const aliados = [
+        {
+            nombre: "La Cueva Fresqui 🐻🥣",
+            descripcion: "¡Tu nuevo hogar y nodo principal de Abyssus! Una comunidad acogedora con eventos épicos, staff atento y beneficios para boosters. ¡Donde Polar aprueba tu estancia y los Cueva-hermanos te esperan! 🐼❄️",
+            link: "https://discord.gg/yqyVfTbU9e"
+        }, // <-- Coma necesaria para separar
+        {
+            nombre: "COMUNIDAD OBJETIVO",
+            descripcion: "Comunidad aliada enfocada en sistemas de economía y trading verificada.",
+            link: "https://discord.gg/ejemplo2"
+        }
     ];
 
-        
-            {
-                nombre: "COMUNIDAD OBJETIVO",
-                descripcion: "Comunidad aliada enfocada en sistemas de economía y trading verificada.",
-                link: "https://discord.gg/ejemplo2"
-            }
-        ];
+    // 2. Seleccionamos el grid
+    const grid = document.getElementById('aliados-grid');
 
-        const grid = document.getElementById('aliados-grid');
-
+    // 3. Renderizamos (usamos una validación para asegurar que el grid existe)
+    if (grid) {
         grid.innerHTML = aliados.map(a => `
             <div class="node-card">
                 <div class="status-container">
@@ -241,6 +243,7 @@
                 <a href="${a.link}" class="node-btn" target="_blank">CONECTAR AL NODO</a>
             </div>
         `).join('');
-    </script>
+    }
+</script>
 </body>
 </html>
