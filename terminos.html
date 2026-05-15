@@ -9,7 +9,6 @@
 
     <meta name="description" content="Términos y condiciones de uso de Abyssus Bot dentro de Discord.">
 
-    <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -42,11 +41,12 @@
             overflow-x: hidden;
         }
 
-        /* NAV */
+        /* NAV OPTIMIZADO */
         nav {
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(15px);
-            padding: 20px;
+            -webkit-backdrop-filter: blur(15px);
+            padding: 15px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -55,14 +55,21 @@
         }
 
         nav a {
-            margin: 0 20px;
+            margin: 0 10px;
             color: var(--text-dim);
             text-decoration: none;
             font-weight: 600;
             transition: 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: inline-block;
+            padding: 5px 10px;
+        }
+
+        @media (min-width: 768px) {
+            nav { padding: 20px; }
+            nav a { margin: 0 20px; font-size: 0.9rem; }
         }
 
         nav a:hover {
@@ -70,16 +77,16 @@
             text-shadow: 0 0 10px var(--glow);
         }
 
-        /* HEADER */
+        /* HEADER RESPONSIVO */
         header {
             text-align: center;
-            padding: 100px 20px;
+            padding: 60px 20px;
             background: linear-gradient(180deg, rgba(31, 111, 235, 0.2) 0%, transparent 100%);
         }
 
         header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            font-size: clamp(2.2rem, 8vw, 3.5rem);
             margin-bottom: 15px;
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text;
@@ -89,27 +96,37 @@
         header p {
             color: var(--text-dim);
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
-        /* MAIN */
+        @media (min-width: 768px) {
+            header { padding: 100px 20px; }
+        }
+
+        /* MAIN Y CARDS */
         main {
             max-width: 900px;
             margin: auto;
-            padding: 20px 20px 80px 20px;
+            padding: 10px 15px 80px 15px;
         }
 
-        /* CARDS */
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             margin-bottom: 25px;
             border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
+        }
+
+        @media (min-width: 768px) {
+            main { padding: 20px 20px 100px 20px; }
+            .card { padding: 35px; transform: translateY(30px); }
         }
 
         .card.visible {
@@ -130,16 +147,12 @@
             align-items: center;
             gap: 12px;
             font-weight: 800;
-            font-size: 1.4rem;
+            font-size: clamp(1.2rem, 5vw, 1.4rem);
         }
 
-        .card h2 i {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .card p {
+        .card p, ul li {
             color: #ced4da;
+            font-size: 0.95rem;
         }
 
         ul {
@@ -150,8 +163,8 @@
         ul li {
             position: relative;
             padding-left: 25px;
-            margin-bottom: 10px;
-            color: #ced4da;
+            margin-bottom: 12px;
+            display: block;
         }
 
         ul li::before {
@@ -170,34 +183,39 @@
 
         code {
             background: #0d1117;
-            padding: 3px 7px;
+            padding: 2px 6px;
             border-radius: 6px;
             color: var(--accent);
             font-size: 0.9em;
             border: 1px solid var(--border);
+            word-break: break-all;
         }
 
-        /* BOTÓN VOLVER ARRIBA */
+        /* BOTÓN VOLVER ARRIBA OPTIMIZADO */
         #backToTop {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
             background: var(--accent);
             color: #000;
             border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
             cursor: pointer;
             opacity: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: 0.4s;
             z-index: 1000;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            #backToTop { width: 50px; height: 50px; bottom: 30px; right: 30px; border-radius: 15px; }
         }
 
         #backToTop.show {
@@ -213,15 +231,11 @@
         /* FOOTER */
         footer {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             background: #0d1117;
             color: var(--text-dim);
             border-top: 1px solid var(--border);
-        }
-
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .card { padding: 20px; }
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -248,45 +262,45 @@
     </p>
 </section>
 
-<section class="card fade-in dashboard-exclusive" style="border-left: 4px solid var(--accent);">
+<section class="card fade-in dashboard-exclusive">
     <h2><i class="fa-solid fa-gauge-high"></i> Uso del Dashboard y Datos</h2>
     <p>Al hacer uso del Panel de Control (Dashboard), el usuario reconoce y acepta lo siguiente:</p>
     <ul>
         <li><strong>OAuth2:</strong> El inicio de sesión se realiza a través de Discord. Abyssus <code>no conoce ni almacena</code> tu contraseña.</li>
-        <li><strong>Gestión de Servidores:</strong> El bot accede a la lista de servidores donde posees permisos para permitir la configuración remota.</li>
-        <li><strong>Tokens de Sesión:</strong> Se generan tokens temporales y cifrados para mantener tu sesión segura. Estos expiran automáticamente tras un periodo de inactividad.</li>
+        <li><strong>Gestión de Servidores:</strong> El bot accede a la lista de servidores donde posees permisos para configuración remota.</li>
+        <li><strong>Tokens de Sesión:</strong> Se generan tokens temporales y cifrados para mantener tu sesión segura.</li>
         <li><strong>Identidad:</strong> Solo se accede a tu ID y avatar de Discord para personalizar tu perfil dentro del panel.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-server"></i> Disponibilidad del Servicio</h2>
+    <h2><i class="fa-solid fa-server"></i> Disponibilidad</h2>
     <p>
-        Trabajamos para mantener una alta disponibilidad mediante infraestructura distribuida (clústeres). No obstante, el servicio puede experimentar interrupciones por mantenimiento o fallos técnicos ajenos. No se garantiza el funcionamiento ininterrumpido.
+        Trabajamos para mantener una alta disponibilidad mediante infraestructura distribuida. No obstante, el servicio puede experimentar interrupciones por mantenimiento. No se garantiza el funcionamiento ininterrumpido.
     </p>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-shield-slash"></i> Restricciones y Seguridad</h2>
+    <h2><i class="fa-solid fa-shield-slash"></i> Restricciones</h2>
     <ul>
         <li>No utilizar el bot para spam, abuso o acoso.</li>
-        <li>Prohibido explotar vulnerabilidades. Cualquier bug debe ser reportado inmediatamente al equipo de soporte.</li>
-        <li>No interferir con el funcionamiento del sistema o la infraestructura de clústeres.</li>
-        <li>El mal uso resultará en la restricción o suspensión del servicio.</li>
+        <li>Prohibido explotar vulnerabilidades. Los errores deben reportarse al equipo de soporte.</li>
+        <li>No interferir con el funcionamiento del sistema o infraestructura de clústeres.</li>
+        <li>El mal uso resultará en la restricción inmediata del servicio.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-gem"></i> Funciones Premium y Pagos</h2>
+    <h2><i class="fa-solid fa-gem"></i> Funciones Premium</h2>
     <p>
-        Las funciones premium son opcionales. Aquellas obtenidas mediante sistemas de <strong>recompensas, invitaciones o soporte</strong> no tienen valor monetario ni son reembolsables. Los pagos voluntarios no garantizan devoluciones salvo que la ley aplicable lo requiera.
+        Las funciones premium son opcionales. Aquellas obtenidas mediante recompensas o invitaciones no tienen valor monetario. Los pagos voluntarios no garantizan devoluciones salvo obligación legal.
     </p>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-scale-balanced"></i> Limitación de Responsabilidad</h2>
+    <h2><i class="fa-solid fa-scale-balanced"></i> Responsabilidad</h2>
     <p>
-        El desarrollador no se hace responsable de daños, pérdidas o conflictos derivados del uso del bot. El uso es bajo tu propio riesgo y responsabilidad.
+        El desarrollador no se hace responsable de daños o conflictos derivados del uso del bot. El uso es bajo tu propio riesgo y responsabilidad.
     </p>
 </section>
 
@@ -308,9 +322,9 @@
     
     btn.onclick = () => window.scrollTo({top: 0, behavior: "smooth"});
 
-    // Animación de aparición suave al hacer scroll
     const observerOptions = {
-        threshold: 0.1
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -328,7 +342,6 @@
 
 </body>
 </html>
-
 
 
 
