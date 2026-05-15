@@ -52,6 +52,7 @@ body{
   background: radial-gradient(circle at top,#0f172a,#020617);
   color:#fff;
   padding-top:80px;
+  overflow-x: hidden; /* Evita desbordamiento lateral */
 }
 
 /* ===== NAV ===== */
@@ -335,6 +336,46 @@ body{
 .btn-discord-pro svg { transition: transform 0.3s ease; }
 .btn-discord-pro:hover svg { transform: scale(1.1) rotate(-5deg); }
 
+/* ========================================================= */
+/* AJUSTES PARA CELULAR (SIN ROMPER NADA)                   */
+/* ========================================================= */
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Oculta links de texto en móvil para que quepan logo y botón */
+    }
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .hero .btn {
+        width: 80%;
+        margin: 5px auto;
+    }
+    .stats-superiores {
+        gap: 10px;
+    }
+    .stat-box {
+        width: 45%; /* Dos columnas en móvil para el Uptime */
+        min-width: 140px;
+    }
+    .grid {
+        grid-template-columns: 1fr; /* Tarjetas de funciones en una columna */
+    }
+    .price-card {
+        width: 100%;
+        max-width: 400px;
+    }
+    .price-card.featured {
+        transform: scale(1); /* Quitamos el aumento de tamaño en móvil para que no se corte */
+        margin-top: 20px;
+    }
+    .cta-animated h2 {
+        font-size: 1.8rem;
+    }
+}
 </style>
 </head>
 
@@ -389,6 +430,10 @@ body{
         <div class="stat-box">
             <span class="valor">24/7</span>
             <span class="etiqueta">Online</span>
+        </div>
+        <div class="stat-box">
+            <span class="valor">99.9%</span>
+            <span class="etiqueta">Uptime</span>
         </div>
     </div>
 
@@ -558,11 +603,7 @@ body{
                 </ul>
             </div>
 
-            <a href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" class="btn btn-primary" style="width: 100%; border-radius: 10px; margin-top: 15px;">Obtener Llave Maestra VIP</a>
-            
-            <p style="font-size: 0.7rem; color: #555; margin-top: 15px; font-style: italic; line-height: 1.2;">
-                * El uso indebido del sistema de privilegios conlleva la revocación inmediata del acceso por ID.
-            </p>
+            <a href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" class="btn btn-primary" style="width: 100%; border-radius: 10px; margin-top: 15px;">Obtener VIP</a>
         </div>
     </div>
 </section>
