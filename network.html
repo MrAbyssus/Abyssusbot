@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abyssus Bot - Networl</title>
+    <title>Abyssus Bot - Network</title>
     <link rel="icon" href="img/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* BASE & RESET (Copiado de tu index) */
+        /* BASE & RESET */
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth;}
 
@@ -15,11 +17,12 @@
           font-family:'Inter',sans-serif;
           background: radial-gradient(circle at top,#0f172a,#020617);
           color:#fff;
-          padding-top:120px;
+          padding-top:100px; /* Ajustado para el Nav */
           min-height: 100vh;
+          overflow-x: hidden;
         }
 
-        /* ===== NAV (Copiado exactamente de tu código) ===== */
+        /* ===== NAV (Optimizado para Celular) ===== */
         .nav{
           position:fixed;
           top:0;
@@ -68,42 +71,16 @@
           position:relative;
           transition:.3s;
         }
-        .nav-links a:hover{color:#fff;}
-        .nav-links a::after{
-          content:"";
-          position:absolute;
-          left:0;
-          bottom:-5px;
-          width:0%;
-          height:2px;
-          background:linear-gradient(90deg,#38bdf8,#6366f1);
-          transition:.3s;
-        }
-        .nav-links a:hover::after{ width:100%; }
-
-        .discord-btn{
-          display:flex;
-          align-items:center;
-          gap:8px;
-          padding:10px 18px;
-          border-radius:12px;
-          font-weight:600;
-          font-size:14px;
-          text-decoration:none;
-          color:#fff;
-          background:linear-gradient(135deg,#5865F2,#4752C4);
-          box-shadow:0 4px 20px rgba(88,101,242,0.35);
-          transition:.25s;
-        }
-
+        .nav-links a:hover, .nav-links a.active{color:#fff;}
+        
         /* SECCIÓN NETWORK */
         .network-header {
             text-align: center;
             max-width: 800px;
-            margin: 0 auto 60px auto;
+            margin: 0 auto 40px auto;
             padding: 0 20px;
         }
-        .network-header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; }
+        .network-header h1 { font-size: clamp(2rem, 8vw, 3rem); font-weight: 800; margin-bottom: 15px; }
         .network-header span {
             background: linear-gradient(90deg,#38bdf8,#6366f1);
             -webkit-background-clip: text;
@@ -126,7 +103,7 @@
         .node-card {
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 35px;
+            padding: 30px;
             border-radius: 20px;
             transition: 0.3s ease;
             backdrop-filter: blur(5px);
@@ -178,11 +155,46 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
+
+        /* ============================================= */
+        /* AJUSTES PARA CELULAR (SIN ROMPER NADA)        */
+        /* ============================================= */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 15px;
+            }
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                width: 100%;
+                justify-content: flex-start;
+                padding-bottom: 5px;
+                scrollbar-width: none; /* Oculta scroll en Firefox */
+            }
+            .nav-links::-webkit-scrollbar { display: none; } /* Oculta scroll en Chrome */
+            
+            .nav-links a {
+                margin: 0 10px;
+                white-space: nowrap; /* Evita que los links se partan en dos lineas */
+                font-size: 13px;
+            }
+            
+            body { padding-top: 140px; } /* Más espacio para el Nav doble */
+            
+            .network-grid {
+                grid-template-columns: 1fr; /* Una columna en móvil */
+            }
+            
+            .node-card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- NAV REUTILIZADA -->
     <nav class="nav">
         <div class="nav-container">
             <a href="index.html" style="text-decoration: none; color: inherit;">
@@ -193,45 +205,40 @@
             </a>
             <div class="nav-links">
                 <a href="index.html">Inicio</a>
-                <a href="commands.html#features">Comandos</a>
-                <a href="staffteam.html#features">Staff</a>
-                <a href="network.html" style="color: #fff; font-weight: 600;">Network</a>
-                <a href="estado.html#features">Estado de Red</a>
+                <a href="commands.html">Comandos</a>
+                <a href="staffteam.html">Staff</a>
+                <a href="network.html" style="color: #fff; font-weight: 600; border-bottom: 2px solid #38bdf8;">Network</a>
+                <a href="estado.html">Estado de Red</a>
             </div>
-            </a>
         </div>
     </nav>
 
     <div class="network-header">
-        <h1>Red de <span>Confianza</span></h1>
+        <h1>Servidores que <span>Apoyan a Abyssus Bot</span></h1>
         <p>Nodos verificados y comunidades bajo la protección de Abyssus.</p>
     </div>
 
     <div class="grid-container">
         <div id="aliados-grid" class="network-grid">
-            <!-- Los servidores se cargan aquí -->
-        </div>
+            </div>
     </div>
 
-   <script>
-    // 1. Definimos la lista correctamente (corregido corchetes y llaves)
+    <script>
     const aliados = [
         {
             nombre: "La Cueva Fresqui 🐻🥣",
             descripcion: "¡Tu nuevo hogar y nodo principal de Abyssus! Una comunidad acogedora con eventos épicos, staff atento y beneficios para boosters. ¡Donde Polar aprueba tu estancia y los Cueva-hermanos te esperan! 🐼❄️",
             link: "https://discord.gg/yqyVfTbU9e"
-        }, // <-- Coma necesaria para separar
+        },
         {
             nombre: "Espacio Disponible",
-            descripcion: "Descripción",
-            link: "https://discord.gg/ejemplo2"
+            descripcion: "Este espacio está reservado para futuros aliados de la red Abyssus. Si quieres que tu comunidad sea parte de nuestra red de confianza, contacta con el staff.",
+            link: "#"
         }
     ];
 
-    // 2. Seleccionamos el grid
     const grid = document.getElementById('aliados-grid');
 
-    // 3. Renderizamos (usamos una validación para asegurar que el grid existe)
     if (grid) {
         grid.innerHTML = aliados.map(a => `
             <div class="node-card">
@@ -244,6 +251,6 @@
             </div>
         `).join('');
     }
-</script>
+    </script>
 </body>
 </html>
