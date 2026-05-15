@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>404 - Perdido en el Abismo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #05070a;
+            --accent: #58a6ff;
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% 50%, #161b22, transparent),
+                radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            padding: 20px;
+            z-index: 2;
+        }
+
+        .error-code {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(6rem, 15vw, 10rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(to bottom, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        p {
+            color: var(--text-dim);
+            max-width: 500px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            color: #05070a;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.2);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: #fff;
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Elementos decorativos de fondo */
+        .orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            filter: blur(150px);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 1;
+            animation: move 10s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb"></div>
+
+    <div class="container">
+        <div class="error-code">404</div>
+        <h2>Creo que te has perdido</h2>
+        <p>Parece que la página que buscas ha sido purgada o nunca existió en este sector del sistema.</p>
+        
+        <a href="index.html" class="btn-home">
+            <i class="fa-solid fa-house-signal"></i> Volver a la superficie
+        </a>
+    </div>
+
+</body>
+</html>
+
