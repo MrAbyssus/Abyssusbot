@@ -9,7 +9,6 @@
 
     <meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
     
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -44,7 +43,8 @@
         nav {
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(15px);
-            padding: 20px;
+            -webkit-backdrop-filter: blur(15px);
+            padding: 15px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -53,52 +53,62 @@
         }
 
         nav a {
-            margin: 0 20px;
+            margin: 0 10px;
             color: var(--text-dim);
             text-decoration: none;
             font-weight: 600;
             transition: 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: inline-block;
+            padding: 5px 10px;
         }
 
         nav a:hover { color: var(--accent); }
 
         header {
             text-align: center;
-            padding: 90px 20px;
+            padding: 60px 20px;
             background: linear-gradient(180deg, rgba(31, 111, 235, 0.15) 0%, transparent 100%);
         }
 
         header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-size: clamp(2rem, 8vw, 3.2rem);
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 15px;
         }
 
-        header p { color: var(--text-dim); font-weight: 500; }
+        header p { color: var(--text-dim); font-weight: 500; font-size: 0.95rem; }
 
         main {
             max-width: 900px;
             margin: auto;
-            padding: 20px 20px 100px 20px;
+            padding: 10px 15px 80px 15px;
         }
 
         .card {
             background: var(--card);
             backdrop-filter: blur(16px);
-            border-radius: 24px;
-            padding: 35px;
-            margin-bottom: 30px;
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (min-width: 768px) {
+            header { padding: 90px 20px; }
+            main { padding: 20px 20px 100px 20px; }
+            .card { padding: 35px; border-radius: 24px; transform: translateY(30px); }
+            nav a { margin: 0 20px; font-size: 0.9rem; }
         }
 
         .card.visible { 
@@ -114,7 +124,7 @@
 
         .card h2 {
             color: var(--accent);
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
             font-weight: 800;
             margin-bottom: 18px;
             display: flex;
@@ -125,36 +135,44 @@
         .card p, .card li { 
             color: #ced4da; 
             margin-bottom: 12px; 
+            font-size: 0.95rem;
         }
 
         ul { list-style: none; padding-left: 5px; }
+        ul li { display: flex; align-items: flex-start; gap: 8px; }
         ul li::before {
             content: "•";
             color: var(--accent);
             font-weight: bold;
-            display: inline-block; 
-            width: 1em;
         }
 
         code {
             background: rgba(88, 166, 255, 0.1);
             color: var(--accent);
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 6px;
             font-family: 'Consolas', monospace;
             font-size: 0.9em;
+            word-break: break-all;
         }
 
         .contact-badge {
             display: inline-block;
             background: var(--accent);
             color: #05070a;
-            padding: 10px 24px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 800;
             text-decoration: none;
             margin-top: 10px;
             transition: 0.3s ease;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        @media (min-width: 480px) {
+            .contact-badge { width: auto; }
         }
 
         .contact-badge:hover {
@@ -165,14 +183,14 @@
 
         #backToTop {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
             background: var(--accent);
             color: #05070a;
             border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
             cursor: pointer;
             opacity: 0;
             visibility: hidden;
@@ -184,6 +202,10 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
+        @media (min-width: 768px) {
+            #backToTop { width: 50px; height: 50px; bottom: 30px; right: 30px; border-radius: 15px; }
+        }
+
         #backToTop.show { 
             opacity: 1; 
             visibility: visible; 
@@ -191,10 +213,10 @@
 
         footer {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: var(--text-dim);
             border-top: 1px solid var(--border);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -213,7 +235,7 @@
 
 <main>
 
-    <section class="card fade-in">
+<section class="card fade-in">
     <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
     <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa como responsable del manejo de los registros (logs) dentro de su comunidad.</p>
 </section>
@@ -222,46 +244,44 @@
     <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
     <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
     <ul>
-        <li><strong>Identificadores:</strong> ID único de Discord de usuarios, servidores y canales.</li>
-        <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador (usado en registros de niveles y economía).</li>
-        <li><strong>Contenido:</strong> Mensajes de registro (solo si el módulo de <code>modlogs</code> es activado por un administrador).</li>
+        <li>ID único de Discord de usuarios, servidores y canales.</li>
+        <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador.</li>
+        <li><strong>Contenido:</strong> Mensajes de registro (si el módulo <code>modlogs</code> está activo).</li>
     </ul>
 </section>
 
 <section class="card fade-in" style="border-left: 4px solid var(--accent);">
     <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-    <p>Si utilizas nuestro panel de control web, procesamos datos adicionales mediante la API oficial de Discord:</p>
+    <p>Si utilizas nuestro panel web, procesamos datos adicionales mediante la API oficial de Discord:</p>
     <ul>
-        <li><strong>Tokens OAuth2:</strong> Se utilizan tokens efímeros y cifrados para validar tu identidad. <code>Nunca</code> almacenamos tu contraseña de Discord.</li>
-        <li><strong>Cookies:</strong> Usamos cookies técnicas estrictamente necesarias para mantener tu sesión iniciada de forma segura.</li>
-        <li><strong>Servidores:</strong> Leemos la lista de servidores donde tienes permisos para mostrarte cuáles puedes configurar.</li>
+        <li><strong>Tokens OAuth2:</strong> Tokens efímeros para validar identidad. Nunca guardamos contraseñas.</li>
+        <li><strong>Cookies:</strong> Técnicas estrictamente necesarias para la sesión.</li>
+        <li><strong>Servidores:</strong> Lista de servidores donde tienes permisos de gestión.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad del Almacenamiento</h2>
-    <p>Los datos se guardan en sistemas de almacenamiento protegidos y estructuras de configuración optimizadas:</p>
+    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad</h2>
+    <p>Los datos se guardan en sistemas protegidos con acceso restringido:</p>
     <ul>
-        <li><strong>Sistema de Economía:</strong> Registra saldos y transacciones virtuales del juego.</li>
-        <li><strong>Sistema de Niveles:</strong> Almacena experiencia y rangos ganados por actividad.</li>
-        <li><strong>Configuraciones:</strong> Guarda los ajustes personalizados de cada comunidad.</li>
+        <li><strong>Economía:</strong> Saldos y transacciones virtuales.</li>
+        <li><strong>Niveles:</strong> Experiencia y rangos por actividad.</li>
+        <li><strong>Configuraciones:</strong> Ajustes personalizados de cada servidor.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-erasing-lines"></i> Control de Registros y Purga</h2>
-    <p>Abyssus Bot garantiza la privacidad institucional mediante herramientas de gestión de datos de nivel administrativo:</p>
+    <h2><i class="fa-solid fa-erasing-lines"></i> Control y Purga</h2>
+    <p>Garantizamos la privacidad mediante herramientas de gestión administrativa:</p>
     <ul>
-        <li><strong>Eliminación Bajo Demanda:</strong> Los administradores pueden ejecutar una purga que elimina los registros de moderación del servidor. Esta acción es definitiva y responsabilidad exclusiva de la administración del servidor.</li>
-        <li><strong>Destrucción de Datos:</strong> Una vez ejecutado el borrado, la información es eliminada de nuestros sistemas de almacenamiento, haciendo que la recuperación sea imposible.</li>
-        <li><strong>Transparencia:</strong> Los usuarios pueden consultar su propio historial mediante comandos de usuario antes de cualquier proceso de limpieza institucional.</li>
-        <li><strong>Derecho al Olvido:</strong> Garantizamos la eliminación de datos de servidores que expulsen al bot o permanezcan inactivos por más de 90 días durante nuestras ventanas de mantenimiento.</li>
+        <li><strong>Eliminación:</strong> Administradores pueden purgar registros de moderación de forma definitiva.</li>
+        <li><strong>Derecho al Olvido:</strong> Eliminamos datos de servidores inactivos tras 90 días de desuso.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
-    <p>Para consultas sobre privacidad, soporte o cualquier duda:</p>
+    <p>Para soporte o dudas sobre tus datos:</p>
     <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
 </section>
 
