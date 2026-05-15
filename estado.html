@@ -253,7 +253,7 @@ async function update() {
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
         
-        if (lastPingTime > 0 && currentPing > lastPingTime + 150) {
+        if (lastPingTime > 0 && currentPing > lastPingTime + 300) {
             addLog(`Inestabilidad de red: Pico de +${currentPing - lastPingTime}ms`, 'warn');
         }
         lastPingTime = currentPing;
