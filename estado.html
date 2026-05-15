@@ -10,7 +10,7 @@
         :root {
             --bg: #0d0e12; 
             --panel: #14151b;
-            --online: #33ff00; /* EL VERDE REAL */
+            --online: #33ff00; 
             --warning: #ffb86c;
             --offline: #ff5555;
             --text-main: #e2e4e9;
@@ -21,7 +21,6 @@
 
         body { 
             background-color: var(--bg); 
-            /* Resplandor superior ahora en verde */
             background-image: radial-gradient(circle at 50% 0%, rgba(51, 255, 0, 0.07) 0%, transparent 70%);
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -76,24 +75,24 @@
             letter-spacing: 1px;
             font-weight: bold;
         }
-        .clear-btn:hover {
-            background: var(--offline);
-            color: white;
-            border-color: transparent;
-        }
+        .clear-btn:hover { background: var(--offline); color: white; border-color: transparent; }
 
         .tech-grid { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 15px; font-family: monospace;
         }
-        .tech-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid var(--border); }
+        .tech-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid var(--border); position: relative; }
         .tech-item b { display: block; color: var(--text-muted); font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
         .tech-item span { font-size: 1.1rem; font-weight: bold; word-break: break-all; }
+        
+        /* Tendencia */
+        .trend { font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
+        .trend-up { color: var(--online); }
+        .trend-down { color: var(--offline); }
 
         .chart-container { height: 220px; width: 100%; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 12px; }
-        
         .box { 
             aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.03); 
             border-radius: 6px; display: flex; align-items: center; justify-content: center;
@@ -102,18 +101,11 @@
         }
         .box:hover { transform: translateY(-5px); border-color: var(--online); background: rgba(51, 255, 0, 0.1); }
 
-        /* EFECTO LATIDO VERDE */
         .box.online::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 6px;
-            border: 1px solid var(--online);
-            animation: pulse 2s infinite;
-            pointer-events: none;
-            opacity: 0;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 6px; border: 1px solid var(--online);
+            animation: pulse 2s infinite; pointer-events: none; opacity: 0;
         }
-
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.6; }
             100% { transform: scale(1.3); opacity: 0; }
@@ -123,7 +115,11 @@
         .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
 
-        .audit-log { height: 160px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; }
+        .audit-log { 
+            height: 160px; overflow-y: auto; font-family: 'Consolas', monospace; 
+            font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;
+            scroll-behavior: smooth;
+        }
         .log-entry { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); display: flex; gap: 15px; }
         .log-time { color: var(--text-muted); min-width: 85px; }
         .log-msg-err { color: var(--offline); font-weight: bold; }
@@ -136,8 +132,8 @@
             visibility: hidden; width: 160px; background: #000; color: #fff; 
             border-radius: 6px; padding: 12px; position: absolute; z-index: 100; 
             bottom: 130%; left: 50%; transform: translateX(-50%); opacity: 0; 
-            transition: 0.2s; font-size: 0.75rem; border: 1px solid var(--online); box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-            pointer-events: none; line-height: 1.4;
+            transition: 0.2s; font-size: 0.75rem; border: 1px solid var(--online); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.4;
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
     </style>
@@ -157,8 +153,8 @@
             <div class="tech-item"><b>Estado</b><span id="sistema-status">CONECTANDO</span></div>
             <div class="tech-item"><b>Uptime Global</b><span id="res-uptime">00d 00h 00m</span></div>
             <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
-            <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span></div>
-            <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span></div>
+            <div class="tech-item"><b>Servidores</b><span id="res-servidores">--</span><small id="trend-guilds" class="trend"></small></div>
+            <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span><small id="trend-ram" class="trend"></small></div>
             <div class="tech-item"><b>Latencia API</b><span id="res-ping">-- ms</span></div>
             <div class="tech-item"><b>Discord API</b><span id="discord-status">...</span></div>
         </div>
@@ -195,6 +191,8 @@ let ramChart;
 let timeLeft = 3;
 let lastPingTime = 0; 
 let lastClustersState = []; 
+let lastRamValue = 0;
+let lastGuildsValue = 0;
 
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
@@ -226,16 +224,14 @@ function formatUptime(ms) {
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
     const entryData = { time, msg, type };
-
     let storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
-    storedLogs.unshift(entryData);
-    if(storedLogs.length > 30) storedLogs.pop(); 
+    storedLogs.push(entryData); // Push al final para orden cronológico
+    if(storedLogs.length > 50) storedLogs.shift(); 
     localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
-
-    renderLogs();
+    renderLogs(true);
 }
 
-function renderLogs() {
+function renderLogs(shouldScroll = false) {
     const storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
     logBox.innerHTML = storedLogs.map(log => {
         let colorClass = '';
@@ -244,14 +240,33 @@ function renderLogs() {
         else if(log.type === 'warn') colorClass = 'log-msg-warn';
         return `<div class="log-entry"><span class="log-time">[${log.time}]</span> <span class="${colorClass}">${log.msg}</span></div>`;
     }).join('');
+    
+    if(shouldScroll) {
+        logBox.scrollTop = logBox.scrollHeight;
+    }
 }
 
 function clearLogs() {
-    if(confirm('¿Estás seguro de que quieres borrar el historial de eventos?')) {
+    if(confirm('¿Borrar historial?')) {
         localStorage.removeItem('abyssus_logs');
-        addLog("Historial de eventos vaciado por el usuario.", "warn");
-        renderLogs();
+        addLog("Historial vaciado.", "warn");
     }
+}
+
+function updateTrends(currentRam, currentGuilds) {
+    const rTrend = document.getElementById('trend-ram');
+    const gTrend = document.getElementById('trend-guilds');
+
+    if(lastRamValue > 0) {
+        if(currentRam > lastRamValue) rTrend.innerHTML = '▲', rTrend.className = 'trend trend-up';
+        else if(currentRam < lastRamValue) rTrend.innerHTML = '▼', rTrend.className = 'trend trend-down';
+    }
+    if(lastGuildsValue > 0) {
+        if(currentGuilds > lastGuildsValue) gTrend.innerHTML = '▲', gTrend.className = 'trend trend-up';
+        else if(currentGuilds < lastGuildsValue) gTrend.innerHTML = '▼', gTrend.className = 'trend trend-down';
+    }
+    lastRamValue = currentRam;
+    lastGuildsValue = currentGuilds;
 }
 
 function initChart() {
@@ -261,19 +276,15 @@ function initChart() {
         data: {
             labels: labelHistory,
             datasets: [{
-                label: 'RAM (MB)',
+                label: 'RAM',
                 data: ramHistory,
                 borderColor: '#33ff00', 
                 backgroundColor: 'rgba(51, 255, 0, 0.05)',
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                borderWidth: 2
+                fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
                 y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#626772', font: { size: 10 } } },
@@ -287,89 +298,54 @@ async function update() {
     const start = Date.now();
     try {
         fetch('https://discordstatus.com/api/v2/summary.json')
-            .then(r => r.json())
-            .then(d => {
+            .then(r => r.json()).then(d => {
                 const hasIncident = d.incidents.length > 0;
-                discordText.innerText = hasIncident ? "ALERTA: " + d.incidents[0].name.toUpperCase() : d.status.description.toUpperCase();
-                discordText.style.color = (hasIncident || d.status.indicator !== 'none') ? "#ffb86c" : "#33ff00";
-            }).catch(() => { discordText.innerText = "ERROR"; });
+                discordText.innerText = hasIncident ? "ALERTA" : d.status.description.toUpperCase();
+                discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
+            });
 
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
-        
-        if (lastPingTime > 0 && currentPing > lastPingTime + 300) {
-            addLog(`Inestabilidad de red: Pico de +${currentPing - lastPingTime}ms`, 'warn');
-        }
-        lastPingTime = currentPing;
+        statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
-        statusText.innerText = "ONLINE";
-        statusText.style.color = "#33ff00";
-
-        if (data.global && data.global.uptime) {
-            const apiUptime = parseUptime(data.global.uptime);
-            document.getElementById('res-uptime').innerText = formatUptime(apiUptime);
+        if (data.global?.uptime) {
+            document.getElementById('res-uptime').innerText = formatUptime(parseUptime(data.global.uptime));
         }
 
         const clusters = data.clusters || [];
-        
-        if (lastClustersState.length > 0) {
-            clusters.forEach((c) => {
-                const prev = lastClustersState.find(p => p.id === c.id);
-                if (prev && prev.status !== c.status) {
-                    const tipo = c.status.toLowerCase() === 'online' ? 'ok' : 'err';
-                    addLog(`Cluster #${c.id} cambió a ${c.status.toUpperCase()}`, tipo);
-                }
-            });
-        } else {
-            addLog(`Enlace exitoso: ${clusters.length} clusters detectados.`, "ok");
-        }
-        lastClustersState = JSON.parse(JSON.stringify(clusters));
-
-        const dead = clusters.filter(c => (c.status || '').toLowerCase() !== 'online');
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
+        const totalGuilds = data.global?.totalGuilds || 0;
+
+        updateTrends(totalRam, totalGuilds);
         
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
-        document.getElementById('res-servidores').innerText = (data.global?.totalGuilds || 0).toLocaleString();
-        document.getElementById('stat-clusters').innerText = `${clusters.length - dead.length} / ${clusters.length}`;
+        document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
+        document.getElementById('stat-clusters').innerText = `${clusters.filter(c => c.status === 'online').length} / ${clusters.length}`;
 
-        const gridHTML = clusters.map(c => {
+        document.getElementById('status-grid').innerHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-            return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>CLUSTER #${c.id}</b><br>• Estado: ${s.toUpperCase()}<br>• Servidores: ${c.guilds || 0}<br>• RAM: ${c.ram} MB</div></div>`;
+            return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB</div></div>`;
         }).join('');
 
-        document.getElementById('status-grid').innerHTML = gridHTML;
-
         if (ramChart) {
-            ramHistory.push(totalRam);
-            labelHistory.push("");
+            ramHistory.push(totalRam); labelHistory.push("");
             if(ramHistory.length > 40) { ramHistory.shift(); labelHistory.shift(); }
             ramChart.update();
         }
-
     } catch (e) {
-        if (statusText.innerText !== "OFFLINE") {
-            statusText.innerText = "OFFLINE";
-            statusText.style.color = "#ff5555";
-            addLog("CRÍTICO: Conexión perdida con Abyssus API", "err");
-        }
+        statusText.innerText = "OFFLINE"; statusText.style.color = "#ff5555";
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initChart();
-    renderLogs(); 
-    update();
-    
+    initChart(); renderLogs(true); update();
     setInterval(() => {
         timeLeft -= 0.1;
-        if (timeLeft <= 0) { 
-            timeLeft = 3; 
-            update(); 
-        }
+        if (timeLeft <= 0) { timeLeft = 3; update(); }
         timerText.innerText = Math.ceil(timeLeft);
     }, 100);
 });
