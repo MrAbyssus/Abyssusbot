@@ -341,40 +341,43 @@ body{
 /* ========================================================= */
 
 @media (max-width: 768px) {
+    /* Hacemos que los links sean una barra deslizable en móvil */
     .nav-links {
-        display: none; /* Oculta links de texto en móvil para que quepan logo y botón */
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px 0;
+        margin: 0 10px;
+        flex: 1;
+        scrollbar-width: none; /* Oculta scroll en Firefox */
     }
-    .hero h2 {
-        font-size: 2.2rem;
+    .nav-links::-webkit-scrollbar {
+        display: none; /* Oculta scroll en Chrome/Safari */
     }
-    .hero p {
-        font-size: 1rem;
+    .nav-links a {
+        margin: 0 10px;
+        font-size: 13px;
     }
-    .hero .btn {
-        width: 80%;
-        margin: 5px auto;
-    }
-    .stats-superiores {
+    .nav-container {
+        padding: 10px 15px;
+        flex-direction: column; /* Apilamos logo arriba y menú abajo */
         gap: 10px;
     }
-    .stat-box {
-        width: 45%; /* Dos columnas en móvil para el Uptime */
-        min-width: 140px;
+    body {
+        padding-top: 120px; /* Ajustamos el espacio por el nav más alto */
     }
-    .grid {
-        grid-template-columns: 1fr; /* Tarjetas de funciones en una columna */
-    }
-    .price-card {
-        width: 100%;
-        max-width: 400px;
-    }
-    .price-card.featured {
-        transform: scale(1); /* Quitamos el aumento de tamaño en móvil para que no se corte */
-        margin-top: 20px;
-    }
-    .cta-animated h2 {
-        font-size: 1.8rem;
-    }
+
+    /* Ajustes de contenido */
+    .hero h2 { font-size: 2.2rem; }
+    .hero .btn { width: 90%; margin: 5px auto; }
+    
+    .stats-superiores { gap: 10px; }
+    .stat-box { width: 45%; min-width: 140px; }
+    
+    .grid { grid-template-columns: 1fr; }
+    
+    .price-card { width: 100%; max-width: 400px; }
+    .price-card.featured { transform: scale(1); margin-top: 20px; }
 }
 </style>
 </head>
