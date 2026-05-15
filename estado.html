@@ -10,7 +10,7 @@
         :root {
             --bg: #0d0e12; 
             --panel: #14151b;
-            --online: #00ffcc;
+            --online: #33ff00; /* EL VERDE REAL */
             --warning: #ffb86c;
             --offline: #ff5555;
             --text-main: #e2e4e9;
@@ -21,7 +21,8 @@
 
         body { 
             background-color: var(--bg); 
-            background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 204, 0.05) 0%, transparent 70%);
+            /* Resplandor superior ahora en verde */
+            background-image: radial-gradient(circle at 50% 0%, rgba(51, 255, 0, 0.07) 0%, transparent 70%);
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; 
@@ -43,7 +44,7 @@
             color: white; font-weight: 900; text-transform: uppercase; 
             letter-spacing: 5px; text-decoration: none; font-size: 1.4rem;
         }
-        .nav-logo span { color: var(--accent); }
+        .nav-logo span { color: var(--online); }
 
         .container { width: 90%; max-width: 900px; display: flex; flex-direction: column; gap: 30px; }
 
@@ -62,7 +63,6 @@
         }
         .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-        /* Estilo del botón Limpiar */
         .clear-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
@@ -93,15 +93,33 @@
         .chart-container { height: 220px; width: 100%; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 12px; }
+        
         .box { 
             aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.03); 
             border-radius: 6px; display: flex; align-items: center; justify-content: center;
             font-size: 0.9rem; font-weight: bold; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
             position: relative; cursor: pointer;
         }
-        .box:hover { transform: translateY(-5px); border-color: var(--accent); background: rgba(0, 255, 204, 0.1); }
+        .box:hover { transform: translateY(-5px); border-color: var(--online); background: rgba(51, 255, 0, 0.1); }
 
-        .online { color: var(--online); border-color: rgba(0, 255, 204, 0.3); }
+        /* EFECTO LATIDO VERDE */
+        .box.online::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 6px;
+            border: 1px solid var(--online);
+            animation: pulse 2s infinite;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+
+        .online { color: var(--online); border-color: rgba(51, 255, 0, 0.4); }
         .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
 
@@ -118,7 +136,7 @@
             visibility: hidden; width: 160px; background: #000; color: #fff; 
             border-radius: 6px; padding: 12px; position: absolute; z-index: 100; 
             bottom: 130%; left: 50%; transform: translateX(-50%); opacity: 0; 
-            transition: 0.2s; font-size: 0.75rem; border: 1px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            transition: 0.2s; font-size: 0.75rem; border: 1px solid var(--online); box-shadow: 0 10px 20px rgba(0,0,0,0.8);
             pointer-events: none; line-height: 1.4;
         }
         .box:hover .tooltip { visibility: visible; opacity: 1; }
@@ -205,7 +223,6 @@ function formatUptime(ms) {
     return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m`;
 }
 
-// --- FUNCIÓN DE LOGS CON PERSISTENCIA ---
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
     const entryData = { time, msg, type };
@@ -229,7 +246,6 @@ function renderLogs() {
     }).join('');
 }
 
-// --- FUNCIÓN PARA BORRAR LOGS ---
 function clearLogs() {
     if(confirm('¿Estás seguro de que quieres borrar el historial de eventos?')) {
         localStorage.removeItem('abyssus_logs');
@@ -247,8 +263,8 @@ function initChart() {
             datasets: [{
                 label: 'RAM (MB)',
                 data: ramHistory,
-                borderColor: '#00ffcc',
-                backgroundColor: 'rgba(0, 255, 204, 0.05)',
+                borderColor: '#33ff00', 
+                backgroundColor: 'rgba(51, 255, 0, 0.05)',
                 fill: true,
                 tension: 0.4,
                 pointRadius: 0,
@@ -275,7 +291,7 @@ async function update() {
             .then(d => {
                 const hasIncident = d.incidents.length > 0;
                 discordText.innerText = hasIncident ? "ALERTA: " + d.incidents[0].name.toUpperCase() : d.status.description.toUpperCase();
-                discordText.style.color = (hasIncident || d.status.indicator !== 'none') ? "#ffb86c" : "#00ffcc";
+                discordText.style.color = (hasIncident || d.status.indicator !== 'none') ? "#ffb86c" : "#33ff00";
             }).catch(() => { discordText.innerText = "ERROR"; });
 
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
@@ -290,7 +306,7 @@ async function update() {
         lastPingTime = currentPing;
 
         statusText.innerText = "ONLINE";
-        statusText.style.color = "#00ffcc";
+        statusText.style.color = "#33ff00";
 
         if (data.global && data.global.uptime) {
             const apiUptime = parseUptime(data.global.uptime);
