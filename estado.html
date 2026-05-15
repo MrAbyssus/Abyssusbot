@@ -182,18 +182,29 @@ function formatUptime(ms) {
     return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m`;
 }
 
+// --- FUNCIÓN DE LOGS CORREGIDA CON PERSISTENCIA ---
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString();
-    const entry = document.createElement('div');
-    entry.className = 'log-entry';
-    let colorClass = '';
-    if(type === 'err') colorClass = 'log-msg-err';
-    else if(type === 'ok') colorClass = 'log-msg-ok';
-    else if(type === 'warn') colorClass = 'log-msg-warn';
-    
-    entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
-    logBox.prepend(entry);
-    if(logBox.children.length > 20) logBox.lastChild.remove();
+    const entryData = { time, msg, type };
+
+    // Recuperar y Guardar en LocalStorage
+    let storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
+    storedLogs.unshift(entryData);
+    if(storedLogs.length > 30) storedLogs.pop(); // Límite de 30 logs guardados
+    localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
+
+    renderLogs();
+}
+
+function renderLogs() {
+    const storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
+    logBox.innerHTML = storedLogs.map(log => {
+        let colorClass = '';
+        if(log.type === 'err') colorClass = 'log-msg-err';
+        else if(log.type === 'ok') colorClass = 'log-msg-ok';
+        else if(log.type === 'warn') colorClass = 'log-msg-warn';
+        return `<div class="log-entry"><span class="log-time">[${log.time}]</span> <span class="${colorClass}">${log.msg}</span></div>`;
+    }).join('');
 }
 
 function initChart() {
@@ -250,7 +261,6 @@ async function update() {
         statusText.innerText = "ONLINE";
         statusText.style.color = "#00ffcc";
 
-        // --- ACTUALIZACIÓN ESTÁTICA DEL UPTIME (SIN SEGUNDOS) ---
         if (data.global && data.global.uptime) {
             const apiUptime = parseUptime(data.global.uptime);
             document.getElementById('res-uptime').innerText = formatUptime(apiUptime);
@@ -304,9 +314,9 @@ async function update() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
+    renderLogs(); // Carga logs guardados al iniciar
     update();
     
-    // Intervalo de refresco visual del timer (3s)
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { 
