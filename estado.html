@@ -25,7 +25,7 @@
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; 
-            padding: 80px 0 30px 0; /* Ajustado para móvil */
+            padding: 80px 0 30px 0; 
             display: flex; 
             justify-content: center; 
         }
@@ -82,7 +82,7 @@
 
         .tech-grid { 
             display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+            grid-template-columns: repeat(2, 1fr); 
             gap: 10px; font-family: monospace;
         }
         @media (min-width: 600px) {
@@ -107,7 +107,7 @@
 
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas en móvil pequeño */
+            grid-template-columns: repeat(4, 1fr); 
             gap: 8px; 
         }
         @media (min-width: 400px) { .grid { grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 12px; } }
@@ -338,7 +338,7 @@ async function update() {
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
 
-        if (statusText.innerText === "OFFLINE") {
+        if (statusText.innerText === "REINICIANDO" || statusText.innerText === "OFFLINE") {
             addLog("Conexión reestablecida con el servidor de estado.", "ok");
         }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
@@ -356,14 +356,12 @@ async function update() {
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clusters.filter(c => c.status === 'online').length} / ${clusters.length}`;
 
-        // 🧠 CÁLCULO DE SERVIDORES CAÍDOS EN TIEMPO REAL
         let servidoresPerdidosTotales = 0;
         
         clusters.forEach(c => {
             const statusActual = (c.status || 'offline').toLowerCase();
             const statusPrevio = lastClustersState[c.id];
 
-            // Si el clúster está caído o conectando, sumamos sus servidores al contador de pérdidas
             if (statusActual !== 'online') {
                 let perdidosEsteCluster = c.guilds || c.servers || 0;
                 if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) {
@@ -389,17 +387,15 @@ async function update() {
             lastClustersState[c.id] = statusActual;
         });
 
-        // 📊 Mejora: Actualización del NUEVO recuadro visual de Servidores Caídos
         const perdidosContainer = document.getElementById('res-perdidos');
         if (servidoresPerdidosTotales > 0) {
             perdidosContainer.innerText = servidoresPerdidosTotales.toLocaleString();
-            perdidosContainer.style.color = "var(--offline)"; // Rojo si hay pérdidas
+            perdidosContainer.style.color = "var(--offline)"; 
         } else {
             perdidosContainer.innerText = "0";
-            perdidosContainer.style.color = "var(--online)"; // Verde si todo está ok
+            perdidosContainer.style.color = "var(--online)"; 
         }
 
-        // Mantenemos el contador principal de Servers intacto y limpio
         document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
 
         document.getElementById('status-grid').innerHTML = clusters.map(c => {
@@ -421,10 +417,13 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
-        if (statusText.innerText !== "OFFLINE") {
-            addLog("Error en el fetch: La API de estado no responde.", "err");
+        // En lugar de romper todo, detectamos que es un reinicio controlado por tu actualización
+        if (statusText.innerText !== "REINICIANDO") {
+            addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
         }
-        statusText.innerText = "OFFLINE"; statusText.style.color = "#ff5555";
+        statusText.innerText = "REINICIANDO"; 
+        statusText.style.color = "var(--warning)";
+        document.getElementById('res-ping').innerText = "-- ms";
     }
 }
 
