@@ -114,12 +114,19 @@
 
         .box { 
             aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.03); 
-            border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center;
             font-size: 0.8rem; font-weight: bold; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
-            position: relative; cursor: pointer;
+            position: relative; cursor: pointer; gap: 2px;
         }
         @media (min-width: 600px) { .box { font-size: 0.9rem; } }
         .box:hover { transform: translateY(-5px); border-color: var(--online); background: rgba(51, 255, 0, 0.1); }
+
+        .box-ram {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            font-family: monospace;
+            font-weight: normal;
+        }
 
         .box.online::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -177,6 +184,7 @@
             <div class="tech-item"><b>Clusters</b><span id="stat-clusters">--</span></div>
             <div class="tech-item"><b>Servers</b><span id="res-servidores">--</span><small id="trend-guilds" class="trend"></small></div>
             <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span><small id="trend-ram" class="trend"></small></div>
+            <div class="tech-item"><b>Servers Caídos</b><span id="res-perdidos">0</span></div>
             <div class="tech-item"><b>API Ping</b><span id="res-ping">-- ms</span></div>
             <div class="tech-item" style="grid-column: span 2;"><b>Discord API</b><span id="discord-status">...</span></div>
         </div>
@@ -212,7 +220,7 @@ let labelHistory = [];
 let ramChart;
 let timeLeft = 3;
 let lastPingTime = 0; 
-let lastClustersState = []; 
+let lastClustersState = {}; 
 let lastRamValue = 0;
 let lastGuildsValue = 0;
 
@@ -242,13 +250,15 @@ function formatUptime(ms) {
 }
 
 function addLog(msg, type = '') {
-    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
     const entryData = { time, msg, type };
     let storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
     storedLogs.push(entryData);
     if(storedLogs.length > 50) storedLogs.shift(); 
     localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
-    renderLogs(true);
+    
+    const isAtBottom = logBox.scrollHeight - logBox.clientHeight <= logBox.scrollTop + 40;
+    renderLogs(isAtBottom);
 }
 
 function renderLogs(shouldScroll = false) {
@@ -266,6 +276,7 @@ function renderLogs(shouldScroll = false) {
 function clearLogs() {
     if(confirm('¿Borrar historial?')) {
         localStorage.removeItem('abyssus_logs');
+        logBox.innerHTML = '';
         addLog("Historial vaciado.", "warn");
     }
 }
@@ -326,6 +337,10 @@ async function update() {
         
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
+
+        if (statusText.innerText === "OFFLINE") {
+            addLog("Conexión reestablecida con el servidor de estado.", "ok");
+        }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
         if (data.global?.uptime) {
@@ -339,13 +354,65 @@ async function update() {
         updateTrends(totalRam, totalGuilds);
         
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
-        document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
         document.getElementById('stat-clusters').innerText = `${clusters.filter(c => c.status === 'online').length} / ${clusters.length}`;
+
+        // 🧠 CÁLCULO DE SERVIDORES CAÍDOS EN TIEMPO REAL
+        let servidoresPerdidosTotales = 0;
+        
+        clusters.forEach(c => {
+            const statusActual = (c.status || 'offline').toLowerCase();
+            const statusPrevio = lastClustersState[c.id];
+
+            // Si el clúster está caído o conectando, sumamos sus servidores al contador de pérdidas
+            if (statusActual !== 'online') {
+                let perdidosEsteCluster = c.guilds || c.servers || 0;
+                if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) {
+                    perdidosEsteCluster = Math.round(totalGuilds / clusters.length);
+                }
+                servidoresPerdidosTotales += perdidosEsteCluster;
+            }
+
+            if (statusPrevio && statusPrevio !== statusActual) {
+                if (statusActual === 'online') {
+                    addLog(`Cluster #${c.id} restablecido exitosamente (ONLINE).`, "ok");
+                } else if (statusActual === 'connecting') {
+                    addLog(`Cluster #${c.id} está intentando conectarse a Discord.`, "warn");
+                } else {
+                    let servidoresPerdidos = c.guilds || c.servers || 0;
+                    if (!servidoresPerdidos && totalGuilds > 0 && clusters.length > 0) {
+                        servidoresPerdidos = Math.round(totalGuilds / clusters.length);
+                    }
+                    const formatLost = servidoresPerdidos > 0 ? ` [~${servidoresPerdidos.toLocaleString()} servidores afectados]` : '';
+                    addLog(`Cluster #${c.id} se encuentra inactivo (OFFLINE).${formatLost}`, "err");
+                }
+            }
+            lastClustersState[c.id] = statusActual;
+        });
+
+        // 📊 Mejora: Actualización del NUEVO recuadro visual de Servidores Caídos
+        const perdidosContainer = document.getElementById('res-perdidos');
+        if (servidoresPerdidosTotales > 0) {
+            perdidosContainer.innerText = servidoresPerdidosTotales.toLocaleString();
+            perdidosContainer.style.color = "var(--offline)"; // Rojo si hay pérdidas
+        } else {
+            perdidosContainer.innerText = "0";
+            perdidosContainer.style.color = "var(--online)"; // Verde si todo está ok
+        }
+
+        // Mantenemos el contador principal de Servers intacto y limpio
+        document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
 
         document.getElementById('status-grid').innerHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
-            return `<div class="box ${cl}">${c.id}<div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB</div></div>`;
+            const ramValue = parseFloat(c.ram || 0).toFixed(0);
+            const guildInfo = (c.guilds || c.servers) ? `<br>• Servers: ${(c.guilds || c.servers).toLocaleString()}` : '';
+            
+            return `<div class="box ${cl}">
+                <span>${c.id}</span>
+                <span class="box-ram">${ramValue}M</span>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB${guildInfo}</div>
+            </div>`;
         }).join('');
 
         if (ramChart) {
@@ -354,6 +421,9 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
+        if (statusText.innerText !== "OFFLINE") {
+            addLog("Error en el fetch: La API de estado no responde.", "err");
+        }
         statusText.innerText = "OFFLINE"; statusText.style.color = "#ff5555";
     }
 }
