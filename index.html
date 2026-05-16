@@ -51,7 +51,7 @@ body{
   font-family:'Inter',sans-serif;
   background: radial-gradient(circle at top,#0f172a,#020617);
   color:#fff;
-  padding-top:80px;
+  padding-top:100px;
   overflow-x: hidden;
 }
 
@@ -62,14 +62,14 @@ body{
   width:100%;
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
-  background:rgba(15,23,42,0.6);
+  background:rgba(15,23,42,0.7);
   border-bottom:1px solid rgba(255,255,255,0.06);
   z-index:1000;
 }
 .nav-container{
   max-width:1200px;
   margin:auto;
-  padding:15px 30px;
+  padding:15px 20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -79,7 +79,7 @@ body{
   align-items:center;
   gap:10px;
   font-weight:800;
-  font-size:1.3rem;
+  font-size:1.2rem;
 }
 .logo span{
   background:linear-gradient(90deg,#38bdf8,#6366f1);
@@ -87,19 +87,23 @@ body{
   color:transparent;
 }
 .logo img{
-  width:36px;
-  height:36px;
+  width:34px;
+  height:34px;
   border-radius:8px;
   animation:pulseLogo 2.5s infinite ease-in-out;
 }
 @keyframes pulseLogo{
   0%{ transform:scale(1); box-shadow:0 0 0 rgba(56,189,248,0); }
-  50%{ transform:scale(1.08); box-shadow:0 0 20px rgba(56,189,248,0.6); }
+  50%{ transform:scale(1.06); box-shadow:0 0 15px rgba(56,189,248,0.5); }
   100%{ transform:scale(1); box-shadow:0 0 0 rgba(56,189,248,0); }
+}
+.nav-links {
+  display: flex;
+  justify-content: center;
 }
 .nav-links a{
   color:#aaa;
-  margin:0 15px;
+  margin:0 12px;
   text-decoration:none;
   font-size:14px;
   position:relative;
@@ -122,49 +126,51 @@ body{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:10px 18px;
-  border-radius:12px;
+  padding:10px 16px;
+  border-radius:10px;
   font-weight:600;
-  font-size:14px;
+  font-size:13px;
   text-decoration:none;
   color:#fff;
   background:linear-gradient(135deg,#5865F2,#4752C4);
-  box-shadow:0 4px 20px rgba(88,101,242,0.35);
+  box-shadow:0 4px 15px rgba(88,101,242,0.3);
   transition:.25s;
+  white-space: nowrap;
 }
 .discord-btn img{ filter:brightness(0) invert(1); }
 .discord-btn:hover{
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 8px 30px rgba(88,101,242,0.6);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(88,101,242,0.5);
 }
 
 /* HERO */
 .hero{
-  min-height: 55vh;
+  min-height: 45vh;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding: 40px 20px; 
+  padding: 20px; 
 }
-.hero h2{ font-size: clamp(2rem, 5vw, 3rem); font-weight:800; line-height: 1.2; }
+.hero h2{ font-size: clamp(1.8rem, 5vw, 3rem); font-weight:800; line-height: 1.2; }
 .hero span{
   background:linear-gradient(90deg,#38bdf8,#6366f1);
   -webkit-background-clip:text;
   color:transparent;
 }
-.hero p{ margin-top:15px; color:#aaa; font-size:1.1rem; }
+.hero p{ margin-top:12px; color:#aaa; font-size:1rem; padding: 0 10px; }
 
-.buttons{margin-top:30px;}
+.buttons{margin-top:25px;}
 .btn{
-  padding:14px 26px;
+  padding:12px 24px;
   border-radius:10px;
   text-decoration:none;
   font-weight:600;
-  margin:10px;
+  margin:8px;
   display:inline-block;
   transition:.3s;
   cursor: pointer;
+  font-size: 14px;
 }
 .btn-primary{
   background:linear-gradient(135deg,#6366f1,#38bdf8);
@@ -172,100 +178,97 @@ body{
   border: none;
 }
 .btn-primary:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 25px rgba(99,102,241,0.4);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(99,102,241,0.35);
 }
 .btn-secondary{ background:rgba(255,255,255,0.05); color:#fff; border: 1px solid rgba(255,255,255,0.1); }
 .btn-secondary:hover{ background:rgba(255,255,255,0.1); }
 
-/* --- BLOQUE 1: ESTADO DEL SISTEMA (SEPARADO) --- */
+/* --- BLOQUE 1: ESTADO DEL SISTEMA --- */
 #seccion-estado {
     max-width: 1100px;
-    margin: 40px auto 10px auto;
+    margin: 30px auto 10px auto;
     padding: 0 20px;
     text-align: center;
 }
 .stats-superiores {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 12px;
+    margin-top: 20px;
     flex-wrap: wrap;
 }
 .stat-box {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 15px 25px;
-    border-radius: 14px;
-    min-width: 140px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    min-width: 100px;
     flex: 1;
-    max-width: 240px;
     transition: 0.3s;
 }
-.stat-box:hover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.02); }
 .stat-box span { display: block; }
-.stat-box .valor { font-weight: 800; font-size: 1.4rem; color: #fff; }
-.stat-box .etiqueta { font-size: 0.8rem; color: #94a3b8; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+.stat-box .valor { font-weight: 800; font-size: 1.3rem; color: #fff; }
+.stat-box .etiqueta { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* --- BLOQUE 2: DASHBOARD MONITOR DE CLUSTERS (SEPARADO) --- */
+/* --- BLOQUE 2: MONITOR DE CLUSTERS (VERTICAL SIN DESLIZAR) --- */
 #dashboard-monitor {
     color: #dbdee1;
     font-family: 'Inter', sans-serif;
     text-align: center;
-    padding: 30px 20px;
+    padding: 25px 15px;
     background: rgba(255,255,255,0.01);
-    border-radius: 20px;
-    margin: 30px auto 40px auto;
+    border-radius: 16px;
+    margin: 20px auto 40px auto;
     max-width: 1100px;
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 .cluster-container {
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    padding: 10px 5px;
 }
 .cluster-card {
     background: rgba(255, 255, 255, 0.03); 
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 20px;
-    border-radius: 14px;
-    width: calc(25% - 16px);
-    min-width: 220px;
+    padding: 16px;
+    border-radius: 12px;
     text-align: left;
     backdrop-filter: blur(6px);
-    transition: transform 0.3s ease, border-color 0.3s;
+    transition: transform 0.2s, border-color 0.2s;
 }
-.cluster-card:hover { transform: translateY(-5px); border-color: #00ffcc; }
-.cluster-card h3 { margin: 0; color: #00ffcc; font-size: 1rem; }
-.stat-row { display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.85rem; }
+.cluster-card:hover { transform: translateY(-3px); border-color: #00ffcc; }
+.cluster-card h3 { margin: 0; color: #00ffcc; font-size: 0.95rem; }
+.stat-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.8rem; }
 .stat-row .val { color: #fff; font-family: monospace; font-weight: 600; }
 
 .online-dot {
-    height: 9px; width: 9px;
+    height: 8px; width: 8px;
     background-color: #23a55a;
     border-radius: 50%;
-    box-shadow: 0 0 8px #23a55a;
+    box-shadow: 0 0 6px #23a55a;
     animation: pulse-green 2s infinite;
 }
-@keyframes pulse-green { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } }
+@keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
 /* FEATURES */
-.features{ padding:80px 20px; text-align:center; }
-.features h2{ font-size:2.2rem; margin-bottom:50px; }
-.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px; max-width:1100px; margin:auto; }
-.card{ background:rgba(255,255,255,0.04); padding:25px; border-radius:14px; border:1px solid rgba(255,255,255,0.05); transition:.3s; }
-.card:hover{ transform:translateY(-5px); border-color:#38bdf8; }
+.features{ padding:60px 20px; text-align:center; }
+.features h2{ font-size:1.8rem; margin-bottom:40px; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; max-width:1100px; margin:auto; }
+.card{ background:rgba(255,255,255,0.04); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); transition:.3s; }
+.card:hover{ transform:translateY(-4px); border-color:#38bdf8; }
 
 /* ===== SECCIÓN PREMIUM INTEGRADA ===== */
-.premium-section { padding: 100px 20px; max-width: 1100px; margin: auto; text-align: center; }
-.premium-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 40px; }
+.premium-section { padding: 80px 20px; max-width: 1100px; margin: auto; text-align: center; }
+.premium-grid { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 35px; }
 .price-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 40px;
-    border-radius: 20px;
-    width: 350px;
+    padding: 35px 25px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 350px;
     position: relative;
     transition: 0.3s;
     display: flex;
@@ -274,113 +277,81 @@ body{
 .price-card.featured {
     border: 2px solid #6366f1;
     background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent);
-    transform: scale(1.05);
 }
 .badge-premium {
     position: absolute;
-    top: -15px;
+    top: -14px;
     left: 50%;
     transform: translateX(-50%);
     background: linear-gradient(90deg, #38bdf8, #6366f1);
-    padding: 5px 20px;
+    padding: 4px 16px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
     white-space: nowrap;
 }
-.price-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
-.price-card .price { font-size: 2.5rem; font-weight: 800; margin: 20px 0; }
-.price-card .price span { font-size: 1rem; color: #aaa; }
+.price-card h3 { font-size: 1.35rem; margin-bottom: 8px; }
+.price-card .price { font-size: 2.2rem; font-weight: 800; margin: 15px 0; }
+.price-card .price span { font-size: 0.9rem; color: #aaa; }
 
-.price-list { list-style: none; text-align: left; margin-bottom: 30px; flex-grow: 1; }
-.price-list li { margin: 12px 0; color: #ccc; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+.price-list { list-style: none; text-align: left; margin-bottom: 25px; flex-grow: 1; }
+.price-list li { margin: 10px 0; color: #ccc; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
 .price-list li::before { content: "✓"; color: #38bdf8; font-weight: bold; }
 
 /* CTA ANIMATED STYLES */
 .cta-animated {
     text-align: center;
-    padding: 100px 20px;
+    padding: 80px 20px;
     background: radial-gradient(circle at center, rgba(88, 101, 242, 0.1), transparent 70%);
     position: relative;
-    overflow: hidden;
 }
-.wumpus-container {
-    margin-bottom: 25px;
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.wumpus-img {
-    width: 120px;
-    height: auto;
-    animation: floatWumpus 3s infinite ease-in-out;
-    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
-}
-@keyframes floatWumpus {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
-}
-.cta-animated h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 10px; color: #fff; }
+.wumpus-container { margin-bottom: 20px; height: 100px; display: flex; justify-content: center; align-items: center; }
+.wumpus-img { width: 100px; height: auto; animation: floatWumpus 3s infinite ease-in-out; }
+@keyframes floatWumpus { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.cta-animated h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 8px; color: #fff; }
 
 .btn-discord-pro {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
-    border-radius: 12px;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 10px;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-decoration: none;
     color: #fff;
     background: #5865F2;
-    box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+    transition: 0.3s;
 }
-.btn-discord-pro:hover {
-    background: #4752C4;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
-}
-.btn-discord-pro svg { transition: transform 0.3s ease; }
-.btn-discord-pro:hover svg { transform: scale(1.1) rotate(-5deg); }
+.btn-discord-pro:hover { background: #4752C4; transform: translateY(-2px); }
 
 /* ====================================================
-   📱 SECCIÓN RESPONSIVE EXCLUSIVA PARA SMARTPHONES 
+   📱 RESPONSIVE CONTROLADO (EVITA MOVIMIENTOS HORIZONTALES)
 ====================================================== */
-@media (max-width: 1024px) {
-    .cluster-card { width: calc(50% - 16px); }
+@media (max-width: 768px) {
+    body { padding-top: 140px; }
+    .nav-container { flex-direction: column; gap: 12px; padding: 12px; }
+    .nav-links { flex-wrap: wrap; justify-content: center; gap: 8px 4px; }
+    .nav-links a { margin: 0 6px; font-size: 13px; }
+    .discord-btn { width: 100%; justify-content: center; padding: 8px; }
+    
+    /* CAMBIO CLAVE: Grid vertical exacto de 2 columnas en celulares modernos */
+    .cluster-container {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    .cluster-card { padding: 12px !important; }
+    .cluster-card h3 { font-size: 0.85rem; }
+    .stat-row { font-size: 0.75rem; margin: 6px 0; }
+    
+    .price-card.featured { transform: none !important; }
 }
 
-@media (max-width: 768px) {
-    .nav-container { flex-direction: column; gap: 15px; text-align: center; }
-    .hero h2 { font-size: 2.1rem; }
-    .price-card { width: 100%; transform: none !important; }
-    .premium-grid { gap: 40px; }
-
-    /* CARRUSEL DESLIZABLE PASA LOS CLUSTERS EN MÓVIL */
-    .cluster-container {
-        flex-wrap: nowrap !important;
-        justify-content: flex-start !important;
-        overflow-x: auto !important;
-        padding: 10px 15px 20px 15px !important;
-        gap: 14px !important;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-    }
-    .cluster-card { 
-        width: 240px !important; 
-        min-width: 240px !important; 
-        flex-shrink: 0 !important;
-        scroll-snap-align: center;
-        background: rgba(30, 41, 59, 0.7) !important;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    }
-    /* Barra de scroll minimalista y moderna para celulares */
-    .cluster-container::-webkit-scrollbar { height: 4px; }
-    .cluster-container::-webkit-scrollbar-thumb { background: rgba(0, 255, 204, 0.3); border-radius: 10px; }
-    .cluster-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+@media (max-width: 480px) {
+    /* Celulares extremadamente pequeños bajan a 1 columna para mantener legibilidad */
+    .cluster-container { grid-template-columns: 1fr !important; }
 }
 </style>
 </head>
@@ -402,7 +373,7 @@ body{
     </div>
     <a href="https://discord.com/oauth2/authorize?client_id=680897280433324081&redirect_uri=https://abyssus-auth.onrender.com/callback&response_type=code&scope=identify%20guilds"
        class="discord-btn">
-      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="18">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16">
       Dashboard
     </a>
   </div>
@@ -421,7 +392,7 @@ body{
 </section>
 
 <div id="seccion-estado">
-    <h2 style="color: #ffffff; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 800;">
+    <h2 style="color: #ffffff; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 800;">
       ⚡ Estado del Sistema
     </h2>
     <div class="stats-superiores">
@@ -441,11 +412,11 @@ body{
 </div>
 
 <div id="dashboard-monitor">
-    <h2 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800;">
+    <h2 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800;">
         🚀 ABYSSUS BOT: MONITOR
     </h2>
 
-    <div id="conexion-texto" style="margin-bottom: 25px; font-size: 0.9rem;">
+    <div id="conexion-texto" style="margin-bottom: 20px; font-size: 0.85rem;">
         Estado: <span style="color:#23a55a; font-weight:bold;">SISTEMA OPERATIVO</span>
     </div>
 
@@ -488,9 +459,9 @@ body{
         if (data.clusters && lista) {
             lista.innerHTML = data.clusters.map(c => `
                 <div class="cluster-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <h3>Cluster ${c.id}</h3>
-                        <span style="font-size:0.7rem; color:#00ffcc; font-weight: bold; background: rgba(0,255,204,0.08); padding: 2px 6px; border-radius: 4px;">
+                        <span style="font-size:0.65rem; color:#00ffcc; font-weight: bold; background: rgba(0,255,204,0.08); padding: 1px 5px; border-radius: 4px;">
                             ${c.ping ? c.ping + 'ms' : '--ms'} 📶
                         </span>
                     </div>
@@ -510,8 +481,8 @@ body{
                         <span class="val" style="color:#00ffcc;">${c.cpu || '0%'}</span>
                     </div>
 
-                    <div style="margin-top:15px; font-size: 0.7rem; color: #00ffcc; font-weight:bold; display:flex; align-items:center; gap:6px; border-top:1px solid rgba(255,255,255,0.05); padding-top:12px;">
-                        <div class="online-dot" style="background-color: ${c.status === 'online' ? '#23a55a' : '#f04747'}; box-shadow: 0 0 8px ${c.status === 'online' ? '#23a55a' : '#f04747'};"></div> 
+                    <div style="margin-top:12px; font-size: 0.65rem; color: #00ffcc; font-weight:bold; display:flex; align-items:center; gap:5px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                        <div class="online-dot" style="background-color: ${c.status === 'online' ? '#23a55a' : '#f04747'}; box-shadow: 0 0 6px ${c.status === 'online' ? '#23a55a' : '#f04747'};"></div> 
                         ${(c.status || 'OFFLINE').toUpperCase()}
                     </div>
                 </div>
@@ -548,14 +519,14 @@ body{
 </section>
 
 <section class="premium-section">
-    <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Domina el Sistema con <span>Abyssus VIP</span></h2>
-    <p style="color: #aaa;">Herramientas de ingeniería avanzada para una administración sin límites.</p>
+    <h2 style="font-size: 2rem; margin-bottom: 10px;">Domina el Sistema con <span>Abyssus VIP</span></h2>
+    <p style="color: #aaa; font-size: 0.95rem;">Herramientas de ingeniería avanzada para una administración sin límites.</p>
 
     <div class="premium-grid">
         <div class="price-card">
             <h3>Versión Base</h3>
             <div class="price">Gratis</div>
-            <ul class="price-list" style="text-align: left;">
+            <ul class="price-list">
                 <li>+200 Comandos de economía</li>
                 <li>Moderación estándar</li>
                 <li>Dashboard Web (✅ Monitor)</li>
@@ -565,51 +536,51 @@ body{
             <a href="#" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">Añadir Bot</a>
         </div>
 
-        <div class="price-card featured" style="padding: 30px;">
+        <div class="price-card featured" style="padding: 30px 20px;">
             <div class="badge-premium">Poder de Desarrollador</div>
             <h3>Premium / VIP</h3>
             <div class="price">Donación <span>/ mensual</span></div>
             
-            <div class="vip-features-container" style="text-align: left; margin-top: 25px;">
+            <div class="vip-features-container" style="text-align: left; margin-top: 20px;">
                 
-                <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 15px;">
-                    <div style="display: flex; align-items: center; gap: 12px; color: #38bdf8;">
-                        <span style="font-size: 1.4rem;">⚡</span>
-                        <strong style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">Sistema Override</strong>
+                <div style="margin-bottom: 20px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #38bdf8;">
+                        <span style="font-size: 1.2rem;">⚡</span>
+                        <strong style="font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">Sistema Override</strong>
                     </div>
-                    <p style="color: #ccc; font-size: 0.95rem; margin: 8px 0; line-height: 1.5;">
+                    <p style="color: #ccc; font-size: 0.85rem; margin: 6px 0; line-height: 1.4;">
                         Bypass total de restricciones y ejecución prioritaria. El bot ignora sus leyes internas para obedecerte.
                     </p>
-                    <span style="color: #666; font-size: 0.75rem; font-style: italic;">
+                    <span style="color: #666; font-size: 0.7rem; font-style: italic;">
                         * Sujeto a protocolos de uso responsable.
                     </span>
                 </div>
 
-                <ul class="price-list" style="list-style: none; padding: 0;">
-                    <li style="color: #00ffaa; font-weight: 600; margin-bottom: 12px; display: flex; gap: 10px;">
+                <ul class="price-list">
+                    <li style="color: #00ffaa; font-weight: 600; display: flex; gap: 8px;">
                         <span>🌍</span> Estatus Global (Vinculado a tu ID)
                     </li>
-                    <li style="color: #fff; margin-bottom: 12px; display: flex; gap: 10px;">
+                    <li style="color: #fff; display: flex; gap: 8px;">
                         <span>👤</span> Moderación Ninja (Ghostkick Invisible)
                     </li>
-                    <li style="color: #fff; margin-bottom: 12px; display: flex; gap: 10px;">
+                    <li style="color: #fff; display: flex; gap: 8px;">
                         <span>🤖</span> IA Sin Límites (/ia npc y historias)
                     </li>
-                    <li style="color: #eee; margin-bottom: 12px; display: flex; gap: 10px;">
+                    <li style="color: #eee; display: flex; gap: 8px;">
                         <span>🛡️</span> Control Táctico: Lockdown de Canales
                     </li>
-                    <li style="color: #eee; margin-bottom: 12px; display: flex; gap: 10px;">
+                    <li style="color: #eee; display: flex; gap: 8px;">
                         <span>💰</span> Economía: Caja Fuerte Blindada VIP
                     </li>
-                    <li style="color: #eee; margin-bottom: 12px; display: flex; gap: 10px;">
+                    <li style="color: #eee; display: flex; gap: 8px;">
                         <span>💎</span> Insignia VIP en Perfil Global
                     </li>
                 </ul>
             </div>
 
-            <a href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" class="btn btn-primary" style="width: 100%; border-radius: 10px; margin-top: 15px;">Obtener Llave Maestra VIP</a>
+            <a href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" class="btn btn-primary" style="width: 100%; border-radius: 10px; margin-top: 10px;">Obtener Llave Maestra VIP</a>
             
-            <p style="font-size: 0.7rem; color: #555; margin-top: 15px; font-style: italic; line-height: 1.2;">
+            <p style="font-size: 0.65rem; color: #555; margin-top: 12px; font-style: italic; line-height: 1.2;">
                 * El uso indebido del sistema de privilegios conlleva la revocación inmediata del acceso por ID.
             </p>
         </div>
@@ -654,24 +625,24 @@ body{
     </div>
 </section>
 
-<footer style="text-align: center; padding: 40px 20px; margin-top: 50px; border-top: 1px solid #2f3136; background: rgba(28, 29, 36, 0.5);">
-    <p style="margin-bottom: 10px; font-weight: 500;">
+<footer style="text-align: center; padding: 30px 20px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(28, 29, 36, 0.5);">
+    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem;">
         © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
     </p>
 
-    <div style="font-size: 0.85rem; margin-bottom: 20px;">
+    <div style="font-size: 0.8rem; margin-bottom: 15px;">
         <a href="terminos.html" style="color: #777; text-decoration: none; transition: 0.3s;">Términos y Condiciones</a>
-        <span style="margin: 0 15px; color: #444;">|</span>
+        <span style="margin: 0 10px; color: #444;">|</span>
         <a href="privacidad.html" style="color: #777; text-decoration: none; transition: 0.3s;">Política de Privacidad</a>
     </div>
 
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; color: #aaa; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #aaa; flex-wrap: wrap;">
         <span>¿Necesitas ayuda?</span>
         <a href="https://discord.gg/qegCgXX99z" 
-           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s;"
+           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s;"
            onmouseover="this.style.background='#4752C4'" 
            onmouseout="this.style.background='#5865F2'">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="18" style="filter: brightness(0) invert(1);">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
             Servidor de Soporte
         </a>
     </div>
@@ -679,4 +650,3 @@ body{
 
 </body>
 </html>
-
