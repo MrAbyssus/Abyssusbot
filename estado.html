@@ -217,11 +217,12 @@
 <script>
 let ramHistory = [];
 let labelHistory = [];
-// 📊 ARRAYS PARALELOS PARA LOS DATOS EXTRA (Inmune a errores de Chart.js)
 let extraClustersActivos = [];
 let extraClustersTotales = [];
 let extraServidores = [];
 let extraPingApi = [];
+// 🔢 ARRAY ESPEJO PARA GUARDAR LOS COMANDOS DETECTADOS
+let extraComandosUsados = []; 
 
 let ramChart;
 let timeLeft = 3;
@@ -229,6 +230,8 @@ let lastPingTime = 0;
 let lastClustersState = {}; 
 let lastRamValue = 0;
 let lastGuildsValue = 0;
+// ⚡ Contador interno para el intervalo actual
+let comandosEnEsteIntervalo = 0; 
 
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
@@ -263,6 +266,11 @@ function addLog(msg, type = '') {
     if(storedLogs.length > 50) storedLogs.shift(); 
     localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
     
+    // Si el log es de tipo exitoso u ok, asumimos que se procesó una acción/comando del bot
+    if (type === 'ok' || msg.toLowerCase().includes('comando') || msg.toLowerCase().includes('ejecutado')) {
+        comandosEnEsteIntervalo++;
+    }
+
     const isAtBottom = logBox.scrollHeight - logBox.clientHeight <= logBox.scrollTop + 40;
     renderLogs(isAtBottom);
 }
@@ -311,7 +319,7 @@ function initChart() {
             labels: labelHistory,
             datasets: [{
                 label: 'RAM',
-                data: ramHistory, // Volvemos a números simples para asegurar el renderizado
+                data: ramHistory, 
                 borderColor: '#33ff00', 
                 backgroundColor: 'rgba(51, 255, 0, 0.04)',
                 fill: true, 
@@ -340,12 +348,10 @@ function initChart() {
                     padding: 10,
                     displayColors: false,
                     callbacks: {
-                        // El título del tooltip usará la hora guardada en ese mismo índice
                         title: function(context) {
                             const index = context[0].dataIndex;
                             return `🕒 Registro: ${labelHistory[index] || 'S/D'}`;
                         },
-                        // Buscamos los datos contextuales usando el índice del punto seleccionado
                         label: function(context) {
                             const index = context.dataIndex;
                             const ramActual = context.parsed.y;
@@ -358,6 +364,10 @@ function initChart() {
                             }
                             if (extraServidores[index] !== undefined) {
                                 lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
+                            }
+                            // 🚀 AQUÍ SE MUESTRAN LOS COMANDOS EN EL TOOLTIP
+                            if (extraComandosUsados[index] !== undefined) {
+                                lineas.push(`🔥 Acciones/Comandos: ${extraComandosUsados[index]}`);
                             }
                             if (extraPingApi[index]) {
                                 lineas.push(`📶 Ping API Web: ${extraPingApi[index]}`);
@@ -482,17 +492,21 @@ async function update() {
         if (ramChart) {
             const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
             
-            // 📝 Guardamos el número limpio en el array de la gráfica
             ramHistory.push(totalRam); 
             labelHistory.push(horaActual);
-            
-            // 📝 Guardamos los extras en sus respectivos arrays espejo
             extraClustersActivos.push(clustersOnline);
             extraClustersTotales.push(clusters.length);
             extraServidores.push(totalGuilds);
             extraPingApi.push(currentPing + " ms");
+
+            /* 💡 NOTA FUTURA: Si algún día modificas la API de tu bot para que envíe un contador real,
+              puedes cambiar 'comandosEnEsteIntervalo' por 'data.global.commandsCount' o similar.
+            */
+            extraComandosUsados.push(comandosEnEsteIntervalo);
             
-            // Limpiamos los arrays para mantener el límite máximo de 40 puntos en pantalla
+            // Reiniciamos el contador local para los próximos 3 segundos
+            comandosEnEsteIntervalo = 0; 
+            
             if(ramHistory.length > 40) { 
                 ramHistory.shift(); 
                 labelHistory.shift(); 
@@ -500,6 +514,7 @@ async function update() {
                 extraClustersTotales.shift();
                 extraServidores.shift();
                 extraPingApi.shift();
+                extraComandosUsados.shift();
             }
             ramChart.update();
         }
