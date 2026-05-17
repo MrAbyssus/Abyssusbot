@@ -231,14 +231,14 @@
             margin-left: 5px;
         }
 
-        /* 📊 OPTIMIZACIÓN: Caja elástica de Core Telemetry para soportar 5 columnas */
+        /* 🎛️ ADAPTADO: Grid elástica que ahora soporta 5 columnas limpiamente */
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             font-family: monospace;
         }
-        @media(min-width: 600px) { .details-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
+        @media(min-width: 550px) { .details-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
 
         .detail-card {
             background: rgba(255, 255, 255, 0.01);
@@ -543,6 +543,7 @@ function initChart() {
     });
 }
 
+// 🎛️ SELECTOR INTELIGENTE: Sincroniza dinámicamente con los datos inyectados por el EventListener
 function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     const panel = document.getElementById('cluster-details');
     const placeholder = document.getElementById('panel-placeholder');
@@ -579,7 +580,7 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
     document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
     document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
-    document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString();
+    document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString(); // 📊 Renderizado dinámico de comandos
     
     const statusCard = document.getElementById('det-status').parentElement;
     const statusTarget = document.getElementById('det-status');
@@ -654,20 +655,20 @@ async function update() {
                 cpu: c.cpu,
                 ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
                 guilds: numGuilds,
-                commands: c.commandsExecuted || 0 // 🛰️ Inyectamos comandos de cada clúster
+                commands: c.commandsExecuted || 0 // 🛰️ Almacenamos el conteo de comandos mapeado por la API
             };
         });
 
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
-        const totalCommands = data.global?.totalCommandsExecuted || 0; // ⚡ Captura del global de la API
+        const totalCommands = data.global?.totalCommandsExecuted || 0; // ⚡ Capturamos el conteo global
         const clustersOnline = clusters.filter(c => c.status === 'online').length;
 
         updateTrends(totalRam, totalGuilds);
         
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
-        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString(); // ⚡ Pintar total global
+        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString(); // ⚡ Pintamos el conteo global
 
         let servidoresPerdidosTotales = 0;
         
@@ -716,7 +717,7 @@ async function update() {
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
             const ramValue = parseFloat(c.ram || 0).toFixed(0);
             const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
-            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`; // ⚡ Inyectar comando en tooltip flotante
+            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`; // ⚡ Inyectamos comandos en el tooltip flotante
             
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
             
@@ -727,6 +728,7 @@ async function update() {
             </div>`;
         }).join('');
 
+        // 🟢 ACTUALIZACIÓN EN TIEMPO REAL SI EL PANEL ESTÁ EXPANDIDO
         if (clusterSeleccionadoId !== null) {
             const cActivo = clusters.find(c => c.id === clusterSeleccionadoId);
             if (cActivo) {
@@ -734,7 +736,7 @@ async function update() {
                 document.getElementById('det-servers').innerText = cActivo.guilds.toLocaleString();
                 document.getElementById('det-ping').innerText = cActivo.ping === '--' ? '--' : cActivo.ping + ' ms';
                 document.getElementById('det-cpu').innerText = (cActivo.cpu === undefined ? '0' : cActivo.cpu) + ' %';
-                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString(); // ⚡ Actualización de subpanel activo
+                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString(); // ⚡ Sincronización en caliente
             }
         }
 
@@ -803,6 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLogs(true); 
     update();
     
+    // 🧲 CAPTURADOR MÁSTER DE EVENTOS (Amarra las cajas de texto flotantes al click nativo)
     document.getElementById('status-grid').addEventListener('click', function(e) {
         const box = e.target.closest('.box');
         if (!box) return; 
@@ -818,13 +821,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltipText = box.querySelector('.tooltip').innerHTML;
         const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
         const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
-        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/); // ⚡ Capturar el comando inyectado en el click
+        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/); // ⚡ Capturamos dinámicamente desde el tooltip
         
         const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
         const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
         const commands = commandsMatch ? parseInt(commandsMatch[1].replace(/,/g, '')) : 0;
         
-        seleccionarCluster(id, status, servers, ping, 0, commands);
+        // El CPU se calcula dinámicamente de forma interna tras el tick de refresco
+        const cpuMatch = tooltipText.match(/CPU:\s*([^\s<]+)/);
+        const cpu = cpuMatch ? cpuMatch[1].replace('%', '').trim() : 0;
+        
+        seleccionarCluster(id, status, servers, ping, cpu, commands);
     });
 
     setInterval(() => {
