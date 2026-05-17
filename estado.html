@@ -8,32 +8,55 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
     <style>
         :root {
-            --bg: #0d0e12; 
-            --panel: #14151b;
+            --bg: #060709; /* Un negro militar más puro para contrastar el neón */
+            --panel: #111217; 
             --online: #33ff00; 
             --warning: #ffb86c;
             --offline: #ff5555;
             --text-main: #e2e4e9;
-            --text-muted: #626772;
+            --text-muted: #525765; 
             --accent: #ffffff;
-            --border: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.04);
         }
 
         body { 
             background-color: var(--bg); 
-            background-image: radial-gradient(circle at 50% 0%, rgba(51, 255, 0, 0.07) 0%, transparent 70%);
+            
+            /* 🌌 MATRIZ CYBERPUNK TRIDIMENSIONAL (Opacidades optimizadas para que sí se noten) */
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(51, 255, 0, 0.12) 0%, transparent 70%),
+                radial-gradient(circle at 85% 45%, rgba(0, 229, 255, 0.04) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 35px 35px, 35px 35px;
+            
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; 
             padding: 80px 0 30px 0; 
             display: flex; 
             justify-content: center; 
+            position: relative;
+        }
+
+        /* 🎞️ CAPA DE TEXTURA CRT (Estilo Monitor de Datos Antiguo) */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.02));
+            z-index: 9999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            opacity: 0.45;
         }
 
         .navbar { 
             position: fixed; top: 0; left: 0; width: 100%; 
-            background: rgba(10, 11, 15, 0.9); 
-            backdrop-filter: blur(10px); 
+            background: rgba(6, 7, 9, 0.85); 
+            backdrop-filter: blur(12px); 
             border-bottom: 1px solid var(--border); 
             padding: 15px 0; z-index: 1000; 
             display: flex; justify-content: center;
@@ -49,7 +72,7 @@
         }
         .nav-logo span { color: var(--online); }
 
-        .container { width: 95%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+        .container { width: 95%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; z-index: 1; }
         @media (min-width: 600px) { .container { width: 90%; gap: 30px; } }
 
         .section {
@@ -57,7 +80,7 @@
             border-radius: 12px;
             padding: 15px;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
         }
         @media (min-width: 600px) { .section { padding: 25px; } }
 
@@ -121,7 +144,6 @@
         @media (min-width: 600px) { .box { font-size: 0.9rem; } }
         .box:hover { transform: translateY(-3px); border-color: var(--online); background: rgba(51, 255, 0, 0.05); }
         
-        /* 🔥 CLÚSTER ACTIVO EN LA LISTA (Efecto neón encendido) */
         .box.active-node { 
             border-color: var(--online) !important; 
             background: rgba(51, 255, 0, 0.12) !important; 
@@ -150,7 +172,6 @@
         .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
 
-        /* 📡 SUBPANEL DE TELEMETRÍA AVANZADA */
         .cluster-details-panel {
             margin-top: 20px;
             background: rgba(0, 0, 0, 0.25);
@@ -165,14 +186,12 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Cuando está iluminado por un clúster activo */
         .cluster-details-panel.illuminated {
             background: linear-gradient(135deg, rgba(20, 21, 27, 0.95) 0%, rgba(10, 11, 15, 0.98) 100%);
             border: 1px solid rgba(51, 255, 0, 0.25);
             box-shadow: 0 0 25px rgba(51, 255, 0, 0.04), 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        /* 🎰 MENSAJE DE ESPERA INICIAL */
         .panel-placeholder {
             text-align: center;
             font-family: monospace;
@@ -187,7 +206,6 @@
             50% { opacity: 0.9; color: rgba(255,255,255,0.4); }
         }
 
-        /* CONTENIDO DE DATOS REALES (Oculto por defecto usando display none/flex vía JS) */
         .panel-content {
             display: none;
             flex-direction: column;
@@ -233,7 +251,6 @@
         .detail-card b { display: block; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
         .detail-card span { font-size: 1.05rem; font-weight: 800; color: #fff; }
 
-        /* Animación Láser Cyberpunk de Barrido */
         .cluster-details-panel::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--online), transparent);
@@ -516,7 +533,6 @@ function seleccionarCluster(id, status, guilds, ping, cpu) {
     const placeholder = document.getElementById('panel-placeholder');
     const content = document.getElementById('panel-content');
     
-    // Si tocan el mismo clúster activo, reseteamos al placeholder inicial
     if (clusterSeleccionadoId === id) {
         clusterSeleccionadoId = null;
         panel.classList.remove('illuminated');
@@ -530,12 +546,10 @@ function seleccionarCluster(id, status, guilds, ping, cpu) {
     
     clusterSeleccionadoId = id;
     
-    // Cambiar visibilidad de las capas internas del subpanel
     placeholder.style.display = 'none';
     content.style.display = 'flex';
     panel.classList.add('illuminated');
     
-    // Marcar visualmente la caja que fue seleccionada
     document.querySelectorAll('#status-grid .box').forEach(box => {
         const textSpan = box.querySelector('span');
         if (textSpan && parseInt(textSpan.innerText) === id) {
@@ -545,14 +559,12 @@ function seleccionarCluster(id, status, guilds, ping, cpu) {
         }
     });
     
-    // Forzar la inyección de los datos actuales de Abyssus
     document.getElementById('details-node-title').innerText = `CLUSTER #${String(id).padStart(2, '0')}`;
     document.getElementById('det-status').innerText = String(status).toUpperCase();
     document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
     document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
     document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
     
-    // Ajustar los colores neón del borde según el estado del nodo
     const statusCard = document.getElementById('det-status').parentElement;
     const statusTarget = document.getElementById('det-status');
     
@@ -666,7 +678,7 @@ async function update() {
 
         document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
 
-        // Construcción dinámica de la Grid conservando clases de estado activo
+        // 🛠️ CORRECCIÓN: Eliminado el "onclick" nativo para evitar ejecuciones duplicadas en cadena
         document.getElementById('status-grid').innerHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
@@ -675,14 +687,13 @@ async function update() {
             
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
             
-            return `<div class="box ${cl} ${activeClass}" onclick="seleccionarCluster(${c.id}, '${s}', ${c.guilds}, '${c.ping}', ${c.cpu || 0})">
+            return `<div class="box ${cl} ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">${ramValue}M</span>
                 <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}</div>
             </div>`;
         }).join('');
 
-        // Mantener datos del subpanel refrescados en vivo sin perder foco
         if (clusterSeleccionadoId !== null) {
             const cActivo = clusters.find(c => c.id === clusterSeleccionadoId);
             if (cActivo) {
@@ -732,11 +743,12 @@ async function update() {
         document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
         document.getElementById('res-perdidos').style.color = "var(--offline)";
 
+        // 🛠️ CORRECCIÓN: Eliminado el "onclick" también en el render de emergencia (Fallback)
         document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
             const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
             
-            return `<div class="box offline ${activeClass}" onclick="seleccionarCluster(${c.id}, 'offline', ${c.guilds}, '--', 0)">
+            return `<div class="box offline ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">0M</span>
                 <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}</div>
@@ -757,13 +769,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLogs(true); 
     update();
     
-    // 🧠 DETECTOR GLOBAL DE CLICS (Captura las cajas incluso cuando el update() las destruye/recrea)
     document.getElementById('status-grid').addEventListener('click', function(e) {
-        // Buscamos si el clic ocurrió dentro de una .box o en sus elementos internos
         const box = e.target.closest('.box');
-        if (!box) return; // Si no es una caja de clúster, ignoramos el clic
+        if (!box) return; 
         
-        // Extraemos de forma segura los parámetros guardados en su tooltip interno
         const idSpan = box.querySelector('span');
         if (!idSpan) return;
         
@@ -772,7 +781,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (box.classList.contains('online')) status = 'online';
         if (box.classList.contains('warning')) status = 'connecting';
         
-        // Limpiamos los datos del tooltip para extraer los valores puros
         const tooltipText = box.querySelector('.tooltip').innerHTML;
         const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
         const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
@@ -780,11 +788,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
         const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
         
-        // Ejecutamos la función con datos limpios y frescos de la interfaz
         seleccionarCluster(id, status, servers, ping, 0);
     });
 
-    // Bucle del temporizador de refresco
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { timeLeft = 3; update(); }
