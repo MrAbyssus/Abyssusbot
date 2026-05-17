@@ -402,13 +402,14 @@ body{
 
 <body>
 
-<div class="alerta-caida">
-    <span class="alerta-icono">⚠️</span>
-    <p class="alerta-texto">
-        <strong>Incidente de Red API:</strong> Abyssus está experimentando un bloqueo temporal de sesiones por parte de Discord tras una actualización de clústeres. 
-        <span class="alerta-tiempo">El sistema se restablecerá automáticamente a las 12:55 AM (Hora México).</span> 
-        Las bases de datos y configuraciones están 100% a salvo.
+<div id="panel-alerta" class="alerta-caida" style="border-color: rgba(51, 255, 0, 0.2); background: rgba(51, 255, 0, 0.02); position: relative; padding-right: 40px;">
+    <span class="alerta-icono" style="color: var(--online);">🛡️</span>
+    <p class="alerta-texto" style="margin: 0;">
+        <strong>Sistema Operacional:</strong> El mantenimiento programado de la infraestructura de clústeres ha finalizado con éxito. 
+        <span class="alerta-tiempo" style="color: var(--online);">Todos los nodos (01-06) están sincronizados y respondiendo en tiempo real.</span> 
+        Las funciones y comandos se encuentran completamente restablecidos.
     </p>
+    <button onclick="document.getElementById('panel-alerta').remove()" style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; transition: 0.2s; padding: 5px; line-height: 1;" onmouseover="this.style.color='var(--offline)'" onmouseout="this.style.color='var(--text-muted)'">×</button>
 </div>
 
 <nav class="nav">
