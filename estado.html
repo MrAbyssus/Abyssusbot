@@ -231,13 +231,14 @@
             margin-left: 5px;
         }
 
+        /* 📊 OPTIMIZACIÓN: Caja elástica de Core Telemetry para soportar 5 columnas */
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             font-family: monospace;
         }
-        @media(min-width: 500px) { .details-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media(min-width: 600px) { .details-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
 
         .detail-card {
             background: rgba(255, 255, 255, 0.01);
@@ -302,6 +303,7 @@
             <div class="tech-item"><b>Servers</b><span id="res-servidores">--</span><small id="trend-guilds" class="trend"></small></div>
             <div class="tech-item"><b>RAM Total</b><span id="res-ram">-- MB</span><small id="trend-ram" class="trend"></small></div>
             <div class="tech-item"><b>Servers Caídos</b><span id="res-perdidos">0</span></div>
+            <div class="tech-item"><b>Comandos Totales</b><span id="res-comandos-global">0</span></div>
             <div class="tech-item"><b>API Ping</b><span id="res-ping">-- ms</span></div>
             <div class="tech-item" style="grid-column: span 2;"><b>Discord API</b><span id="discord-status">...</span></div>
         </div>
@@ -344,6 +346,10 @@
                     <div class="detail-card" style="border-left-color: #ffb86c;">
                         <b>🧠 Carga CPU</b>
                         <span id="det-cpu" style="color: #ffb86c;">--</span>
+                    </div>
+                    <div class="detail-card" style="border-left-color: #9a4dff;">
+                        <b>⚡ Comandos Exec</b>
+                        <span id="det-commands" style="color: #9a4dff;">--</span>
                     </div>
                 </div>
             </div>
@@ -407,12 +413,10 @@ function formatUptime(ms) {
     let horas = Math.floor(minutos / 60);
     let dias = Math.floor(horas / 24);
 
-    // Evitamos el desbordamiento usando el residuo (%)
     segundos %= 60;
     minutos %= 60;
     horas %= 24;
 
-    // Formateamos para que siempre muestre 2 dígitos (ej: 02d 05h 12m)
     const d = dias.toString().padStart(2, '0');
     const h = horas.toString().padStart(2, '0');
     const m = minutos.toString().padStart(2, '0');
@@ -539,8 +543,7 @@ function initChart() {
     });
 }
 
-// 🎛️ CONTROL DE VISUALIZACIÓN DEL SUBPANEL (VERSIÓN ULTRA-ESTABLE)
-function seleccionarCluster(id, status, guilds, ping, cpu) {
+function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     const panel = document.getElementById('cluster-details');
     const placeholder = document.getElementById('panel-placeholder');
     const content = document.getElementById('panel-content');
@@ -576,6 +579,7 @@ function seleccionarCluster(id, status, guilds, ping, cpu) {
     document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
     document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
     document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
+    document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString();
     
     const statusCard = document.getElementById('det-status').parentElement;
     const statusTarget = document.getElementById('det-status');
@@ -616,14 +620,11 @@ async function update() {
         }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
-if (data.global?.uptime) {
+        if (data.global?.uptime) {
             let upValue = data.global.uptime;
 
-            // 🥷 EL HACK: Si el VPS te manda el acumulado corrupto (ej: "218h")
             if (typeof upValue === 'string' && upValue.endsWith('h')) {
-                const horasTotales = parseInt(upValue); // Agarra el 218
-                
-                // Dividimos entre tus 6 clústeres para obtener las horas reales del clúster
+                const horasTotales = parseInt(upValue); 
                 const horasReales = Math.floor(horasTotales / 6); 
                 
                 let dias = Math.floor(horasReales / 24);
@@ -632,7 +633,6 @@ if (data.global?.uptime) {
                 upValue = `${dias}d ${horasRestantes}h 00m`;
             }
 
-            // Pinta el valor corregido en la pantalla
             document.getElementById('res-uptime').innerText = upValue;
         } else {
             document.getElementById('res-uptime').innerText = "00d 00h 00m";
@@ -653,18 +653,21 @@ if (data.global?.uptime) {
                 ram: c.ram,
                 cpu: c.cpu,
                 ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
-                guilds: numGuilds
+                guilds: numGuilds,
+                commands: c.commandsExecuted || 0 // 🛰️ Inyectamos comandos de cada clúster
             };
         });
 
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
+        const totalCommands = data.global?.totalCommandsExecuted || 0; // ⚡ Captura del global de la API
         const clustersOnline = clusters.filter(c => c.status === 'online').length;
 
         updateTrends(totalRam, totalGuilds);
         
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
+        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString(); // ⚡ Pintar total global
 
         let servidoresPerdidosTotales = 0;
         
@@ -708,19 +711,19 @@ if (data.global?.uptime) {
 
         document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
 
-        // 🛠️ CORRECCIÓN: Eliminado el "onclick" nativo para evitar ejecuciones duplicadas en cadena
         document.getElementById('status-grid').innerHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
             const ramValue = parseFloat(c.ram || 0).toFixed(0);
             const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
+            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`; // ⚡ Inyectar comando en tooltip flotante
             
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
             
             return `<div class="box ${cl} ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">${ramValue}M</span>
-                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}</div>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}${commandsInfo}</div>
             </div>`;
         }).join('');
 
@@ -731,6 +734,7 @@ if (data.global?.uptime) {
                 document.getElementById('det-servers').innerText = cActivo.guilds.toLocaleString();
                 document.getElementById('det-ping').innerText = cActivo.ping === '--' ? '--' : cActivo.ping + ' ms';
                 document.getElementById('det-cpu').innerText = (cActivo.cpu === undefined ? '0' : cActivo.cpu) + ' %';
+                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString(); // ⚡ Actualización de subpanel activo
             }
         }
 
@@ -764,7 +768,7 @@ if (data.global?.uptime) {
         let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
             const guildsDelCluster = memoriaUltimosServidores[id] || 0;
             servidoresCaidosCalculados += guildsDelCluster;
-            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0 };
+            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0, commands: 0 };
         });
 
         if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
@@ -773,7 +777,6 @@ if (data.global?.uptime) {
         document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
         document.getElementById('res-perdidos').style.color = "var(--offline)";
 
-        // 🛠️ CORRECCIÓN: Eliminado el "onclick" también en el render de emergencia (Fallback)
         document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
             const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
@@ -781,7 +784,7 @@ if (data.global?.uptime) {
             return `<div class="box offline ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">0M</span>
-                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}</div>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}<br>• Comandos: 0</div>
             </div>`;
         }).join('');
 
@@ -790,6 +793,7 @@ if (data.global?.uptime) {
             document.getElementById('det-status').style.color = "var(--offline)";
             document.getElementById('det-ping').innerText = "--";
             document.getElementById('det-cpu').innerText = "--";
+            document.getElementById('det-commands').innerText = "0";
         }
     }
 }
@@ -814,11 +818,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltipText = box.querySelector('.tooltip').innerHTML;
         const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
         const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
+        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/); // ⚡ Capturar el comando inyectado en el click
         
         const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
         const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
+        const commands = commandsMatch ? parseInt(commandsMatch[1].replace(/,/g, '')) : 0;
         
-        seleccionarCluster(id, status, servers, ping, 0);
+        seleccionarCluster(id, status, servers, ping, 0, commands);
     });
 
     setInterval(() => {
