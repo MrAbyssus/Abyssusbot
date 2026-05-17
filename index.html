@@ -511,27 +511,33 @@ body{
                 }
             }
 
-            // 2. Mapeo adaptativo de Clústeres
+            // 2. Mapeo adaptativo de Clústeres (INMUNE A IDs INDETERMINADOS)
             if (data.clusters && data.clusters.length > 0) {
                 let algunClusterCaido = false;
 
-                // Mapeamos los datos entrantes directamente de la API
-                let nuevosClusters = data.clusters.map(clData => {
+                // 1️⃣ Primero ordenamos la lista original usando sus IDs reales (ej: 18, 19, 20...)
+                let clustersOrdenadosBackend = [...data.clusters].sort((a, b) => a.id - b.id);
+
+                // 2️⃣ Mapeamos asignando el ID visual basado puramente en su posición en el array (index + 1)
+                let nuevosClusters = clustersOrdenadosBackend.map((clData, index) => {
                     const status = clData.status || 'online';
                     if (status !== 'online') algunClusterCaido = true;
 
+                    // 📶 Si el ping es negativo (-1) o inválido, lo forzamos a '--' para que no quede feo
+                    let pingVisual = clData.ping;
+                    if (pingVisual === undefined || pingVisual < 0) {
+                        pingVisual = '--';
+                    }
+
                     return {
-                        id: clData.id,
+                        id: index + 1, // ✨ El primero siempre será 1, luego 2, 3, etc.
                         guilds: clData.guilds || '0',
                         ram: clData.ram || '0',
                         cpu: clData.cpu || '0%',
-                        ping: clData.ping || '--',
+                        ping: pingVisual,
                         status: status
                     };
                 });
-
-                // Los ordenamos numéricamente por su ID (para que salgan en orden: 12, 13, 14...)
-                nuevosClusters.sort((a, b) => a.id - b.id);
                 
                 memoriaClusters = nuevosClusters;
 
