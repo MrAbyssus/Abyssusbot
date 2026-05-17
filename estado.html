@@ -217,6 +217,12 @@
 <script>
 let ramHistory = [];
 let labelHistory = [];
+// 📊 ARRAYS PARALELOS PARA LOS DATOS EXTRA (Inmune a errores de Chart.js)
+let extraClustersActivos = [];
+let extraClustersTotales = [];
+let extraServidores = [];
+let extraPingApi = [];
+
 let ramChart;
 let timeLeft = 3;
 let lastPingTime = 0; 
@@ -305,7 +311,7 @@ function initChart() {
             labels: labelHistory,
             datasets: [{
                 label: 'RAM',
-                data: ramHistory,
+                data: ramHistory, // Volvemos a números simples para asegurar el renderizado
                 borderColor: '#33ff00', 
                 backgroundColor: 'rgba(51, 255, 0, 0.04)',
                 fill: true, 
@@ -319,9 +325,6 @@ function initChart() {
         options: {
             responsive: true, 
             maintainAspectRatio: false,
-            parsing: {
-                yAxisKey: 'y' // ✨ Crucial: Le dice a Chart.js que busque la propiedad 'y' dentro de nuestro objeto personalizado
-            },
             interaction: {
                 mode: 'index',
                 intersect: false 
@@ -337,17 +340,27 @@ function initChart() {
                     padding: 10,
                     displayColors: false,
                     callbacks: {
+                        // El título del tooltip usará la hora guardada en ese mismo índice
                         title: function(context) {
-                            return `🕒 Registro: ${context[0].raw.hora}`;
+                            const index = context[0].dataIndex;
+                            return `🕒 Registro: ${labelHistory[index] || 'S/D'}`;
                         },
+                        // Buscamos los datos contextuales usando el índice del punto seleccionado
                         label: function(context) {
-                            const dataRaw = context.raw;
+                            const index = context.dataIndex;
+                            const ramActual = context.parsed.y;
+                            
                             let lineas = [];
-                            lineas.push(`📊 RAM Total: ${dataRaw.y.toFixed(1)} MB`);
-                            lineas.push(`⚡ Clusters Activos: ${dataRaw.activos} / ${dataRaw.totales}`);
-                            lineas.push(`🌐 Servidores: ${dataRaw.servidores.toLocaleString()}`);
-                            if (dataRaw.pingApi) {
-                                lineas.push(`📶 Ping API Web: ${dataRaw.pingApi}`);
+                            lineas.push(`📊 RAM Total: ${ramActual.toFixed(1)} MB`);
+                            
+                            if (extraClustersActivos[index] !== undefined) {
+                                lineas.push(`⚡ Clusters Activos: ${extraClustersActivos[index]} / ${extraClustersTotales[index]}`);
+                            }
+                            if (extraServidores[index] !== undefined) {
+                                lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
+                            }
+                            if (extraPingApi[index]) {
+                                lineas.push(`📶 Ping API Web: ${extraPingApi[index]}`);
                             }
                             return lineas;
                         }
@@ -469,21 +482,24 @@ async function update() {
         if (ramChart) {
             const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
             
-            const puntoGrafica = {
-                y: totalRam,              
-                hora: horaActual,         
-                activos: clustersOnline,  
-                totales: clusters.length, 
-                servidores: totalGuilds,  
-                pingApi: currentPing + " ms"
-            };
-
-            ramHistory.push(puntoGrafica); 
-            labelHistory.push(horaActual); // ✨ Ahora sí empujamos la hora real como label para mapear el eje X correctamente
+            // 📝 Guardamos el número limpio en el array de la gráfica
+            ramHistory.push(totalRam); 
+            labelHistory.push(horaActual);
             
+            // 📝 Guardamos los extras en sus respectivos arrays espejo
+            extraClustersActivos.push(clustersOnline);
+            extraClustersTotales.push(clusters.length);
+            extraServidores.push(totalGuilds);
+            extraPingApi.push(currentPing + " ms");
+            
+            // Limpiamos los arrays para mantener el límite máximo de 40 puntos en pantalla
             if(ramHistory.length > 40) { 
                 ramHistory.shift(); 
                 labelHistory.shift(); 
+                extraClustersActivos.shift();
+                extraClustersTotales.shift();
+                extraServidores.shift();
+                extraPingApi.shift();
             }
             ramChart.update();
         }
