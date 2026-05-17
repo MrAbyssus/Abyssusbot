@@ -617,8 +617,26 @@ async function update() {
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
 if (data.global?.uptime) {
-    document.getElementById('res-uptime').innerText = formatUptime(data.global.uptime);
-}
+            let upValue = data.global.uptime;
+
+            // 🥷 EL HACK: Si el VPS te manda el acumulado corrupto (ej: "218h")
+            if (typeof upValue === 'string' && upValue.endsWith('h')) {
+                const horasTotales = parseInt(upValue); // Agarra el 218
+                
+                // Dividimos entre tus 6 clústeres para obtener las horas reales del clúster
+                const horasReales = Math.floor(horasTotales / 6); 
+                
+                let dias = Math.floor(horasReales / 24);
+                let horasRestantes = horasReales % 24;
+
+                upValue = `${dias}d ${horasRestantes}h 00m`;
+            }
+
+            // Pinta el valor corregido en la pantalla
+            document.getElementById('res-uptime').innerText = upValue;
+        } else {
+            document.getElementById('res-uptime').innerText = "00d 00h 00m";
+        }
 
         let rawClusters = data.clusters || [];
         rawClusters.sort((a, b) => a.id - b.id);
