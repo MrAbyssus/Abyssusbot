@@ -428,16 +428,8 @@ body{
 </div>
 
 <script>
-    // 🧠 MEMORIA LOCAL PERSISTENTE: Mantiene la cuadrícula rígida de 12 elementos aunque la API falle
-    const TOTAL_CLUSTERS = 12;
-    let memoriaClusters = Array.from({ length: TOTAL_CLUSTERS }, (_, i) => ({
-        id: i + 1,
-        guilds: '---',
-        ram: '---',
-        cpu: '---',
-        ping: '--',
-        status: 'offline'
-    }));
+    // 🧠 MEMORIA DINÁMICA: Ahora se inicializa vacía y se adapta a lo que dicte la API
+    let memoriaClusters = [];
 
     function animateCount(element, start, end, duration) {
         if (start === end) return;
@@ -454,15 +446,20 @@ body{
         window.requestAnimationFrame(step);
     }
 
-    // Función encargada de dbiujar de forma estricta las 12 tarjetas
+    // Dibuja en pantalla exactamente los clústeres almacenados en memoria
     function renderizarInterfaz() {
         const lista = document.getElementById('clusters-lista');
         if (!lista) return;
 
+        if (memoriaClusters.length === 0) {
+            lista.innerHTML = `<div style="grid-column: 1/-1; color: #aaa; font-size: 0.9rem; padding: 20px;">Cargando clústeres del sistema...</div>`;
+            return;
+        }
+
         lista.innerHTML = memoriaClusters.map(c => {
             const isOnline = c.status === 'online';
-            const colorEstado = isOnline ? '#23a55a' : '#f04747'; // Verde o Rojo
-            const colorTextoSecundario = isOnline ? '#00ffcc' : '#ff4d4d'; // Cyan o Rojo brillante para métricas
+            const colorEstado = isOnline ? '#23a55a' : '#f04747'; 
+            const colorTextoSecundario = isOnline ? '#00ffcc' : '#ff4d4d'; 
 
             return `
                 <div class="cluster-card" style="${!isOnline ? 'border: 1px solid rgba(240, 71, 71, 0.2); background: rgba(240, 71, 71, 0.02);' : ''}">
@@ -497,7 +494,6 @@ body{
         }).join('');
     }
 
-    // 🌟 CORREGIDO: Añadida la palabra clave "function" para evitar romper la sintaxis del motor JS
     async function actualizarDashboard() {
         try {
             const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
@@ -506,7 +502,7 @@ body{
             const countSrv = document.getElementById('count-servidores');
             const estadoGlobal = document.getElementById('sistema-estado-global');
 
-            // Actualización del contador global superior
+            // 1. Contador global
             if (data.global && countSrv) {
                 const nuevoTotal = data.global.totalGuilds || 0;
                 const valorActual = parseInt(countSrv.innerText.replace(/[+,]/g, '')) || 0;
@@ -515,36 +511,31 @@ body{
                 }
             }
 
-            // Actualización inteligente de la memoria local
-            if (data.clusters) {
+            // 2. Mapeo adaptativo de Clústeres
+            if (data.clusters && data.clusters.length > 0) {
                 let algunClusterCaido = false;
 
-                for (let i = 0; i < TOTAL_CLUSTERS; i++) {
-                    const idBuscado = i + 1;
-                    // Buscamos si la API nos mandó datos de este clúster específico
-                    const clData = data.clusters.find(c => c.id === idBuscado);
+                // Mapeamos los datos entrantes directamente de la API
+                let nuevosClusters = data.clusters.map(clData => {
+                    const status = clData.status || 'online';
+                    if (status !== 'online') algunClusterCaido = true;
 
-                    if (clData) {
-                        // Si el clúster responde, actualizamos TODO
-                        memoriaClusters[i] = {
-                            id: idBuscado,
-                            guilds: clData.guilds || '0',
-                            ram: clData.ram || '0',
-                            cpu: clData.cpu || '0%',
-                            ping: clData.ping || '--',
-                            status: clData.status || 'online'
-                        };
-                        if (clData.status !== 'online') algunClusterCaido = true;
-                    } else {
-                        // SI EL CLUSTER NO APARECE EN LA API: Lo forzamos a "offline" pero CONSERVAMOS sus "guilds" pasadas
-                        memoriaClusters[i].status = 'offline';
-                        memoriaClusters[i].cpu = '0%';
-                        memoriaClusters[i].ping = '--';
-                        algunClusterCaido = true;
-                    }
-                }
+                    return {
+                        id: clData.id,
+                        guilds: clData.guilds || '0',
+                        ram: clData.ram || '0',
+                        cpu: clData.cpu || '0%',
+                        ping: clData.ping || '--',
+                        status: status
+                    };
+                });
 
-                // Modificar el indicador global del panel si hay alguna alerta
+                // Los ordenamos numéricamente por su ID (para que salgan en orden: 12, 13, 14...)
+                nuevosClusters.sort((a, b) => a.id - b.id);
+                
+                memoriaClusters = nuevosClusters;
+
+                // Cambiar el indicador global en el panel
                 if (estadoGlobal) {
                     if (algunClusterCaido) {
                         estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">ALERTA: CLUSTER DETENIDO</span>';
@@ -554,18 +545,19 @@ body{
                 }
             }
 
-            // Dibujar los cambios consolidados en pantalla
             renderizarInterfaz();
 
         } catch (e) {
             console.log("Error en el monitor:", e);
-            // Si la API entera se cae, marcamos todos los clústeres como caídos de forma visual segura
-            memoriaClusters.forEach(c => c.status = 'offline');
+            // Si la API entera se cae, marcamos los elementos existentes como offline de forma segura
+            if (memoriaClusters.length > 0) {
+                memoriaClusters.forEach(c => c.status = 'offline');
+            }
             renderizarInterfaz();
         }
     }
 
-    // Inicialización del flujo continuo
+    // Inicialización
     setInterval(actualizarDashboard, 3000);
     actualizarDashboard();
 </script>
