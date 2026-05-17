@@ -54,14 +54,14 @@ body{
   font-family:'Inter',sans-serif;
   background: radial-gradient(circle at top,#0f172a,#020617);
   color:#fff;
-  padding-top:100px;
+  padding-top:138px !important; /* Ajustado dinámicamente por el banner superior */
   overflow-x: hidden;
 }
 
 /* ===== NAV ===== */
 .nav{
   position:fixed;
-  top:0;
+  top: 38px !important; /* Ajustado dinámicamente por el banner superior */
   width:100%;
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
@@ -330,17 +330,58 @@ body{
 }
 .btn-discord-pro:hover { background: #4752C4; transform: translateY(-2px); }
 
+/* ===== BANNER DE ALERTA DE CAIDA ===== */
+.alerta-caida {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #7f1d1d, #b91c1c);
+    color: #fef2f2;
+    padding: 10px 20px;
+    font-size: 13px;
+    text-align: center;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #ef4444;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.2);
+}
+.alerta-icono {
+    font-size: 16px;
+    animation: parpadeoAlerta 1.5s infinite;
+}
+.alerta-texto {
+    line-height: 1.4;
+    margin: 0;
+}
+.alerta-tiempo {
+    color: #fca5a5;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+@keyframes parpadeoAlerta {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.9); }
+}
+
 /* ====================================================
    📱 RESPONSIVE CONTROLADO (EVITA MOVIMIENTOS HORIZONTALES)
 ====================================================== */
 @media (max-width: 768px) {
-    body { padding-top: 140px; }
+    body { padding-top: 190px !important; }
+    .alerta-caida { font-size: 11px; padding: 8px 12px; }
+    .nav { top: 50px !important; flex-direction: column; gap: 12px; padding: 12px; }
     .nav-container { flex-direction: column; gap: 12px; padding: 12px; }
     .nav-links { flex-wrap: wrap; justify-content: center; gap: 8px 4px; }
     .nav-links a { margin: 0 6px; font-size: 13px; }
     .discord-btn { width: 100%; justify-content: center; padding: 8px; }
     
-    /* CAMBIO CLAVE: Grid vertical exacto de 2 columnas en celulares modernos */
+    /* Grid vertical exacto de 2 columnas en celulares modernos */
     .cluster-container {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 10px !important;
@@ -360,6 +401,15 @@ body{
 </head>
 
 <body>
+
+<div class="alerta-caida">
+    <span class="alerta-icono">⚠️</span>
+    <p class="alerta-texto">
+        <strong>Incidente de Red API:</strong> Abyssus está experimentando un bloqueo temporal de sesiones por parte de Discord tras una actualización de clústeres. 
+        <span class="alerta-tiempo">El sistema se restablecerá automáticamente a las 12:55 AM (Hora México).</span> 
+        Las bases de datos y configuraciones están 100% a salvo.
+    </p>
+</div>
 
 <nav class="nav">
   <div class="nav-container">
@@ -424,11 +474,10 @@ body{
     </div>
 
     <div id="clusters-lista" class="cluster-container">
-        </div>
+    </div>
 </div>
 
 <script>
-    // 🧠 MEMORIA DINÁMICA: Ahora se inicializa vacía y se adapta a lo que dicte la API
     let memoriaClusters = [];
 
     function animateCount(element, start, end, duration) {
@@ -446,7 +495,6 @@ body{
         window.requestAnimationFrame(step);
     }
 
-    // Dibuja en pantalla exactamente los clústeres almacenados en memoria
     function renderizarInterfaz() {
         const lista = document.getElementById('clusters-lista');
         if (!lista) return;
@@ -502,7 +550,6 @@ body{
             const countSrv = document.getElementById('count-servidores');
             const estadoGlobal = document.getElementById('sistema-estado-global');
 
-            // 1. Contador global
             if (data.global && countSrv) {
                 const nuevoTotal = data.global.totalGuilds || 0;
                 const valorActual = parseInt(countSrv.innerText.replace(/[+,]/g, '')) || 0;
@@ -511,26 +558,21 @@ body{
                 }
             }
 
-            // 2. Mapeo adaptativo de Clústeres (INMUNE A IDs INDETERMINADOS)
             if (data.clusters && data.clusters.length > 0) {
                 let algunClusterCaido = false;
-
-                // 1️⃣ Primero ordenamos la lista original usando sus IDs reales (ej: 18, 19, 20...)
                 let clustersOrdenadosBackend = [...data.clusters].sort((a, b) => a.id - b.id);
 
-                // 2️⃣ Mapeamos asignando el ID visual basado puramente en su posición en el array (index + 1)
                 let nuevosClusters = clustersOrdenadosBackend.map((clData, index) => {
                     const status = clData.status || 'online';
                     if (status !== 'online') algunClusterCaido = true;
 
-                    // 📶 Si el ping es negativo (-1) o inválido, lo forzamos a '--' para que no quede feo
                     let pingVisual = clData.ping;
                     if (pingVisual === undefined || pingVisual < 0) {
                         pingVisual = '--';
                     }
 
                     return {
-                        id: index + 1, // ✨ El primero siempre será 1, luego 2, 3, etc.
+                        id: index + 1,
                         guilds: clData.guilds || '0',
                         ram: clData.ram || '0',
                         cpu: clData.cpu || '0%',
@@ -541,7 +583,6 @@ body{
                 
                 memoriaClusters = nuevosClusters;
 
-                // Cambiar el indicador global en el panel
                 if (estadoGlobal) {
                     if (algunClusterCaido) {
                         estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">ALERTA: CLUSTER DETENIDO</span>';
@@ -555,7 +596,6 @@ body{
 
         } catch (e) {
             console.log("Error en el monitor:", e);
-            // Si la API entera se cae, marcamos los elementos existentes como offline de forma segura
             if (memoriaClusters.length > 0) {
                 memoriaClusters.forEach(c => c.status = 'offline');
             }
@@ -563,7 +603,6 @@ body{
         }
     }
 
-    // Inicialización
     setInterval(actualizarDashboard, 3000);
     actualizarDashboard();
 </script>
@@ -681,7 +720,7 @@ body{
                 padding: 18px 40px; 
                 font-size: 1.1rem; 
                 border-radius: 15px; 
-                background-color: #5865F2; /* Color Blurple oficial de Discord */
+                background-color: #5865F2;
                 color: #ffffff; 
                 border: 1px solid transparent;
                 box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
