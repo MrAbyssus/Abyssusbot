@@ -400,12 +400,24 @@ function parseUptime(value) {
 }
 
 function formatUptime(ms) {
-    if (isNaN(ms) || ms <= 0) return "00d 00h";
-    let s = Math.floor(ms / 1000);
-    const d = Math.floor(s / (3600 * 24));
-    s %= (3600 * 24);
-    const h = Math.floor(s / 3600);
-    return `${d.toString().padStart(2, '0')}d ${h.toString().padStart(2, '0')}h`;
+    if (isNaN(ms) || ms <= 0) return "00d 00h 00m";
+    
+    let segundos = Math.floor(ms / 1000);
+    let minutos = Math.floor(segundos / 60);
+    let horas = Math.floor(minutos / 60);
+    let dias = Math.floor(horas / 24);
+
+    // Evitamos el desbordamiento usando el residuo (%)
+    segundos %= 60;
+    minutos %= 60;
+    horas %= 24;
+
+    // Formateamos para que siempre muestre 2 dígitos (ej: 02d 05h 12m)
+    const d = dias.toString().padStart(2, '0');
+    const h = horas.toString().padStart(2, '0');
+    const m = minutos.toString().padStart(2, '0');
+
+    return `${d}d ${h}h ${m}m`;
 }
 
 function addLog(msg, type = '') {
@@ -604,9 +616,9 @@ async function update() {
         }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
-        if (data.global?.uptime) {
-            document.getElementById('res-uptime').innerText = formatUptime(parseUptime(data.global.uptime));
-        }
+if (data.global?.uptime) {
+    document.getElementById('res-uptime').innerText = formatUptime(data.global.uptime);
+}
 
         let rawClusters = data.clusters || [];
         rawClusters.sort((a, b) => a.id - b.id);
