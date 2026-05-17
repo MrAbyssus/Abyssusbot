@@ -119,7 +119,15 @@
             position: relative; cursor: pointer; gap: 2px;
         }
         @media (min-width: 600px) { .box { font-size: 0.9rem; } }
-        .box:hover { transform: translateY(-5px); border-color: var(--online); background: rgba(51, 255, 0, 0.1); }
+        .box:hover { transform: translateY(-3px); border-color: var(--online); background: rgba(51, 255, 0, 0.05); }
+        
+        /* 🔥 CLÚSTER ACTIVO EN LA LISTA (Efecto neón encendido) */
+        .box.active-node { 
+            border-color: var(--online) !important; 
+            background: rgba(51, 255, 0, 0.12) !important; 
+            box-shadow: 0 0 15px rgba(51, 255, 0, 0.25), inset 0 0 8px rgba(51, 255, 0, 0.15); 
+            transform: translateY(-3px);
+        }
 
         .box-ram {
             font-size: 0.55rem;
@@ -141,6 +149,98 @@
         .online { color: var(--online); border-color: rgba(51, 255, 0, 0.4); }
         .warning { color: var(--warning); border-color: var(--warning); }
         .offline { color: var(--offline); border-color: var(--offline); }
+
+        /* 📡 SUBPANEL DE TELEMETRÍA AVANZADA */
+        .cluster-details-panel {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            border: 1px dashed rgba(255, 255, 255, 0.06);
+            padding: 20px;
+            position: relative;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Cuando está iluminado por un clúster activo */
+        .cluster-details-panel.illuminated {
+            background: linear-gradient(135deg, rgba(20, 21, 27, 0.95) 0%, rgba(10, 11, 15, 0.98) 100%);
+            border: 1px solid rgba(51, 255, 0, 0.25);
+            box-shadow: 0 0 25px rgba(51, 255, 0, 0.04), 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        /* 🎰 MENSAJE DE ESPERA INICIAL */
+        .panel-placeholder {
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse-text 2s infinite ease-in-out;
+        }
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.9; color: rgba(255,255,255,0.4); }
+        }
+
+        /* CONTENIDO DE DATOS REALES (Oculto por defecto usando display none/flex vía JS) */
+        .panel-content {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .details-title {
+            font-size: 0.7rem;
+            font-weight: 900;
+            font-family: monospace;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .details-title span { 
+            color: #fff; 
+            background: rgba(51, 255, 0, 0.15); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            border: 1px solid rgba(51, 255, 0, 0.3);
+            text-shadow: 0 0 8px var(--online);
+            margin-left: 5px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            font-family: monospace;
+        }
+        @media(min-width: 500px) { .details-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.01);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-left: 3px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s;
+        }
+        .detail-card:hover { transform: scale(1.02); background: rgba(255,255,255,0.02); }
+        .detail-card b { display: block; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
+        .detail-card span { font-size: 1.05rem; font-weight: 800; color: #fff; }
+
+        /* Animación Láser Cyberpunk de Barrido */
+        .cluster-details-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--online), transparent);
+            animation: laser-scan 3s infinite linear; opacity: 0; pointer-events: none;
+        }
+        .cluster-details-panel.illuminated::before { opacity: 0.6; }
+        @keyframes laser-scan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
 
         .audit-log { 
             height: 150px; overflow-y: auto; font-family: 'Consolas', monospace; 
@@ -202,6 +302,36 @@
     <section class="section">
         <div class="section-title">Clusters</div>
         <div id="status-grid" class="grid"></div>
+        
+        <div id="cluster-details" class="cluster-details-panel">
+            
+            <div id="panel-placeholder" class="panel-placeholder">
+                [ SELECCIONE UN NODO PARA VER DETALLES AVANZADOS ]
+            </div>
+            
+            <div id="panel-content" class="panel-content">
+                <div class="details-title">🛰️ CORE TELEMETRY // <span id="details-node-title">CLUSTER #01</span></div>
+                <div class="details-grid">
+                    <div class="detail-card" style="border-left-color: var(--online);">
+                        <b>🟢 Estado Nodo</b>
+                        <span id="det-status">--</span>
+                    </div>
+                    <div class="detail-card" style="border-left-color: #00e5ff;">
+                        <b>🤖 Servidores</b>
+                        <span id="det-servers" style="color: #00e5ff;">--</span>
+                    </div>
+                    <div class="detail-card" style="border-left-color: #ff007f;">
+                        <b>📶 Latencia API</b>
+                        <span id="det-ping" style="color: #ff007f;">--</span>
+                    </div>
+                    <div class="detail-card" style="border-left-color: #ffb86c;">
+                        <b>🧠 Carga CPU</b>
+                        <span id="det-cpu" style="color: #ffb86c;">--</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
 
     <section class="section">
@@ -231,7 +361,9 @@ let lastRamValue = 0;
 let lastGuildsValue = 0;
 let comandosEnEsteIntervalo = 0; 
 
-// 🔄 MEMORIA DE SEGURIDAD: Guarda la última cantidad conocida de servidores por clúster
+// ID del clúster seleccionado
+let clusterSeleccionadoId = null;
+
 let memoriaUltimosServidores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
 
 const logBox = document.getElementById('audit-log');
@@ -365,18 +497,6 @@ function initChart() {
                             if (extraServidores[index] !== undefined) {
                                 lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
                             }
-                            
-                            if (extraClustersActivos[index] === extraClustersTotales[index] && extraClustersTotales[index] > 0) {
-                                lineas.push(`🔥 Estado: Procesando comandos (Estable)`);
-                            } else if (extraClustersActivos[index] < extraClustersTotales[index] && extraClustersActivos[index] > 0) {
-                                lineas.push(`⚠️ Estado: Actividad inestable (Nodo caído)`);
-                            } else {
-                                lineas.push(`🛑 Estado: Sin respuesta`);
-                            }
-                            
-                            if (extraPingApi[index]) {
-                                lineas.push(`📶 Ping API Web: ${extraPingApi[index]}`);
-                            }
                             return lineas;
                         }
                     }
@@ -388,6 +508,67 @@ function initChart() {
             }
         }
     });
+}
+
+// 🎛️ CONTROL DE VISUALIZACIÓN DEL SUBPANEL (VERSIÓN ULTRA-ESTABLE)
+function seleccionarCluster(id, status, guilds, ping, cpu) {
+    const panel = document.getElementById('cluster-details');
+    const placeholder = document.getElementById('panel-placeholder');
+    const content = document.getElementById('panel-content');
+    
+    // Si tocan el mismo clúster activo, reseteamos al placeholder inicial
+    if (clusterSeleccionadoId === id) {
+        clusterSeleccionadoId = null;
+        panel.classList.remove('illuminated');
+        content.style.display = 'none';
+        placeholder.style.display = 'block';
+        
+        const activeBox = document.querySelector('.box.active-node');
+        if (activeBox) activeBox.classList.remove('active-node');
+        return;
+    }
+    
+    clusterSeleccionadoId = id;
+    
+    // Cambiar visibilidad de las capas internas del subpanel
+    placeholder.style.display = 'none';
+    content.style.display = 'flex';
+    panel.classList.add('illuminated');
+    
+    // Marcar visualmente la caja que fue seleccionada
+    document.querySelectorAll('#status-grid .box').forEach(box => {
+        const textSpan = box.querySelector('span');
+        if (textSpan && parseInt(textSpan.innerText) === id) {
+            box.classList.add('active-node');
+        } else {
+            box.classList.remove('active-node');
+        }
+    });
+    
+    // Forzar la inyección de los datos actuales de Abyssus
+    document.getElementById('details-node-title').innerText = `CLUSTER #${String(id).padStart(2, '0')}`;
+    document.getElementById('det-status').innerText = String(status).toUpperCase();
+    document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
+    document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
+    document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
+    
+    // Ajustar los colores neón del borde según el estado del nodo
+    const statusCard = document.getElementById('det-status').parentElement;
+    const statusTarget = document.getElementById('det-status');
+    
+    if (status === 'online') {
+        statusCard.style.borderLeftColor = 'var(--online)';
+        statusTarget.style.color = 'var(--online)';
+        panel.style.borderColor = 'rgba(51, 255, 0, 0.25)';
+    } else if (status === 'connecting') {
+        statusCard.style.borderLeftColor = 'var(--warning)';
+        statusTarget.style.color = 'var(--warning)';
+        panel.style.borderColor = 'rgba(255, 184, 108, 0.25)';
+    } else {
+        statusCard.style.borderLeftColor = 'var(--offline)';
+        statusTarget.style.color = 'var(--offline)';
+        panel.style.borderColor = 'rgba(255, 85, 85, 0.25)';
+    }
 }
 
 async function update() {
@@ -421,8 +602,6 @@ async function update() {
         const clusters = rawClusters.map((c, index) => {
             const clusterId = index + 1;
             const numGuilds = c.guilds || c.servers || 0;
-            
-            // 💾 Guardamos dinámicamente en memoria cuántos servidores maneja este clúster específico
             memoriaUltimosServidores[clusterId] = numGuilds;
 
             return {
@@ -487,22 +666,35 @@ async function update() {
 
         document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
 
+        // Construcción dinámica de la Grid conservando clases de estado activo
         document.getElementById('status-grid').innerHTML = clusters.map(c => {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
             const ramValue = parseFloat(c.ram || 0).toFixed(0);
             const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
             
-            return `<div class="box ${cl}">
+            const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
+            
+            return `<div class="box ${cl} ${activeClass}" onclick="seleccionarCluster(${c.id}, '${s}', ${c.guilds}, '${c.ping}', ${c.cpu || 0})">
                 <span>${c.id}</span>
                 <span class="box-ram">${ramValue}M</span>
                 <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}</div>
             </div>`;
         }).join('');
 
+        // Mantener datos del subpanel refrescados en vivo sin perder foco
+        if (clusterSeleccionadoId !== null) {
+            const cActivo = clusters.find(c => c.id === clusterSeleccionadoId);
+            if (cActivo) {
+                document.getElementById('det-status').innerText = cActivo.status.toUpperCase();
+                document.getElementById('det-servers').innerText = cActivo.guilds.toLocaleString();
+                document.getElementById('det-ping').innerText = cActivo.ping === '--' ? '--' : cActivo.ping + ' ms';
+                document.getElementById('det-cpu').innerText = (cActivo.cpu === undefined ? '0' : cActivo.cpu) + ' %';
+            }
+        }
+
         if (ramChart) {
             const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-            
             ramHistory.push(totalRam); 
             labelHistory.push(horaActual);
             extraClustersActivos.push(clustersOnline);
@@ -514,13 +706,8 @@ async function update() {
             comandosEnEsteIntervalo = 0; 
             
             if(ramHistory.length > 40) { 
-                ramHistory.shift(); 
-                labelHistory.shift(); 
-                extraClustersActivos.shift();
-                extraClustersTotales.shift();
-                extraServidores.shift();
-                extraPingApi.shift();
-                extraComandosUsados.shift();
+                ramHistory.shift(); labelHistory.shift(); extraClustersActivos.shift();
+                extraClustersTotales.shift(); extraServidores.shift(); extraPingApi.shift(); extraComandosUsados.shift();
             }
             ramChart.update();
         }
@@ -532,16 +719,13 @@ async function update() {
         statusText.style.color = "var(--offline)";
         document.getElementById('res-ping').innerText = "-- ms";
         
-        // 📊 SUMA DINÁMICA: Calculamos los servidores caídos reales basándonos en la memoria guardada por clúster
         let servidoresCaidosCalculados = 0;
         let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
             const guildsDelCluster = memoriaUltimosServidores[id] || 0;
-            servidoresCaidosCalculados += guildsDelCluster; // Suma al contador general
-            
-            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster };
+            servidoresCaidosCalculados += guildsDelCluster;
+            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0 };
         });
 
-        // Si la suma total da 0 porque es la primera carga y nunca leyó la API, aplicamos un fallback genérico seguro
         if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
 
         document.getElementById('stat-clusters').innerText = "0 / 6";
@@ -550,17 +734,57 @@ async function update() {
 
         document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
             const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
-            return `<div class="box offline">
+            const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
+            
+            return `<div class="box offline ${activeClass}" onclick="seleccionarCluster(${c.id}, 'offline', ${c.guilds}, '--', 0)">
                 <span>${c.id}</span>
                 <span class="box-ram">0M</span>
                 <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}</div>
             </div>`;
         }).join('');
+
+        if (clusterSeleccionadoId !== null) {
+            document.getElementById('det-status').innerText = "OFFLINE";
+            document.getElementById('det-status').style.color = "var(--offline)";
+            document.getElementById('det-ping').innerText = "--";
+            document.getElementById('det-cpu').innerText = "--";
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initChart(); renderLogs(true); update();
+    initChart(); 
+    renderLogs(true); 
+    update();
+    
+    // 🧠 DETECTOR GLOBAL DE CLICS (Captura las cajas incluso cuando el update() las destruye/recrea)
+    document.getElementById('status-grid').addEventListener('click', function(e) {
+        // Buscamos si el clic ocurrió dentro de una .box o en sus elementos internos
+        const box = e.target.closest('.box');
+        if (!box) return; // Si no es una caja de clúster, ignoramos el clic
+        
+        // Extraemos de forma segura los parámetros guardados en su tooltip interno
+        const idSpan = box.querySelector('span');
+        if (!idSpan) return;
+        
+        const id = parseInt(idSpan.innerText);
+        let status = 'offline';
+        if (box.classList.contains('online')) status = 'online';
+        if (box.classList.contains('warning')) status = 'connecting';
+        
+        // Limpiamos los datos del tooltip para extraer los valores puros
+        const tooltipText = box.querySelector('.tooltip').innerHTML;
+        const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
+        const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
+        
+        const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
+        const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
+        
+        // Ejecutamos la función con datos limpios y frescos de la interfaz
+        seleccionarCluster(id, status, servers, ping, 0);
+    });
+
+    // Bucle del temporizador de refresco
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { timeLeft = 3; update(); }
