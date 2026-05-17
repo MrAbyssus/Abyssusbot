@@ -478,13 +478,14 @@ body{
 </div>
 
 <script>
-    // 🧠 MEMORIA INICIAL: Declaramos los clústeres por defecto para que la interfaz 
-    // nunca se vacíe si la API de Cloudflare o el bot fallan al cargar.
+    // 🧠 MEMORIA INICIAL: Definimos tus 6 clústeres por defecto para el modo fallback offline
     let memoriaClusters = [
         { id: 1, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
         { id: 2, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
         { id: 3, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
-        { id: 4, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' }
+        { id: 4, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
+        { id: 5, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
+        { id: 6, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' }
     ];
 
     function animateCount(element, start, end, duration) {
@@ -506,7 +507,6 @@ body{
         const lista = document.getElementById('clusters-lista');
         if (!lista) return;
 
-        // Se dibuja el array actual (sea el recuperado por la API o el fallback offline)
         lista.innerHTML = memoriaClusters.map(c => {
             const isOnline = c.status === 'online';
             const colorEstado = isOnline ? '#23a55a' : '#f04747'; 
@@ -596,7 +596,7 @@ body{
         } catch (e) {
             console.log("Error de conexión con la API, aplicando fallback offline:", e);
             
-            // 🚨 SOLUCIÓN AL PROBLEMA: Forzar la memoria interna a offline con strings vacíos '---'
+            // 🚨 Forzar los 6 clústeres a estado offline con datos vacíos en caso de crash de API
             memoriaClusters.forEach(c => {
                 c.status = 'offline';
                 c.ping = '--';
@@ -612,12 +612,11 @@ body{
                 countSrv.innerText = "--";
             }
         } finally {
-            // El bloque 'finally' asegura el renderizado sin importar si el fetch falló o tuvo éxito
             renderizarInterfaz();
         }
     }
 
-    // Ejecución de ciclo limpio
+    // Inicialización del ciclo
     renderizarInterfaz(); 
     actualizarDashboard();
     setInterval(actualizarDashboard, 4000);
