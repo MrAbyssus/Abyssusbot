@@ -231,6 +231,9 @@ let lastRamValue = 0;
 let lastGuildsValue = 0;
 let comandosEnEsteIntervalo = 0; 
 
+// 🔄 MEMORIA DE SEGURIDAD: Guarda la última cantidad conocida de servidores por clúster
+let memoriaUltimosServidores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+
 const logBox = document.getElementById('audit-log');
 const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
@@ -363,7 +366,6 @@ function initChart() {
                                 lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
                             }
                             
-                            // ✨ MEJORA: Pulso de estado premium en vez de un 0 estático
                             if (extraClustersActivos[index] === extraClustersTotales[index] && extraClustersTotales[index] > 0) {
                                 lineas.push(`🔥 Estado: Procesando comandos (Estable)`);
                             } else if (extraClustersActivos[index] < extraClustersTotales[index] && extraClustersActivos[index] > 0) {
@@ -404,7 +406,7 @@ async function update() {
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
 
-        if (statusText.innerText === "REINICIANDO" || statusText.innerText === "OFFLINE") {
+        if (statusText.innerText === "REINICIANDO" || statusText.innerText === "OFFLINE" || statusText.innerText === "MANTENIMIENTO") {
             addLog("Conexión reestablecida con el servidor de estado.", "ok");
         }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
@@ -417,14 +419,20 @@ async function update() {
         rawClusters.sort((a, b) => a.id - b.id);
 
         const clusters = rawClusters.map((c, index) => {
+            const clusterId = index + 1;
+            const numGuilds = c.guilds || c.servers || 0;
+            
+            // 💾 Guardamos dinámicamente en memoria cuántos servidores maneja este clúster específico
+            memoriaUltimosServidores[clusterId] = numGuilds;
+
             return {
-                id: index + 1, 
+                id: clusterId, 
                 idOriginal: c.id,
                 status: c.status,
                 ram: c.ram,
                 cpu: c.cpu,
                 ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
-                guilds: c.guilds || c.servers || 0
+                guilds: numGuilds
             };
         });
 
@@ -517,12 +525,37 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
-        if (statusText.innerText !== "REINICIANDO") {
+        if (statusText.innerText !== "MANTENIMIENTO") {
             addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
         }
-        statusText.innerText = "REINICIANDO"; 
-        statusText.style.color = "var(--warning)";
+        statusText.innerText = "MANTENIMIENTO"; 
+        statusText.style.color = "var(--offline)";
         document.getElementById('res-ping').innerText = "-- ms";
+        
+        // 📊 SUMA DINÁMICA: Calculamos los servidores caídos reales basándonos en la memoria guardada por clúster
+        let servidoresCaidosCalculados = 0;
+        let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
+            const guildsDelCluster = memoriaUltimosServidores[id] || 0;
+            servidoresCaidosCalculados += guildsDelCluster; // Suma al contador general
+            
+            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster };
+        });
+
+        // Si la suma total da 0 porque es la primera carga y nunca leyó la API, aplicamos un fallback genérico seguro
+        if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
+
+        document.getElementById('stat-clusters').innerText = "0 / 6";
+        document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
+        document.getElementById('res-perdidos').style.color = "var(--offline)";
+
+        document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
+            const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
+            return `<div class="box offline">
+                <span>${c.id}</span>
+                <span class="box-ram">0M</span>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}</div>
+            </div>`;
+        }).join('');
     }
 }
 
