@@ -297,7 +297,6 @@ function updateTrends(currentRam, currentGuilds) {
     lastGuildsValue = currentGuilds;
 }
 
-// 🛠️ CONFIGURACIÓN AVANZADA DE LA GRÁFICA CON CUSTOM TOOLTIPS E INTERACTIVIDAD
 function initChart() {
     const ctx = document.getElementById('ramChart');
     ramChart = new Chart(ctx, {
@@ -308,11 +307,11 @@ function initChart() {
                 label: 'RAM',
                 data: ramHistory,
                 borderColor: '#33ff00', 
-                backgroundColor: 'rgba(51, 255, 0, 0.04)', // Un degradado sutil e impecable
+                backgroundColor: 'rgba(51, 255, 0, 0.04)',
                 fill: true, 
                 tension: 0.4, 
                 pointRadius: 0, 
-                pointHoverRadius: 5, // Muestra un pequeño punto al pasar el cursor sobre la línea
+                pointHoverRadius: 5, 
                 pointHoverBackgroundColor: '#33ff00',
                 borderWidth: 2
             }]
@@ -320,9 +319,12 @@ function initChart() {
         options: {
             responsive: true, 
             maintainAspectRatio: false,
+            parsing: {
+                yAxisKey: 'y' // ✨ Crucial: Le dice a Chart.js que busque la propiedad 'y' dentro de nuestro objeto personalizado
+            },
             interaction: {
                 mode: 'index',
-                intersect: false // Permite que el tooltip aparezca sin tener que tocar milimétricamente la línea
+                intersect: false 
             },
             plugins: { 
                 legend: { display: false },
@@ -335,18 +337,15 @@ function initChart() {
                     padding: 10,
                     displayColors: false,
                     callbacks: {
-                        // Customización del título del Tooltip (Ponemos la hora del scan)
                         title: function(context) {
                             return `🕒 Registro: ${context[0].raw.hora}`;
                         },
-                        // Extracción de metadatos guardados sin romper la línea base
                         label: function(context) {
                             const dataRaw = context.raw;
                             let lineas = [];
                             lineas.push(`📊 RAM Total: ${dataRaw.y.toFixed(1)} MB`);
                             lineas.push(`⚡ Clusters Activos: ${dataRaw.activos} / ${dataRaw.totales}`);
                             lineas.push(`🌐 Servidores: ${dataRaw.servidores.toLocaleString()}`);
-                            
                             if (dataRaw.pingApi) {
                                 lineas.push(`📶 Ping API Web: ${dataRaw.pingApi}`);
                             }
@@ -467,24 +466,21 @@ async function update() {
             </div>`;
         }).join('');
 
-        // 📈 AQUÍ SE HACE LA MAGIA DE LA GRÁFICA AVANZADA
         if (ramChart) {
             const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
             
-            // Construimos un objeto completo en lugar de pasar solo el número totalRam
             const puntoGrafica = {
-                y: totalRam,              // Valor del eje Y obligatorio para Chart.js
-                hora: horaActual,         // Se leerá en el título del tooltip
-                activos: clustersOnline,  // Clústeres estables
-                totales: clusters.length, // Clústeres totales configurados
-                servidores: totalGuilds,  // El número exacto de servidores en ese segundo
+                y: totalRam,              
+                hora: horaActual,         
+                activos: clustersOnline,  
+                totales: clusters.length, 
+                servidores: totalGuilds,  
                 pingApi: currentPing + " ms"
             };
 
             ramHistory.push(puntoGrafica); 
-            labelHistory.push(horaActual); // Añadimos la etiqueta de tiempo real
+            labelHistory.push(horaActual); // ✨ Ahora sí empujamos la hora real como label para mapear el eje X correctamente
             
-            // Mantenemos un tamaño saludable de 40 muestras en caché de pantalla
             if(ramHistory.length > 40) { 
                 ramHistory.shift(); 
                 labelHistory.shift(); 
