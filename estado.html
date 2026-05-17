@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
     <style>
         :root {
-            --bg: #060709; /* Un negro militar más puro para contrastar el neón */
+            --bg: #060709; 
             --panel: #111217; 
             --online: #33ff00; 
             --warning: #ffb86c;
@@ -21,15 +21,12 @@
 
         body { 
             background-color: var(--bg); 
-            
-            /* 🌌 MATRIZ CYBERPUNK TRIDIMENSIONAL (Opacidades optimizadas para que sí se noten) */
             background-image: 
                 radial-gradient(circle at 50% 0%, rgba(51, 255, 0, 0.12) 0%, transparent 70%),
                 radial-gradient(circle at 85% 45%, rgba(0, 229, 255, 0.04) 0%, transparent 50%),
                 linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 35px 35px, 35px 35px;
-            
             color: var(--text-main); 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; 
@@ -39,7 +36,6 @@
             position: relative;
         }
 
-        /* 🎞️ CAPA DE TEXTURA CRT (Estilo Monitor de Datos Antiguo) */
         body::before {
             content: " ";
             display: block;
@@ -231,14 +227,14 @@
             margin-left: 5px;
         }
 
-        /* 🎛️ ADAPTADO: Grid elástica que ahora soporta 5 columnas limpiamente */
+        /* 🎛️ SOPORTE PARA 5 COLUMNAS EN ESCRITORIO */
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             font-family: monospace;
         }
-        @media(min-width: 550px) { .details-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
+        @media(min-width: 550px) { .details-grid { grid-template-columns: repeat(5, 1fr); } }
 
         .detail-card {
             background: rgba(255, 255, 255, 0.01);
@@ -384,9 +380,7 @@ let lastRamValue = 0;
 let lastGuildsValue = 0;
 let comandosEnEsteIntervalo = 0; 
 
-// ID del clúster seleccionado
 let clusterSeleccionadoId = null;
-
 let memoriaUltimosServidores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
 
 const logBox = document.getElementById('audit-log');
@@ -407,20 +401,14 @@ function parseUptime(value) {
 
 function formatUptime(ms) {
     if (isNaN(ms) || ms <= 0) return "00d 00h 00m";
-    
     let segundos = Math.floor(ms / 1000);
     let minutos = Math.floor(segundos / 60);
     let horas = Math.floor(minutos / 60);
     let dias = Math.floor(horas / 24);
-
-    segundos %= 60;
-    minutos %= 60;
-    horas %= 24;
-
+    segundos %= 60; minutos %= 60; horas %= 24;
     const d = dias.toString().padStart(2, '0');
     const h = horas.toString().padStart(2, '0');
-    const m = minutos.toString().padStart(2, '0');
-
+    const m = minutes.toString().padStart(2, '0');
     return `${d}d ${h}h ${m}m`;
 }
 
@@ -435,7 +423,6 @@ function addLog(msg, type = '') {
     if (type === 'ok' || msg.toLowerCase().includes('comando') || msg.toLowerCase().includes('ejecutado')) {
         comandosEnEsteIntervalo++;
     }
-
     const isAtBottom = logBox.scrollHeight - logBox.clientHeight <= logBox.scrollTop + 40;
     renderLogs(isAtBottom);
 }
@@ -463,7 +450,6 @@ function clearLogs() {
 function updateTrends(currentRam, currentGuilds) {
     const rTrend = document.getElementById('trend-ram');
     const gTrend = document.getElementById('trend-guilds');
-
     if(lastRamValue > 0) {
         if(currentRam > lastRamValue) rTrend.innerHTML = '▲', rTrend.className = 'trend trend-up';
         else if(currentRam < lastRamValue) rTrend.innerHTML = '▼', rTrend.className = 'trend trend-down';
@@ -498,10 +484,7 @@ function initChart() {
         options: {
             responsive: true, 
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false 
-            },
+            interaction: { mode: 'index', intersect: false },
             plugins: { 
                 legend: { display: false },
                 tooltip: {
@@ -513,23 +496,12 @@ function initChart() {
                     padding: 10,
                     displayColors: false,
                     callbacks: {
-                        title: function(context) {
-                            const index = context[0].dataIndex;
-                            return `🕒 Registro: ${labelHistory[index] || 'S/D'}`;
-                        },
+                        title: function(context) { return `🕒 Registro: ${labelHistory[context[0].dataIndex] || 'S/D'}`; },
                         label: function(context) {
                             const index = context.dataIndex;
-                            const ramActual = context.parsed.y;
-                            
-                            let lineas = [];
-                            lineas.push(`📊 RAM Total: ${ramActual.toFixed(1)} MB`);
-                            
-                            if (extraClustersActivos[index] !== undefined) {
-                                lineas.push(`⚡ Clusters Activos: ${extraClustersActivos[index]} / ${extraClustersTotales[index]}`);
-                            }
-                            if (extraServidores[index] !== undefined) {
-                                lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
-                            }
+                            let lineas = [`📊 RAM Total: ${context.parsed.y.toFixed(1)} MB`];
+                            if (extraClustersActivos[index] !== undefined) lineas.push(`⚡ Clusters Activos: ${extraClustersActivos[index]} / ${extraClustersTotales[index]}`);
+                            if (extraServidores[index] !== undefined) lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
                             return lineas;
                         }
                     }
@@ -543,7 +515,6 @@ function initChart() {
     });
 }
 
-// 🎛️ SELECTOR INTELIGENTE: Sincroniza dinámicamente con los datos inyectados por el EventListener
 function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     const panel = document.getElementById('cluster-details');
     const placeholder = document.getElementById('panel-placeholder');
@@ -554,25 +525,20 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
         panel.classList.remove('illuminated');
         content.style.display = 'none';
         placeholder.style.display = 'block';
-        
         const activeBox = document.querySelector('.box.active-node');
         if (activeBox) activeBox.classList.remove('active-node');
         return;
     }
     
     clusterSeleccionadoId = id;
-    
     placeholder.style.display = 'none';
     content.style.display = 'flex';
     panel.classList.add('illuminated');
     
     document.querySelectorAll('#status-grid .box').forEach(box => {
         const textSpan = box.querySelector('span');
-        if (textSpan && parseInt(textSpan.innerText) === id) {
-            box.classList.add('active-node');
-        } else {
-            box.classList.remove('active-node');
-        }
+        if (textSpan && parseInt(textSpan.innerText) === id) box.classList.add('active-node');
+        else box.classList.remove('active-node');
     });
     
     document.getElementById('details-node-title').innerText = `CLUSTER #${String(id).padStart(2, '0')}`;
@@ -580,22 +546,18 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
     document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
     document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
-    document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString(); // 📊 Renderizado dinámico de comandos
+    document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString();
     
     const statusCard = document.getElementById('det-status').parentElement;
     const statusTarget = document.getElementById('det-status');
-    
     if (status === 'online') {
-        statusCard.style.borderLeftColor = 'var(--online)';
-        statusTarget.style.color = 'var(--online)';
+        statusCard.style.borderLeftColor = 'var(--online)'; statusTarget.style.color = 'var(--online)';
         panel.style.borderColor = 'rgba(51, 255, 0, 0.25)';
     } else if (status === 'connecting') {
-        statusCard.style.borderLeftColor = 'var(--warning)';
-        statusTarget.style.color = 'var(--warning)';
+        statusCard.style.borderLeftColor = 'var(--warning)'; statusTarget.style.color = 'var(--warning)';
         panel.style.borderColor = 'rgba(255, 184, 108, 0.25)';
     } else {
-        statusCard.style.borderLeftColor = 'var(--offline)';
-        statusTarget.style.color = 'var(--offline)';
+        statusCard.style.borderLeftColor = 'var(--offline)'; statusTarget.style.color = 'var(--offline)';
         panel.style.borderColor = 'rgba(255, 85, 85, 0.25)';
     }
 }
@@ -612,7 +574,6 @@ async function update() {
 
         const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
-        
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
 
@@ -623,17 +584,13 @@ async function update() {
 
         if (data.global?.uptime) {
             let upValue = data.global.uptime;
-
             if (typeof upValue === 'string' && upValue.endsWith('h')) {
-                const horasTotales = parseInt(upValue); 
+                const horasTotales = parseInt(upValue);
                 const horasReales = Math.floor(horasTotales / 6); 
-                
                 let dias = Math.floor(horasReales / 24);
                 let horasRestantes = horasReales % 24;
-
                 upValue = `${dias}d ${horasRestantes}h 00m`;
             }
-
             document.getElementById('res-uptime').innerText = upValue;
         } else {
             document.getElementById('res-uptime').innerText = "00d 00h 00m";
@@ -646,7 +603,6 @@ async function update() {
             const clusterId = index + 1;
             const numGuilds = c.guilds || c.servers || 0;
             memoriaUltimosServidores[clusterId] = numGuilds;
-
             return {
                 id: clusterId, 
                 idOriginal: c.id,
@@ -655,45 +611,35 @@ async function update() {
                 cpu: c.cpu,
                 ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
                 guilds: numGuilds,
-                commands: c.commandsExecuted || 0 // 🛰️ Almacenamos el conteo de comandos mapeado por la API
+                commands: c.commandsExecuted || 0
             };
         });
 
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
-        const totalCommands = data.global?.totalCommandsExecuted || 0; // ⚡ Capturamos el conteo global
+        const totalCommands = data.global?.totalCommandsExecuted || 0;
         const clustersOnline = clusters.filter(c => c.status === 'online').length;
 
         updateTrends(totalRam, totalGuilds);
-        
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
-        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString(); // ⚡ Pintamos el conteo global
+        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString();
 
         let servidoresPerdidosTotales = 0;
-        
         clusters.forEach(c => {
             const statusActual = (c.status || 'offline').toLowerCase();
             const statusPrevio = lastClustersState[c.id];
-
             if (statusActual !== 'online') {
                 let perdidosEsteCluster = c.guilds;
-                if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) {
-                    perdidosEsteCluster = Math.round(totalGuilds / clusters.length);
-                }
+                if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) perdidosEsteCluster = Math.round(totalGuilds / clusters.length);
                 servidoresPerdidosTotales += perdidosEsteCluster;
             }
-
             if (statusPrevio && statusPrevio !== statusActual) {
-                if (statusActual === 'online') {
-                    addLog(`Cluster #${c.id} restablecido exitosamente (ONLINE).`, "ok");
-                } else if (statusActual === 'connecting') {
-                    addLog(`Cluster #${c.id} está intentando conectarse a Discord.`, "warn");
-                } else {
+                if (statusActual === 'online') addLog(`Cluster #${c.id} restablecido exitosamente (ONLINE).`, "ok");
+                else if (statusActual === 'connecting') addLog(`Cluster #${c.id} está intentando conectarse a Discord.`, "warn");
+                else {
                     let servidoresPerdidos = c.guilds;
-                    if (!servidoresPerdidos && totalGuilds > 0 && clusters.length > 0) {
-                        servidoresPerdidos = Math.round(totalGuilds / clusters.length);
-                    }
+                    if (!servidoresPerdidos && totalGuilds > 0 && clusters.length > 0) servidoresPerdidos = Math.round(totalGuilds / clusters.length);
                     const formatLost = servidoresPerdidos > 0 ? ` [~${servidoresPerdidos.toLocaleString()} servidores afectados]` : '';
                     addLog(`Cluster #${c.id} se encuentra inactivo (OFFLINE).${formatLost}`, "err");
                 }
@@ -717,10 +663,8 @@ async function update() {
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
             const ramValue = parseFloat(c.ram || 0).toFixed(0);
             const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
-            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`; // ⚡ Inyectamos comandos en el tooltip flotante
-            
+            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`;
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
-            
             return `<div class="box ${cl} ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">${ramValue}M</span>
@@ -728,7 +672,6 @@ async function update() {
             </div>`;
         }).join('');
 
-        // 🟢 ACTUALIZACIÓN EN TIEMPO REAL SI EL PANEL ESTÁ EXPANDIDO
         if (clusterSeleccionadoId !== null) {
             const cActivo = clusters.find(c => c.id === clusterSeleccionadoId);
             if (cActivo) {
@@ -736,22 +679,16 @@ async function update() {
                 document.getElementById('det-servers').innerText = cActivo.guilds.toLocaleString();
                 document.getElementById('det-ping').innerText = cActivo.ping === '--' ? '--' : cActivo.ping + ' ms';
                 document.getElementById('det-cpu').innerText = (cActivo.cpu === undefined ? '0' : cActivo.cpu) + ' %';
-                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString(); // ⚡ Sincronización en caliente
+                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString();
             }
         }
 
         if (ramChart) {
             const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-            ramHistory.push(totalRam); 
-            labelHistory.push(horaActual);
-            extraClustersActivos.push(clustersOnline);
-            extraClustersTotales.push(clusters.length);
-            extraServidores.push(totalGuilds);
-            extraPingApi.push(currentPing + " ms");
-            extraComandosUsados.push(comandosEnEsteIntervalo);
-            
+            ramHistory.push(totalRam); labelHistory.push(horaActual);
+            extraClustersActivos.push(clustersOnline); extraClustersTotales.push(clusters.length);
+            extraServidores.push(totalGuilds); extraPingApi.push(currentPing + " ms"); extraComandosUsados.push(comandosEnEsteIntervalo);
             comandosEnEsteIntervalo = 0; 
-            
             if(ramHistory.length > 40) { 
                 ramHistory.shift(); labelHistory.shift(); extraClustersActivos.shift();
                 extraClustersTotales.shift(); extraServidores.shift(); extraPingApi.shift(); extraComandosUsados.shift();
@@ -759,22 +696,16 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
-        if (statusText.innerText !== "MANTENIMIENTO") {
-            addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
-        }
-        statusText.innerText = "MANTENIMIENTO"; 
-        statusText.style.color = "var(--offline)";
+        if (statusText.innerText !== "MANTENIMIENTO") addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
+        statusText.innerText = "MANTENIMIENTO"; statusText.style.color = "var(--offline)";
         document.getElementById('res-ping').innerText = "-- ms";
-        
         let servidoresCaidosCalculados = 0;
         let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
             const guildsDelCluster = memoriaUltimosServidores[id] || 0;
             servidoresCaidosCalculados += guildsDelCluster;
             return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0, commands: 0 };
         });
-
         if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
-
         document.getElementById('stat-clusters').innerText = "0 / 6";
         document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
         document.getElementById('res-perdidos').style.color = "var(--offline)";
@@ -782,7 +713,6 @@ async function update() {
         document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
             const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
             const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
-            
             return `<div class="box offline ${activeClass}">
                 <span>${c.id}</span>
                 <span class="box-ram">0M</span>
@@ -791,28 +721,20 @@ async function update() {
         }).join('');
 
         if (clusterSeleccionadoId !== null) {
-            document.getElementById('det-status').innerText = "OFFLINE";
-            document.getElementById('det-status').style.color = "var(--offline)";
-            document.getElementById('det-ping').innerText = "--";
-            document.getElementById('det-cpu').innerText = "--";
-            document.getElementById('det-commands').innerText = "0";
+            document.getElementById('det-status').innerText = "OFFLINE"; document.getElementById('det-status').style.color = "var(--offline)";
+            document.getElementById('det-ping').innerText = "--"; document.getElementById('det-cpu').innerText = "--"; document.getElementById('det-commands').innerText = "0";
         }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initChart(); 
-    renderLogs(true); 
-    update();
+    initChart(); renderLogs(true); update();
     
-    // 🧲 CAPTURADOR MÁSTER DE EVENTOS (Amarra las cajas de texto flotantes al click nativo)
     document.getElementById('status-grid').addEventListener('click', function(e) {
         const box = e.target.closest('.box');
         if (!box) return; 
-        
         const idSpan = box.querySelector('span');
         if (!idSpan) return;
-        
         const id = parseInt(idSpan.innerText);
         let status = 'offline';
         if (box.classList.contains('online')) status = 'online';
@@ -821,13 +743,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltipText = box.querySelector('.tooltip').innerHTML;
         const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
         const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
-        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/); // ⚡ Capturamos dinámicamente desde el tooltip
+        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/);
         
         const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
         const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
         const commands = commandsMatch ? parseInt(commandsMatch[1].replace(/,/g, '')) : 0;
-        
-        // El CPU se calcula dinámicamente de forma interna tras el tick de refresco
         const cpuMatch = tooltipText.match(/CPU:\s*([^\s<]+)/);
         const cpu = cpuMatch ? cpuMatch[1].replace('%', '').trim() : 0;
         
