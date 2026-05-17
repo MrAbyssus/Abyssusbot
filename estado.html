@@ -221,7 +221,6 @@ let extraClustersActivos = [];
 let extraClustersTotales = [];
 let extraServidores = [];
 let extraPingApi = [];
-// 🔢 ARRAY ESPEJO PARA GUARDAR LOS COMANDOS DETECTADOS
 let extraComandosUsados = []; 
 
 let ramChart;
@@ -230,7 +229,6 @@ let lastPingTime = 0;
 let lastClustersState = {}; 
 let lastRamValue = 0;
 let lastGuildsValue = 0;
-// ⚡ Contador interno para el intervalo actual
 let comandosEnEsteIntervalo = 0; 
 
 const logBox = document.getElementById('audit-log');
@@ -266,7 +264,6 @@ function addLog(msg, type = '') {
     if(storedLogs.length > 50) storedLogs.shift(); 
     localStorage.setItem('abyssus_logs', JSON.stringify(storedLogs));
     
-    // Si el log es de tipo exitoso u ok, asumimos que se procesó una acción/comando del bot
     if (type === 'ok' || msg.toLowerCase().includes('comando') || msg.toLowerCase().includes('ejecutado')) {
         comandosEnEsteIntervalo++;
     }
@@ -365,10 +362,16 @@ function initChart() {
                             if (extraServidores[index] !== undefined) {
                                 lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
                             }
-                            // 🚀 AQUÍ SE MUESTRAN LOS COMANDOS EN EL TOOLTIP
-                            if (extraComandosUsados[index] !== undefined) {
-                                lineas.push(`🔥 Acciones/Comandos: ${extraComandosUsados[index]}`);
+                            
+                            // ✨ MEJORA: Pulso de estado premium en vez de un 0 estático
+                            if (extraClustersActivos[index] === extraClustersTotales[index] && extraClustersTotales[index] > 0) {
+                                lineas.push(`🔥 Estado: Procesando comandos (Estable)`);
+                            } else if (extraClustersActivos[index] < extraClustersTotales[index] && extraClustersActivos[index] > 0) {
+                                lineas.push(`⚠️ Estado: Actividad inestable (Nodo caído)`);
+                            } else {
+                                lineas.push(`🛑 Estado: Sin respuesta`);
                             }
+                            
                             if (extraPingApi[index]) {
                                 lineas.push(`📶 Ping API Web: ${extraPingApi[index]}`);
                             }
@@ -498,13 +501,8 @@ async function update() {
             extraClustersTotales.push(clusters.length);
             extraServidores.push(totalGuilds);
             extraPingApi.push(currentPing + " ms");
-
-            /* 💡 NOTA FUTURA: Si algún día modificas la API de tu bot para que envíe un contador real,
-              puedes cambiar 'comandosEnEsteIntervalo' por 'data.global.commandsCount' o similar.
-            */
             extraComandosUsados.push(comandosEnEsteIntervalo);
             
-            // Reiniciamos el contador local para los próximos 3 segundos
             comandosEnEsteIntervalo = 0; 
             
             if(ramHistory.length > 40) { 
