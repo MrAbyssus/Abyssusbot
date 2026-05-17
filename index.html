@@ -402,14 +402,32 @@ body{
 
 <body>
 
-<div id="panel-alerta" class="alerta-caida" style="border-color: rgba(255, 215, 0, 0.3); background: rgba(255, 215, 0, 0.02); position: relative; padding-right: 40px; margin-bottom: 20px;">
-    <span class="alerta-icono" style="color: #ffd700;">👑</span>
-    <p class="alerta-texto" style="margin: 0;">
-        <strong>Abyssus Premium disponible:</strong> Desbloquea el verdadero poder del bot para tu comunidad. 
-        <span class="alerta-tiempo" style="color: #ffd700;">Obtén acceso inmediato a comandos exclusivos,</span> 
-        sistemas avanzados de economía, personalización sin límites y prioridad de soprte.
-    </p>
-    <button onclick="document.getElementById('panel-alerta').remove()" style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; transition: 0.2s; padding: 5px; line-height: 1;" onmouseover="this.style.color='var(--offline)'" onmouseout="this.style.color='var(--text-muted)'">×</button>
+<div id="panel-alerta" class="alerta-caida" style="border-color: rgba(56, 189, 248, 0.3); background: rgba(17, 18, 23, 0.6); position: relative; padding: 12px 40px 12px 45px; margin-bottom: 20px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); overflow: hidden; display: flex; align-items: center; backdrop-filter: blur(4px);">
+    
+    <span class="alerta-icono" style="position: absolute; left: 15px; color: #38bdf8; font-size: 1.1rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); z-index: 2; animation: alert-pulse 1.5s infinite alternate;">📡</span>
+    
+    <div style="width: 100%; overflow: hidden; white-space: nowrap; position: relative;">
+        <p class="alerta-texto" style="margin: 0; display: inline-block; padding-left: 100%; animation: marquee-cyber 40s linear infinite; font-size: 0.9rem; letter-spacing: 0.5px; color: #e2e8f0; font-weight: 500;">
+            <span style="color: #ffd700; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);">👑 ABYSSUS PREMIUM:</span> Desbloquea el verdadero poder del bot. Obtén acceso inmediato a comandos exclusivos, sistemas avanzados de economía, personalización sin límites y prioridad de soporte. 
+            
+            <span style="margin: 0 40px; color: #2f3136;">• ————— •</span>
+            
+            <span style="color: #38bdf8; font-weight: 700; text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);">⚡ ALIANZA OFICIAL:</span> Nos unimos a <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 800; text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);">Lumin Labs</span> para potenciar la infraestructura de Abyssus con Inteligencia Artificial avanzada de última generación a través del modelo <span style="color: #a78bfa; font-weight: 700;">Vera 3 (235B)</span>. ¡Próximamente disponible en todos tus clústeres!
+        </p>
+    </div>
+
+    <button onclick="document.getElementById('panel-alerta').remove()" style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: rgba(17, 18, 23, 0.8); border: none; color: #64748b; font-size: 1.2rem; cursor: pointer; transition: 0.2s; padding: 2px 8px; border-radius: 4px; line-height: 1; z-index: 2;" onmouseover="this.style.color='#ef4444'; this.style.background='rgba(239, 68, 68, 0.1)'" onmouseout="this.style.color='#64748b'; this.style.background='rgba(17, 18, 23, 0.8)'">×</button>
+
+    <style>
+        @keyframes marquee-cyber {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        @keyframes alert-pulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+    </style>
 </div>
 
 <nav class="nav">
@@ -752,23 +770,35 @@ body{
     </div>
 </section>
 
-<footer style="text-align: center; padding: 30px 20px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(28, 29, 36, 0.5);">
-    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem;">
+<footer style="text-align: center; padding: 40px 20px 30px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(17, 18, 23, 0.75); backdrop-filter: blur(8px);">
+    
+    <div style="margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+        <span style="font-size: 0.65rem; letter-spacing: 2px; color: #64748b; font-weight: 700; text-transform: uppercase;">Official Infrastructure Partner</span>
+        <a href="https://luminlabs.es" target="_blank" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; background: rgba(56, 189, 248, 0.03); border: 1px solid rgba(56, 189, 248, 0.15); padding: 8px 16px; border-radius: 8px; transition: 0.3s; box-shadow: 0 0 15px rgba(56, 189, 248, 0.05);"
+           onmouseover="this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.2)'; this.style.background='rgba(56, 189, 248, 0.07)'" 
+           onmouseout="this.style.borderColor='rgba(56, 189, 248, 0.15)'; this.style.boxShadow='0 0 15px rgba(56, 189, 248, 0.05)'; this.style.background='rgba(56, 189, 248, 0.03)'">
+            <span style="font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px;">Powered by <span style="color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);">Lumin Labs</span></span>
+        </a>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #2f3136, transparent); margin-bottom: 20px; width: 60%;">
+
+    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: #94a3b8;">
         © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
     </p>
 
-    <div style="font-size: 0.8rem; margin-bottom: 15px;">
-        <a href="terminos.html" style="color: #777; text-decoration: none; transition: 0.3s;">Términos y Condiciones</a>
-        <span style="margin: 0 10px; color: #444;">|</span>
-        <a href="privacidad.html" style="color: #777; text-decoration: none; transition: 0.3s;">Política de Privacidad</a>
+    <div style="font-size: 0.8rem; margin-bottom: 20px;">
+        <a href="terminos.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a>
+        <span style="margin: 0 10px; color: #334155;">|</span>
+        <a href="privacidad.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Política de Privacidad</a>
     </div>
 
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #aaa; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap;">
         <span>¿Necesitas ayuda?</span>
         <a href="https://discord.gg/qegCgXX99z" 
-           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s;"
-           onmouseover="this.style.background='#4752C4'" 
-           onmouseout="this.style.background='#5865F2'">
+           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);"
+           onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" 
+           onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
             Servidor de Soporte
         </a>
