@@ -347,7 +347,25 @@ async function update() {
             document.getElementById('res-uptime').innerText = formatUptime(parseUptime(data.global.uptime));
         }
 
-        const clusters = data.clusters || [];
+        // 🛠️ FILTRO Y NORMALIZACIÓN DE CLÚSTERES INMUNE A CAMBIOS DE ID
+        let rawClusters = data.clusters || [];
+        
+        // 1️⃣ Ordenamos por el ID numérico real que entregue el backend (ej: 18, 19, 20...)
+        rawClusters.sort((a, b) => a.id - b.id);
+
+        // 2️⃣ Mapeamos reasignando un ID secuencial basado en su índice (1, 2, 3...)
+        const clusters = rawClusters.map((c, index) => {
+            return {
+                id: index + 1, // ✨ ID Visual forzado del 1 al 6
+                idOriginal: c.id,
+                status: c.status,
+                ram: c.ram,
+                cpu: c.cpu,
+                ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
+                guilds: c.guilds || c.servers || 0
+            };
+        });
+
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
 
@@ -360,10 +378,10 @@ async function update() {
         
         clusters.forEach(c => {
             const statusActual = (c.status || 'offline').toLowerCase();
-            const statusPrevio = lastClustersState[c.id];
+            const statusPrevio = lastClustersState[c.id]; // Almacenado bajo el ID limpio (1-6)
 
             if (statusActual !== 'online') {
-                let perdidosEsteCluster = c.guilds || c.servers || 0;
+                let perdidosEsteCluster = c.guilds;
                 if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) {
                     perdidosEsteCluster = Math.round(totalGuilds / clusters.length);
                 }
@@ -376,7 +394,7 @@ async function update() {
                 } else if (statusActual === 'connecting') {
                     addLog(`Cluster #${c.id} está intentando conectarse a Discord.`, "warn");
                 } else {
-                    let servidoresPerdidos = c.guilds || c.servers || 0;
+                    let servidoresPerdidos = c.guilds;
                     if (!servidoresPerdidos && totalGuilds > 0 && clusters.length > 0) {
                         servidoresPerdidos = Math.round(totalGuilds / clusters.length);
                     }
@@ -402,12 +420,12 @@ async function update() {
             const s = (c.status || 'offline').toLowerCase();
             const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
             const ramValue = parseFloat(c.ram || 0).toFixed(0);
-            const guildInfo = (c.guilds || c.servers) ? `<br>• Servers: ${(c.guilds || c.servers).toLocaleString()}` : '';
+            const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
             
             return `<div class="box ${cl}">
                 <span>${c.id}</span>
                 <span class="box-ram">${ramValue}M</span>
-                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB${guildInfo}</div>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}</div>
             </div>`;
         }).join('');
 
@@ -417,7 +435,6 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
-        // En lugar de romper todo, detectamos que es un reinicio controlado por tu actualización
         if (statusText.innerText !== "REINICIANDO") {
             addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
         }
