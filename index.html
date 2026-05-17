@@ -478,7 +478,14 @@ body{
 </div>
 
 <script>
-    let memoriaClusters = [];
+    // 🧠 MEMORIA INICIAL: Declaramos los clústeres por defecto para que la interfaz 
+    // nunca se vacíe si la API de Cloudflare o el bot fallan al cargar.
+    let memoriaClusters = [
+        { id: 1, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
+        { id: 2, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
+        { id: 3, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' },
+        { id: 4, guilds: '---', ram: '---', cpu: '0%', ping: '--', status: 'offline' }
+    ];
 
     function animateCount(element, start, end, duration) {
         if (start === end) return;
@@ -499,18 +506,14 @@ body{
         const lista = document.getElementById('clusters-lista');
         if (!lista) return;
 
-        if (memoriaClusters.length === 0) {
-            lista.innerHTML = `<div style="grid-column: 1/-1; color: #aaa; font-size: 0.9rem; padding: 20px;">Cargando clústeres del sistema...</div>`;
-            return;
-        }
-
+        // Se dibuja el array actual (sea el recuperado por la API o el fallback offline)
         lista.innerHTML = memoriaClusters.map(c => {
             const isOnline = c.status === 'online';
             const colorEstado = isOnline ? '#23a55a' : '#f04747'; 
             const colorTextoSecundario = isOnline ? '#00ffcc' : '#ff4d4d'; 
 
             return `
-                <div class="cluster-card" style="${!isOnline ? 'border: 1px solid rgba(240, 71, 71, 0.2); background: rgba(240, 71, 71, 0.02);' : ''}">
+                <div class="cluster-card" style="${!isOnline ? 'border: 1px solid rgba(240, 71, 71, 0.3); background: rgba(240, 71, 71, 0.04);' : ''}">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <h3 style="${!isOnline ? 'color: #95a5a6;' : ''}">Cluster ${c.id}</h3>
                         <span style="font-size:0.65rem; color:${colorTextoSecundario}; font-weight: bold; background: ${isOnline ? 'rgba(0,255,204,0.08)' : 'rgba(255,77,77,0.08)'}; padding: 1px 5px; border-radius: 4px;">
@@ -534,7 +537,7 @@ body{
                     </div>
 
                     <div style="margin-top:12px; font-size: 0.65rem; color: ${colorEstado}; font-weight:bold; display:flex; align-items:center; gap:5px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
-                        <div class="online-dot" style="background-color: ${colorEstado}; box-shadow: 0 0 6px ${colorEstado};"></div> 
+                        <div class="online-dot" style="background-color: ${colorEstado}; box-shadow: 0 0 6px ${colorEstado}; animation: ${isOnline ? 'pulse-green 2s infinite' : 'none'};"></div> 
                         ${isOnline ? 'ONLINE' : 'CRASHED / OFFLINE'}
                     </div>
                 </div>
@@ -543,12 +546,12 @@ body{
     }
 
     async function actualizarDashboard() {
+        const countSrv = document.getElementById('count-servidores');
+        const estadoGlobal = document.getElementById('sistema-estado-global');
+
         try {
             const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
             const data = await res.json();
-            
-            const countSrv = document.getElementById('count-servidores');
-            const estadoGlobal = document.getElementById('sistema-estado-global');
 
             if (data.global && countSrv) {
                 const nuevoTotal = data.global.totalGuilds || 0;
@@ -562,7 +565,7 @@ body{
                 let algunClusterCaido = false;
                 let clustersOrdenadosBackend = [...data.clusters].sort((a, b) => a.id - b.id);
 
-                let nuevosClusters = clustersOrdenadosBackend.map((clData, index) => {
+                memoriaClusters = clustersOrdenadosBackend.map((clData, index) => {
                     const status = clData.status || 'online';
                     if (status !== 'online') algunClusterCaido = true;
 
@@ -580,8 +583,6 @@ body{
                         status: status
                     };
                 });
-                
-                memoriaClusters = nuevosClusters;
 
                 if (estadoGlobal) {
                     if (algunClusterCaido) {
@@ -592,19 +593,34 @@ body{
                 }
             }
 
-            renderizarInterfaz();
-
         } catch (e) {
-            console.log("Error en el monitor:", e);
-            if (memoriaClusters.length > 0) {
-                memoriaClusters.forEach(c => c.status = 'offline');
+            console.log("Error de conexión con la API, aplicando fallback offline:", e);
+            
+            // 🚨 SOLUCIÓN AL PROBLEMA: Forzar la memoria interna a offline con strings vacíos '---'
+            memoriaClusters.forEach(c => {
+                c.status = 'offline';
+                c.ping = '--';
+                c.guilds = '---';
+                c.ram = '---';
+                c.cpu = '0%';
+            });
+
+            if (estadoGlobal) {
+                estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">API OFFLINE (MANTENIMIENTO)</span>';
             }
+            if (countSrv) {
+                countSrv.innerText = "--";
+            }
+        } finally {
+            // El bloque 'finally' asegura el renderizado sin importar si el fetch falló o tuvo éxito
             renderizarInterfaz();
         }
     }
 
-    setInterval(actualizarDashboard, 3000);
+    // Ejecución de ciclo limpio
+    renderizarInterfaz(); 
     actualizarDashboard();
+    setInterval(actualizarDashboard, 4000);
 </script>
     
 <section class="features">
