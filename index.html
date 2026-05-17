@@ -454,7 +454,7 @@ body{
         window.requestAnimationFrame(step);
     }
 
-    // Función encargada de dibujar de forma estricta las 12 tarjetas
+    // Función encargada de dbiujar de forma estricta las 12 tarjetas
     function renderizarInterfaz() {
         const lista = document.getElementById('clusters-lista');
         if (!lista) return;
@@ -497,7 +497,8 @@ body{
         }).join('');
     }
 
-    async actualizarDashboard() {
+    // 🌟 CORREGIDO: Añadida la palabra clave "function" para evitar romper la sintaxis del motor JS
+    async function actualizarDashboard() {
         try {
             const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
             const data = await res.json();
@@ -535,11 +536,10 @@ body{
                         };
                         if (clData.status !== 'online') algunClusterCaido = true;
                     } else {
-                        // 🚨 SI EL CLUSTER NO APARECE EN LA API: Lo forzamos a "offline" pero CONSERVAMOS sus "guilds" pasadas
+                        // SI EL CLUSTER NO APARECE EN LA API: Lo forzamos a "offline" pero CONSERVAMOS sus "guilds" pasadas
                         memoriaClusters[i].status = 'offline';
                         memoriaClusters[i].cpu = '0%';
                         memoriaClusters[i].ping = '--';
-                        // conservamos memoriaClusters[i].guilds intacto para que no desaparezca el conteo de servidores previo
                         algunClusterCaido = true;
                     }
                 }
@@ -694,7 +694,7 @@ body{
            "
            onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 25px rgba(88, 101, 242, 0.5)';"
            onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.3)';">
-            Añadir a Discord
+             Añadir a Discord
         </a>
     </div>
 </section>
