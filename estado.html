@@ -572,7 +572,7 @@ async function update() {
             });
 
         // 🔥 CORRECCIÓN AQUÍ: Quitamos el "/api" y agregamos la cabecera JSON inteligente requerida por el backend unificado
-const res = await fetch('https://dosage-roger-stopping-publishers.trycloudflare.com/status?json=true&t=' + Date.now(), {
+const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + Date.now(), {
     headers: { 'Accept': 'application/json' }
 });
 
