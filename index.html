@@ -567,75 +567,95 @@ body{
     }
 
     async function actualizarDashboard() {
-        const countSrv = document.getElementById('count-servidores');
-        const estadoGlobal = document.getElementById('sistema-estado-global');
+    const countSrv = document.getElementById('count-servidores');
+    const estadoGlobal = document.getElementById('sistema-estado-global');
+    // Opcional: Si tienes un elemento para comandos globales en tu HTML, puedes usarlo
+    const countCmds = document.getElementById('count-comandos'); 
 
-        try {
-            const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/api/status?t=' + Date.now());
-            const data = await res.json();
+    try {
+        // CORRECCIÓN DE RUTA: Quitamos el /api y apuntamos a /status con la cabecera JSON inteligente
+        const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/status?json=true&t=' + Date.now(), {
+            headers: { 'Accept': 'application/json' }
+        });
+        const data = await res.json();
 
-            if (data.global && countSrv) {
-                const nuevoTotal = data.global.totalGuilds || 0;
-                const valorActual = parseInt(countSrv.innerText.replace(/[+,]/g, '')) || 0;
-                if (nuevoTotal !== valorActual) {
-                    animateCount(countSrv, valorActual, nuevoTotal, 1000);
-                }
+        if (data.global && countSrv) {
+            const nuevoTotal = data.global.totalGuilds || 0;
+            const valorActual = parseInt(countSrv.innerText.replace(/[+,]/g, '')) || 0;
+            if (nuevoTotal !== valorActual) {
+                animateCount(countSrv, valorActual, nuevoTotal, 1000);
             }
 
-            if (data.clusters && data.clusters.length > 0) {
-                let algunClusterCaido = false;
-                let clustersOrdenadosBackend = [...data.clusters].sort((a, b) => a.id - b.id);
-
-                memoriaClusters = clustersOrdenadosBackend.map((clData, index) => {
-                    const status = clData.status || 'online';
-                    if (status !== 'online') algunClusterCaido = true;
-
-                    let pingVisual = clData.ping;
-                    if (pingVisual === undefined || pingVisual < 0) {
-                        pingVisual = '--';
-                    }
-
-                    return {
-                        id: index + 1,
-                        guilds: clData.guilds || '0',
-                        ram: clData.ram || '0',
-                        cpu: clData.cpu || '0%',
-                        ping: pingVisual,
-                        status: status
-                    };
-                });
-
-                if (estadoGlobal) {
-                    if (algunClusterCaido) {
-                        estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">ALERTA: CLUSTER DETENIDO</span>';
-                    } else {
-                        estadoGlobal.innerHTML = '<span style="color:#23a55a; font-weight:bold;">SISTEMA OPERATIVO</span>';
-                    }
+            // Si tienes el contador de comandos en tu diseño, se actualizará aquí dinámicamente
+            if (countCmds && data.global.totalCommandsExecuted !== undefined) {
+                const nuevoTotalCmds = data.global.totalCommandsExecuted || 0;
+                const valorActualCmds = parseInt(countCmds.innerText.replace(/[+,]/g, '')) || 0;
+                if (nuevoTotalCmds !== valorActualCmds) {
+                    animateCount(countCmds, valorActualCmds, nuevoTotalCmds, 1000);
                 }
             }
+        }
 
-        } catch (e) {
-            console.log("Error de conexión con la API, aplicando fallback offline:", e);
-            
-            // 🚨 Forzar los 6 clústeres a estado offline con datos vacíos en caso de crash de API
-            memoriaClusters.forEach(c => {
-                c.status = 'offline';
-                c.ping = '--';
-                c.guilds = '---';
-                c.ram = '---';
-                c.cpu = '0%';
+        if (data.clusters && data.clusters.length > 0) {
+            let algunClusterCaido = false;
+            let clustersOrdenadosBackend = [...data.clusters].sort((a, b) => a.id - b.id);
+
+            memoriaClusters = clustersOrdenadosBackend.map((clData, index) => {
+                const status = clData.status || 'online';
+                if (status !== 'online') algunClusterCaido = true;
+
+                let pingVisual = clData.ping;
+                if (pingVisual === undefined || pingVisual < 0) {
+                    pingVisual = '--';
+                }
+
+                return {
+                    id: index + 1,
+                    guilds: clData.guilds || '0',
+                    ram: clData.ram || '0',
+                    cpu: clData.cpu || '0%',
+                    ping: pingVisual,
+                    status: status,
+                    // Pasamos también los comandos individuales del clúster a la memoria de la interfaz
+                    commandsExecuted: clData.commandsExecuted || 0 
+                };
             });
 
             if (estadoGlobal) {
-                estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">API OFFLINE (MANTENIMIENTO)</span>';
+                if (algunClusterCaido) {
+                    estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">ALERTA: CLUSTER DETENIDO</span>';
+                } else {
+                    estadoGlobal.innerHTML = '<span style="color:#23a55a; font-weight:bold;">SISTEMA OPERATIVO</span>';
+                }
             }
-            if (countSrv) {
-                countSrv.innerText = "--";
-            }
-        } finally {
-            renderizarInterfaz();
         }
+
+    } catch (e) {
+        console.log("Error de conexión con la API, aplicando fallback offline:", e);
+        
+        // Forzar los 6 clústeres a estado offline con datos vacíos en caso de crash de API
+        memoriaClusters.forEach(c => {
+            c.status = 'offline';
+            c.ping = '--';
+            c.guilds = '---';
+            c.ram = '---';
+            c.cpu = '0%';
+            c.commandsExecuted = '---';
+        });
+
+        if (estadoGlobal) {
+            estadoGlobal.innerHTML = '<span style="color:#f04747; font-weight:bold;">API OFFLINE (MANTENIMIENTO)</span>';
+        }
+        if (countSrv) {
+            countSrv.innerText = "--";
+        }
+        if (countCmds) {
+            countCmds.innerText = "--";
+        }
+    } finally {
+        renderizarInterfaz();
     }
+}
 
     // Inicialización del ciclo
     renderizarInterfaz(); 
