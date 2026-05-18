@@ -565,16 +565,16 @@ body{
         }).join('');
     }
 
-    async function actualizarDashboard() {
+   async function actualizarDashboard() {
         const countSrv = document.getElementById('count-servidores');
         const estadoGlobal = document.getElementById('sistema-estado-global');
 
         try {
-            // 🔄 Cambiado a tu enlace actual de Pinggy configurando el método y los headers correctos
-            const res = await fetch('https://mkkip-2001-41d0-404-200--56c4.run.pinggy-free.link/status', {
+            // 🔄 CORREGIDO: Ahora apunta a /api/status para obtener el JSON de PM2 real
+            const res = await fetch('https://mkkip-2001-41d0-404-200--56c4.run.pinggy-free.link/api/status', {
                 method: 'GET',
                 headers: {
-                    'X-Pinggy-No-Screen': 'true' // 👈 ESTO ELIMINA LA PANTALLA ROJA DE ADVERTENCIA AUTOMÁTICAMENTE
+                    'X-Pinggy-No-Screen': 'true' 
                 }
             });
             const data = await res.json();
