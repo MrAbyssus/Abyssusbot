@@ -227,7 +227,6 @@
             margin-left: 5px;
         }
 
-        /* 🎛️ SOPORTE PARA 5 COLUMNAS EN ESCRITORIO */
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -408,7 +407,7 @@ function formatUptime(ms) {
     segundos %= 60; minutos %= 60; horas %= 24;
     const d = dias.toString().padStart(2, '0');
     const h = horas.toString().padStart(2, '0');
-    const m = minutes.toString().padStart(2, '0');
+    const m = minutos.toString().padStart(2, '0');
     return `${d}d ${h}h ${m}m`;
 }
 
@@ -572,7 +571,10 @@ async function update() {
                 discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
             });
 
-        const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/api/status?t=' + Date.now());
+        // 🔥 CORRECCIÓN AQUÍ: Quitamos el "/api" y agregamos la cabecera JSON inteligente requerida por el backend unificado
+        const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/status?json=true&t=' + Date.now(), {
+            headers: { 'Accept': 'application/json' }
+        });
         const data = await res.json();
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
