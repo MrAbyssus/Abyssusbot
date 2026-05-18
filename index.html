@@ -570,7 +570,13 @@ body{
         const estadoGlobal = document.getElementById('sistema-estado-global');
 
         try {
-            const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
+            // 🔄 Cambiado a tu enlace actual de Pinggy configurando el método y los headers correctos
+            const res = await fetch('https://mkkip-2001-41d0-404-200--56c4.run.pinggy-free.link/status', {
+                method: 'GET',
+                headers: {
+                    'X-Pinggy-No-Screen': 'true' // 👈 ESTO ELIMINA LA PANTALLA ROJA DE ADVERTENCIA AUTOMÁTICAMENTE
+                }
+            });
             const data = await res.json();
 
             if (data.global && countSrv) {
