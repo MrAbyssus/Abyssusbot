@@ -569,12 +569,11 @@ body{
     async function actualizarDashboard() {
         const countSrv = document.getElementById('count-servidores');
         const estadoGlobal = document.getElementById('sistema-estado-global');
-        // Opcional: Si tienes un elemento para comandos globales en tu HTML, puedes usarlo
         const countCmds = document.getElementById('count-comandos'); 
 
         try {
-            // CORRECCIÓN DEFINITIVA: Apuntamos directo a la raíz con el parámetro que sí responde tu bot
-            const res = await fetch('https://dosage-roger-stopping-publishers.trycloudflare.com/?json=true&t=' + Date.now(), {
+            // CORRECCIÓN PARA EL PUERTO 3030: Apuntamos exactamente a /status
+            const res = await fetch('https://dosage-roger-stopping-publishers.trycloudflare.com/status?t=' + Date.now(), {
                 headers: { 'Accept': 'application/json' }
             });
             const data = await res.json();
@@ -586,7 +585,6 @@ body{
                     animateCount(countSrv, valorActual, nuevoTotal, 1000);
                 }
 
-                // Si tienes el contador de comandos en tu diseño, se actualizará aquí dinámicamente
                 if (countCmds && data.global.totalCommandsExecuted !== undefined) {
                     const nuevoTotalCmds = data.global.totalCommandsExecuted || 0;
                     const valorActualCmds = parseInt(countCmds.innerText.replace(/[+,]/g, '')) || 0;
@@ -616,7 +614,6 @@ body{
                         cpu: clData.cpu || '0%',
                         ping: pingVisual,
                         status: status,
-                        // Pasamos también los comandos individuales del clúster a la memoria de la interfaz
                         commandsExecuted: clData.commandsExecuted || 0 
                     };
                 });
@@ -633,7 +630,6 @@ body{
         } catch (e) {
             console.log("Error de conexión con la API, aplicando fallback offline:", e);
             
-            // Forzar los 6 clústeres a estado offline con datos vacíos en caso de crash de API
             memoriaClusters.forEach(c => {
                 c.status = 'offline';
                 c.ping = '--';
