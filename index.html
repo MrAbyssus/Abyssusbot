@@ -574,7 +574,7 @@ body{
 
     try {
         // CORRECCIÓN DE RUTA: Quitamos el /api y apuntamos a /status con la cabecera JSON inteligente
-        const res = await fetch('https://dosage-roger-stopping-publishers.trycloudflare.com/status?json=true&t=' + Date.now(), {
+        const res = await fetch('https://dosage-roger-stopping-publishers.trycloudflare.com/api/status?json=true&t=' + Date.now(), {
             headers: { 'Accept': 'application/json' }
         });
         const data = await res.json();
