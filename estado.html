@@ -571,7 +571,7 @@ async function update() {
                 discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
             });
 
-        const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + Date.now(), {
+        const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
             headers: { 'Accept': 'application/json' }
         });
 
