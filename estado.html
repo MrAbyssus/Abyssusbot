@@ -571,10 +571,9 @@ async function update() {
                 discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
             });
 
-        // 🔥 CORRECCIÓN AQUÍ: Quitamos el "/api" y agregamos la cabecera JSON inteligente requerida por el backend unificado
-const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + Date.now(), {
-    headers: { 'Accept': 'application/json' }
-});
+        const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + Date.now(), {
+            headers: { 'Accept': 'application/json' }
+        });
 
         const data = await res.json();
         const currentPing = Date.now() - start;
@@ -602,6 +601,9 @@ const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + D
         let rawClusters = data.clusters || [];
         rawClusters.sort((a, b) => a.id - b.id);
 
+        // 🔥 CORRECCIÓN 1: Mapear los comandos globales netos usando la variable correcta del backend
+        const totalCommands = data.global?.commands || 0;
+
         const clusters = rawClusters.map((c, index) => {
             const clusterId = index + 1;
             const numGuilds = c.guilds || c.servers || 0;
@@ -614,18 +616,20 @@ const res = await fetch('https://51.77.211.104:3031/api/status?json=true&t=' + D
                 cpu: c.cpu,
                 ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
                 guilds: numGuilds,
-                commands: c.commandsExecuted || 0
+                // 🔥 CORRECCIÓN 2: Como dividimos en el proxy para el global, asignamos el total global para que se pinte en los tooltips
+                commands: totalCommands 
             };
         });
 
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
-        const totalCommands = data.global?.totalCommandsExecuted || 0;
         const clustersOnline = clusters.filter(c => c.status === 'online').length;
 
         updateTrends(totalRam, totalGuilds);
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
+        
+        // 🔥 CORRECCIÓN 3: Pintar el conteo real en el recuadro global de la interfaz
         document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString();
 
         let servidoresPerdidosTotales = 0;
@@ -763,6 +767,6 @@ document.addEventListener('DOMContentLoaded', () => {
         timerText.innerText = Math.ceil(timeLeft);
     }, 100);
 });
-</script>    
+</script>  
 </body>
 </html>
