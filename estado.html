@@ -572,7 +572,7 @@ async function update() {
                 discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
             });
 
-        const res = await fetch('https://survivors-outlet-boolean-aquarium.trycloudflare.com/api/status?t=' + Date.now());
+        const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/api/status?t=' + Date.now());
         const data = await res.json();
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
