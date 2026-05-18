@@ -398,13 +398,14 @@ body{
     .cluster-container { grid-template-columns: 1fr !important; }
 }
 </style>
+
 </head>
 
 <body>
 
 <nav class="nav">
 
-<div id="panel-alerta" class="alerta-caida" style="border-color: rgba(56, 189, 248, 0.3); background: rgba(17, 18, 23, 0.6); position: relative; padding: 12px 40px 12px 45px; margin-bottom: 20px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); overflow: hidden; display: flex; align-items: center; backdrop-filter: blur(4px);">
+ <div id="panel-alerta" class="alerta-caida" style="border-color: rgba(56, 189, 248, 0.3); background: rgba(17, 18, 23, 0.6); position: relative; padding: 12px 40px 12px 45px; margin-bottom: 20px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); overflow: hidden; display: flex; align-items: center; backdrop-filter: blur(4px);">
     
     <span class="alerta-icono" style="position: absolute; left: 15px; color: #38bdf8; font-size: 1.1rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); z-index: 2; animation: alert-pulse 1.5s infinite alternate;">📡</span>
     
@@ -430,8 +431,8 @@ body{
             100% { opacity: 1; transform: scale(1.05); }
         }
     </style>
-</div>
-    
+</div>    
+
   <div class="nav-container">
     <div class="logo">
       <img src="img/logo.jpg" alt="Abyssus Logo">
@@ -565,18 +566,12 @@ body{
         }).join('');
     }
 
-   async function actualizarDashboard() {
+    async function actualizarDashboard() {
         const countSrv = document.getElementById('count-servidores');
         const estadoGlobal = document.getElementById('sistema-estado-global');
 
         try {
-            // 🔄 CORREGIDO: Ahora apunta a /api/status para obtener el JSON de PM2 real
-            const res = await fetch('https://mkkip-2001-41d0-404-200--56c4.run.pinggy-free.link/api/status', {
-                method: 'GET',
-                headers: {
-                    'X-Pinggy-No-Screen': 'true' 
-                }
-            });
+            const res = await fetch('https://tin-niagara-schemes-fact.trycloudflare.com/api/status?t=' + Date.now());
             const data = await res.json();
 
             if (data.global && countSrv) {
