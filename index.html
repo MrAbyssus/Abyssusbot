@@ -215,6 +215,7 @@ body{
 .stat-box .etiqueta { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* --- BLOQUE 2: MONITOR DE CLUSTERS (VERTICAL SIN DESLIZAR) --- */
+/* --- BLOQUE 2: MONITOR DE CLUSTERS (RESTRUCTURADO EN 3x3) --- */
 #dashboard-monitor {
     color: #dbdee1;
     font-family: 'Inter', sans-serif;
@@ -226,16 +227,19 @@ body{
     max-width: 1100px;
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
+
+/* Forzamos cuadrícula exacta de 3 columnas en pantallas grandes */
 .cluster-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     padding: 10px 5px;
 }
+
 .cluster-card {
     background: rgba(255, 255, 255, 0.03); 
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 16px;
+    padding: 18px;
     border-radius: 12px;
     text-align: left;
     backdrop-filter: blur(6px);
@@ -254,7 +258,7 @@ body{
     animation: pulse-green 2s infinite;
 }
 @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
+    
 /* FEATURES */
 .features{ padding:60px 20px; text-align:center; }
 .features h2{ font-size:1.8rem; margin-bottom:40px; }
