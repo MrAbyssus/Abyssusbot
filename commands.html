@@ -6,14 +6,16 @@
     <title>Abyssus Bot - Comandos</title>
     <link rel="icon" href="img/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #38bdf8;
             --accent-glow: rgba(56, 189, 248, 0.15);
-            --bg-card: rgba(30, 41, 59, 0.5);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-muted: #94a3b8;
+            --bg-card: rgba(9, 15, 29, 0.6);
+            --border: rgba(255, 255, 255, 0.06);
+            --text-muted: #475569;
+            --text-secondary: #94a3b8;
+            --discord: #5865F2;
         }
 
         /* Scrollbar personalizado */
@@ -28,10 +30,12 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #020617;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 40%);
             color: #f8fafc;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
             line-height: 1.6;
         }
@@ -40,102 +44,184 @@
         nav {
             position: fixed; top: 0; width: 100%; 
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            background: rgba(2, 6, 23, 0.8); 
+            background: rgba(2, 6, 23, 0.75); 
             border-bottom: 1px solid var(--border);
-            z-index: 1000; padding: 15px 0;
+            z-index: 1000; padding: 18px 0;
         }
         .nav-container {
             width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 20px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        nav h1 { font-weight: 800; color: var(--accent); font-size: 1.4rem; letter-spacing: -0.5px; }
-        nav .links a { color: var(--text-muted); text-decoration: none; margin-left: 20px; transition: .3s; font-size: 0.85rem; font-weight: 600; }
-        nav .links a:hover { color: var(--accent); }
+        nav h1 { font-weight: 800; font-size: 1.3rem; text-decoration: none; color: inherit; letter-spacing: 0.5px; }
+        nav h1 span { background: linear-gradient(90deg, #38bdf8, #6366f1); -webkit-background-clip: text; color: transparent; }
+        nav .links a { color: var(--text-secondary); text-decoration: none; margin-left: 24px; transition: .3s ease; font-size: 0.85rem; font-weight: 600; }
+        nav .links a:hover { color: #fff; }
 
-        /* ===== HEADER ===== */
-        .header { text-align: center; padding-top: 140px; margin-bottom: 40px; padding-inline: 20px; }
-        .header h1 { font-size: clamp(2.2rem, 8vw, 3rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 15px; }
-        .header span { background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
-        .header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-
-        /* ===== CONTROLES ===== */
-        .controls { max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
-        .search-box { width: 100%; max-width: 600px; margin: 0 auto 25px; position: relative; }
-        .search-box input {
-            width: 100%; padding: 16px 20px; border: 1px solid var(--border); border-radius: 16px;
-            background: rgba(15, 23, 42, 0.6); color: #fff; outline: none; transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* ===== HEADER FUTURISTA ===== */
+        .header { 
+            text-align: center; 
+            padding-top: 160px; 
+            padding-bottom: 20px;
+            position: relative;
         }
-        .search-box input:focus { border-color: var(--accent); background: rgba(15, 23, 42, 0.8); box-shadow: 0 0 0 4px var(--accent-glow); }
+        /* Grid de fondo decorativo para el Header */
+        .header::before {
+            content: ''; position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+            width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        .sys-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--accent); background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.2); padding: 4px 12px; border-radius: 20px;
+            display: inline-block; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .header h1 { font-size: clamp(2.4rem, 7vw, 3.2rem); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px; }
+        .header span { background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; }
+        .header .highlight { background: linear-gradient(135deg, #38bdf8, #6366f1); -webkit-background-clip: text; color: transparent; }
+        .header p { color: var(--text-secondary); font-size: 1.05rem; max-width: 550px; margin: 0 auto; }
 
+        /* ===== DECK DE CONSOLA CENTRAL ===== */
+        .console-deck {
+            max-width: 1100px; width: calc(100% - 40px); margin: 30px auto 40px; 
+            padding: 30px; background: rgba(9, 15, 29, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 24px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.02), 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        /* Detalle estético de esquina de terminal */
+        .console-deck::overflow-line {
+            content: ''; position: absolute; top: 0; left: 30px; width: 40px; height: 2px; background: var(--accent);
+        }
+
+        .search-box { width: 100%; max-width: 700px; margin: 0 auto 28px; position: relative; }
+        .search-box ::placeholder { color: #334155; }
+        .search-box input {
+            width: 100%; padding: 16px 20px 16px 52px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
+            background: #040814; color: #fff; outline: none; transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .search-box input:focus { border-color: rgba(56, 189, 248, 0.4); background: #060c1e; box-shadow: 0 0 25px rgba(56, 189, 248, 0.08), inset 0 2px 4px rgba(0,0,0,0.4); }
+        .search-box .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #334155; transition: .3s; }
+        .search-box input:focus + .search-icon { color: var(--accent); }
+
+        /* Categorías Cyberpunk Tech */
         .categories { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .category {
-            padding: 8px 18px; border-radius: 12px; background: var(--bg-card);
-            color: var(--text-muted); cursor: pointer; transition: .2s; font-size: 0.8rem; 
-            font-weight: 600; border: 1px solid var(--border);
+            padding: 10px 18px; 
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-secondary); cursor: pointer; transition: all .25s ease; 
+            font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative; text-transform: uppercase; letter-spacing: 0.5px;
+            clip-path: polygon(6px 0%, 100% 0%, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0% 100%, 0% 6px);
         }
-        .category:hover { border-color: var(--accent); color: #fff; }
-        .category.active { background: var(--accent); color: #020617; border-color: var(--accent); }
+        .category:hover { 
+            color: #fff; background: rgba(30, 41, 59, 0.6); border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        .category.active { 
+            background: linear-gradient(135deg, #0ea5e9, #4f46e5); color: #fff; 
+            border-color: transparent; 
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
 
-        /* ===== GRID & CARDS ===== */
+        /* ===== GRID & CARDS TÁCTICAS ===== */
         .commands-grid {
-            max-width: 1100px; margin: auto; display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px; padding: 20px;
+            max-width: 1100px; width: 100%; margin: 0 auto; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 20px; padding: 0 20px 40px;
         }
 
         .command-card {
-            background: var(--bg-card); border-radius: 20px; padding: 24px;
+            background: var(--bg-card); border-radius: 16px; padding: 24px;
             border: 1px solid var(--border); transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column; justify-content: space-between;
-            position: relative; overflow: hidden;
-            animation: fadeIn 0.5s ease backwards;
+            position: relative; overflow: hidden; cursor: pointer;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.4s ease backwards;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         .command-card:hover {
-            transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.4);
-            background: rgba(30, 41, 59, 0.7);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 15px var(--accent-glow);
+            transform: translateY(-4px); border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(15, 23, 42, 0.6);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.05);
         }
         
+        .cmd-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .cmd-name { 
             font-family: 'JetBrains Mono', monospace; font-weight: 600; 
-            color: var(--accent); font-size: 1.1rem; margin-bottom: 12px;
+            color: #fff; font-size: 1.05rem;
             display: flex; align-items: center; gap: 8px;
         }
-        .cmd-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.5; }
+        .command-card:hover .cmd-name { color: var(--accent); }
+        
+        .cmd-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 24px; line-height: 1.5; min-height: 45px; }
         
         .card-footer {
             display: flex; justify-content: space-between; align-items: center;
-            padding-top: 15px; border-top: 1px solid var(--border);
+            padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
+        
+        /* Badges de Categoría */
         .cmd-tag { 
-            font-size: 0.65rem; color: var(--accent); background: var(--accent-glow);
-            padding: 4px 10px; border-radius: 8px; text-transform: uppercase; 
-            font-weight: 800; letter-spacing: 0.5px;
+            font-size: 0.65rem; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; 
+            font-weight: 800; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace;
         }
-        .copy-hint { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+        .tag-vip { background: rgba(14, 165, 233, 0.1); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.2); }
+        .tag-moderacion { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .tag-economia { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .tag-diversion { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.2); }
+        .tag-interaccion { background: rgba(236, 72, 153, 0.1); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.2); }
+        .tag-configuracion { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .tag-utilidad { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.2); }
+        .tag-nsfw { background: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid rgba(220, 38, 38, 0.3); }
 
-        /* Notificación de copiado */
+        .copy-btn-icon { color: rgba(255,255,255,0.2); transition: .2s; }
+        .command-card:hover .copy-btn-icon { color: var(--accent); opacity: 1; transform: scale(1.05); }
+
+        /* ===== NOTIFICACIÓN TOAST ===== */
         #copy-toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: #020617; padding: 12px 24px;
-            border-radius: 12px; font-weight: 700; font-size: 0.9rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
-            display: none; z-index: 2000; animation: slideUp 0.3s ease;
+            background: #0ea5e9; color: #fff; padding: 12px 26px;
+            border-radius: 10px; font-weight: 700; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 12px 30px rgba(14, 165, 233, 0.3);
+            display: none; z-index: 2000; letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        @keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
 
-        footer { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 0.85rem; }
+        /* ===== MAIN FOOTER UNIFICADO ===== */
+        .main-footer {
+            width: 100%; margin-top: auto; padding: 40px 20px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(9, 15, 29, 0.85);
+            backdrop-filter: blur(12px); text-align: center;
+        }
+        .footer-divider {
+            border: 0; height: 1px; background: linear-gradient(to right, transparent, rgba(56, 189, 248, 0.2), transparent); margin: 0 auto 25px; width: 60%;
+        }
+        .footer-copyright { margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: var(--text-secondary); }
+        .footer-links { font-size: 0.8rem; margin-bottom: 25px; }
+        .footer-links a { color: #64748b; text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--text-secondary); }
+        .footer-links .separator { margin: 0 10px; color: #334155; }
+        .footer-support { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary); flex-wrap: wrap; }
+        
+        .btn-discord {
+            display: flex; align-items: center; gap: 8px; color: #fff; background: var(--discord); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+        }
+        .btn-discord:hover { background: #4752C4; box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4); transform: translateY(-1px); }
 
         /* Ajustes Móvil */
         @media (max-width: 768px) {
-            .nav-container { flex-direction: column; gap: 10px; }
-            .nav .links a { margin: 0 8px; font-size: 0.75rem; }
-            .header { padding-top: 160px; }
-            .categories { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 10px; scrollbar-width: none; }
+            .nav-container { flex-direction: column; gap: 12px; }
+            nav .links a { margin: 0 10px; font-size: 0.8rem; }
+            .header { padding-top: 180px; }
+            .console-deck { padding: 15px; width: calc(100% - 30px); margin-bottom: 25px; border-radius: 16px; }
+            .categories { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 5px 5px 12px; margin-left: -5px; margin-right: -5px; scrollbar-width: none; }
             .categories::-webkit-scrollbar { display: none; }
+            .category { white-space: nowrap; }
             .commands-grid { grid-template-columns: 1fr; padding: 15px; }
         }
     </style>
@@ -144,10 +230,12 @@
 
 <nav>
     <div class="nav-container">
-        <h1>ABYSSUS</h1>
+        <a href="index.html" style="text-decoration: none; color: inherit;">
+            <h1><span>ABYSSUS</span></h1>
+        </a>
         <div class="links">
             <a href="index.html">Inicio</a>
-            <a href="commands.html" style="color: var(--accent);">Comandos</a>
+            <a href="commands.html" style="color: var(--accent); font-weight: 800;">Comandos</a>
             <a href="staffteam.html">Staff</a>
             <a href="network.html">Network</a>
             <a href="estado.html">Estado de Red</a>
@@ -156,38 +244,37 @@
 </nav>
 
 <div class="header">
-    <h1>📜 <span>Comandos</span> del Sistema</h1>
-    <p>Gestiona tu comunidad con herramientas de última generación diseñadas para el rendimiento.</p>
+    <div class="sys-badge">CORE: SYSTEM_COMMANDS</div>
+    <h1><span>Módulos de</span> <span class="highlight">Ejecución</span></h1>
+    <p>Indexación completa de funciones integradas para la gestión, economía y entretenimiento de tu servidor.</p>
 </div>
 
 <div class="controls">
-    <div class="search-box">
-        <input type="text" id="search" placeholder="Buscar función o comando...">
-    </div>
-    <div class="categories" id="cat-list">
-        <div class="category active" data-cat="all" onclick="filter('all', this)">Todos</div>
-        <div class="category" data-cat="vip" onclick="filter('vip', this)">💎 Premium</div>
-        <div class="category" data-cat="moderacion" onclick="filter('moderacion', this)">Moderación</div>
-        <div class="category" data-cat="economia" onclick="filter('economia', this)">Economía</div>
-        <div class="category" data-cat="diversion" onclick="filter('diversion', this)">Diversión</div>
-        <div class="category" data-cat="interaccion" onclick="filter('interaccion', this)">Social</div>
-        <div class="category" data-cat="configuracion" onclick="filter('configuracion', this)">Ajustes</div>
-        <div class="category" data-cat="utilidad" onclick="filter('utilidad', this)">Utilidad</div>
-        <div class="category" data-cat="nsfw" onclick="filter('nsfw', this)">NSFW</div>
+    <div class="console-deck">
+        <div class="search-box">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search" placeholder="Escribe un comando o palabra clave para filtrar...">
+        </div>
+        <div class="categories" id="cat-list">
+            <div class="category active" data-cat="all" onclick="filter('all', this)">Todos</div>
+            <div class="category" data-cat="vip" onclick="filter('vip', this)">💎 Premium</div>
+            <div class="category" data-cat="moderacion" onclick="filter('moderacion', this)">Moderación</div>
+            <div class="category" data-cat="economia" onclick="filter('economia', this)">Economía</div>
+            <div class="category" data-cat="diversion" onclick="filter('diversion', this)">Diversión</div>
+            <div class="category" data-cat="interaccion" onclick="filter('interaccion', this)">Social</div>
+            <div class="category" data-cat="configuracion" onclick="filter('configuracion', this)">Ajustes</div>
+            <div class="category" data-cat="utilidad" onclick="filter('utilidad', this)">Utilidad</div>
+            <div class="category" data-cat="nsfw" onclick="filter('nsfw', this)">NSFW</div>
+        </div>
     </div>
 </div>
 
 <div class="commands-grid" id="commands-container"></div>
 
-<div id="copy-toast">¡Comando copiado al portapapeles!</div>
-
-<footer>
-    &copy; 2026 Abyssus Bot — Potenciando comunidades de Discord
-</footer>
+<div id="copy-toast">> SYSTEM: COMANDO COPIADO EXI_</div>
 
 <script>
    const comandos = [
-        // Mantengo todos tus datos exactamente igual
         { n: "/vip boost", d: "🚀 Potencia tu reputación durante 1 hora (Exclusivo Donadores)", c: "vip" },
         { n: "/vip ghostkick", d: "👻 Expulsión invisible sin dejar rastro en el historial", c: "vip" },
         { n: "/vip lockdown", d: "🔒 Bloqueo de máxima seguridad para canales críticos", c: "vip" },
@@ -325,20 +412,31 @@
         filtrados.forEach((cmd, index) => {
             const card = document.createElement('div');
             card.className = 'command-card';
-            card.style.animationDelay = `${index * 0.03}s`; // Efecto cascada
+            card.style.animationDelay = `${index * 0.012}s`;
             card.onclick = () => copyToClipboard(cmd.n);
             
+            let catDisplay = cmd.c;
+            if(cmd.c === 'vip') catDisplay = 'Premium';
+            if(cmd.c === 'moderacion') catDisplay = 'Moderación';
+            if(cmd.c === 'economia') catDisplay = 'Economía';
+            if(cmd.c === 'diversion') catDisplay = 'Diversión';
+            if(cmd.c === 'interaccion') catDisplay = 'Social';
+            if(cmd.c === 'configuracion') catDisplay = 'Ajustes';
+            if(cmd.c === 'utilidad') catDisplay = 'Utilidad';
+
             card.innerHTML = `
                 <div>
-                    <div class="cmd-name">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                        ${cmd.n}
+                    <div class="cmd-meta">
+                        <div class="cmd-name">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                            ${cmd.n}
+                        </div>
                     </div>
                     <div class="cmd-desc">${cmd.d}</div>
                 </div>
                 <div class="card-footer">
-                    <span class="cmd-tag">${cmd.c}</span>
-                    <span class="copy-hint">Click para copiar</span>
+                    <span class="cmd-tag tag-${cmd.c}">${catDisplay}</span>
+                    <svg class="copy-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                 </div>
             `;
             container.appendChild(card);
@@ -349,7 +447,7 @@
         navigator.clipboard.writeText(text);
         const toast = document.getElementById('copy-toast');
         toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        setTimeout(() => { toast.style.display = 'none'; }, 1500);
     }
 
     function filter(cat, el) {
@@ -366,28 +464,24 @@
 
     render();
 </script>
-    
-<footer style="text-align: center; padding: 40px 20px 30px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(17, 18, 23, 0.75); backdrop-filter: blur(8px);">
 
-    <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #2f3136, transparent); margin-bottom: 20px; width: 60%;">
+<footer class="main-footer">
+    <hr class="footer-divider">
 
-    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: #94a3b8;">
-        © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
+    <p class="footer-copyright">
+        © 2026 <span style="color: var(--accent);">Abyssus Bot</span> — No afiliado con Discord
     </p>
 
-    <div style="font-size: 0.8rem; margin-bottom: 20px;">
-        <a href="terminos.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a>
-        <span style="margin: 0 10px; color: #334155;">|</span>
-        <a href="privacidad.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Política de Privacidad</a>
+    <div class="footer-links">
+        <a href="terminos.html">Términos y Condiciones</a>
+        <span class="separator">|</span>
+        <a href="privacidad.html">Política de Privacidad</a>
     </div>
 
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap;">
+    <div class="footer-support">
         <span>¿Necesitas ayuda?</span>
-        <a href="https://discord.gg/qegCgXX99z" 
-           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);"
-           onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" 
-           onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
+        <a href="https://discord.gg/qegCgXX99z" class="btn-discord">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);" alt="Discord Icon">
             Servidor de Soporte
         </a>
     </div>
