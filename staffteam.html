@@ -17,6 +17,7 @@
             --discord: #5865F2;
             --card-bg: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.1);
+            --text-secondary: #94a3b8;
         }
 
         body{
@@ -99,16 +100,88 @@
             margin-bottom: 20px;
             font-weight: 700;
             color: #38bdf8;
-            border-radius: 8px; /* Para los badges con fondo */
+            border-radius: 8px;
         }
 
         .staff-bio { color: #949ba4; font-size: 0.95rem; line-height: 1.6; }
 
-        footer { margin-top: auto; padding: 40px; color: #444; font-size: 0.8rem; text-align: center; }
+        /* ===== FOOTER REFACTORIZADO TERMINAL SYSTEM ===== */
+        .main-footer {
+            width: 100%;
+            margin-top: auto;
+            padding: 40px 20px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(9, 15, 29, 0.85);
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }
 
-        /* ============================================= */
-        /* AJUSTES PARA CELULAR (SIN ROMPER NADA)        */
-        /* ============================================= */
+        .footer-divider {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(56, 189, 248, 0.2), transparent);
+            margin: 0 auto 25px;
+            width: 60%;
+        }
+
+        .footer-copyright {
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-secondary);
+        }
+
+        .footer-links .separator {
+            margin: 0 10px;
+            color: #334155;
+        }
+
+        .footer-support {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .btn-discord {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            background: var(--discord);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+        }
+
+        .btn-discord:hover {
+            background: #4752C4;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* ===== AJUSTES PARA CELULAR ===== */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -129,12 +202,16 @@
             body { padding-top: 140px; }
 
             .staff-grid {
-                grid-template-columns: 1fr; /* Una sola columna en móvil */
+                grid-template-columns: 1fr;
                 width: 95%;
             }
 
             .staff-card {
                 padding: 30px 20px;
+            }
+
+            .footer-divider {
+                width: 80%;
             }
         }
     </style>
@@ -200,35 +277,31 @@
             <h2 class="staff-name" style="color: rgba(255,255,255,0.3);">Espacio Disponible</h2>
             <div class="discord-tag" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2);">@username</div>
             <span class="staff-role" style="border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); background: transparent;">Hiring...</span>
-            <p class="staff-bio" style="font-style: italic; color: #444;">¿Tienes lo que se necesita para formar parte del equipo de Abyssus? Mantente atento a nuestras convocatorias de Staff.</p>
+            <p class="staff-bio" style="font-style: italic; color: #64748b;">¿Tienes lo que se necesita para formar parte del equipo de Abyssus? Mantente atento a nuestras convocatorias de Staff.</p>
         </div>
     </main>
 
-<footer style="text-align: center; padding: 40px 20px 30px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(17, 18, 23, 0.75); backdrop-filter: blur(8px);">
+    <footer class="main-footer">
+        <hr class="footer-divider">
 
-    <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #2f3136, transparent); margin-bottom: 20px; width: 60%;">
+        <p class="footer-copyright">
+            © 2026 <span style="color: var(--accent);">Abyssus Bot</span> — No afiliado con Discord
+        </p>
 
-    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: #94a3b8;">
-        © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
-    </p>
+        <div class="footer-links">
+            <a href="terminos.html">Términos y Condiciones</a>
+            <span class="separator">|</span>
+            <a href="privacidad.html">Política de Privacidad</a>
+        </div>
 
-    <div style="font-size: 0.8rem; margin-bottom: 20px;">
-        <a href="terminos.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a>
-        <span style="margin: 0 10px; color: #334155;">|</span>
-        <a href="privacidad.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Política de Privacidad</a>
-    </div>
-
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap;">
-        <span>¿Necesitas ayuda?</span>
-        <a href="https://discord.gg/qegCgXX99z" 
-           style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);"
-           onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" 
-           onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
-            Servidor de Soporte
-        </a>
-    </div>
-</footer>
+        <div class="footer-support">
+            <span>¿Necesitas ayuda?</span>
+            <a href="https://discord.gg/qegCgXX99z" class="btn-discord">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);" alt="Discord Icon">
+                Servidor de Soporte
+            </a>
+        </div>
+    </footer>
 
 </body>
 </html>
