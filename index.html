@@ -214,7 +214,6 @@ body{
 .stat-box .valor { font-weight: 800; font-size: 1.3rem; color: #fff; }
 .stat-box .etiqueta { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* --- BLOQUE 2: MONITOR DE CLUSTERS (VERTICAL SIN DESLIZAR) --- */
 /* --- BLOQUE 2: MONITOR DE CLUSTERS (RESTRUCTURADO EN 3x3) --- */
 #dashboard-monitor {
     color: #dbdee1;
@@ -258,7 +257,7 @@ body{
     animation: pulse-green 2s infinite;
 }
 @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    
+
 /* FEATURES */
 .features{ padding:60px 20px; text-align:center; }
 .features h2{ font-size:1.8rem; margin-bottom:40px; }
@@ -376,6 +375,14 @@ body{
 /* ====================================================
    📱 RESPONSIVE CONTROLADO (EVITA MOVIMIENTOS HORIZONTALES)
 ====================================================== */
+@media (max-width: 900px) {
+    /* En pantallas medianas/tablets baja a 2 columnas distribuidas simétricamente (3 filas de 2) */
+    .cluster-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
 @media (max-width: 768px) {
     body { padding-top: 190px !important; }
     .alerta-caida { font-size: 11px; padding: 8px 12px; }
@@ -385,11 +392,6 @@ body{
     .nav-links a { margin: 0 6px; font-size: 13px; }
     .discord-btn { width: 100%; justify-content: center; padding: 8px; }
     
-    /* Grid vertical exacto de 2 columnas en celulares modernos */
-    .cluster-container {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-    }
     .cluster-card { padding: 12px !important; }
     .cluster-card h3 { font-size: 0.85rem; }
     .stat-row { font-size: 0.75rem; margin: 6px 0; }
@@ -397,9 +399,12 @@ body{
     .price-card.featured { transform: none !important; }
 }
 
-@media (max-width: 480px) {
-    /* Celulares extremadamente pequeños bajan a 1 columna para mantener legibilidad */
-    .cluster-container { grid-template-columns: 1fr !important; }
+@media (max-width: 520px) {
+    /* En teléfonos móviles se apilan en 1 sola columna vertical para mantener el texto legible */
+    .cluster-container { 
+        grid-template-columns: 1fr !important; 
+        gap: 14px;
+    }
 }
 </style>
 
@@ -414,7 +419,7 @@ body{
     <span class="alerta-icono" style="position: absolute; left: 15px; color: #38bdf8; font-size: 1.1rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); z-index: 2; animation: alert-pulse 1.5s infinite alternate;">📡</span>
     
     <div style="width: 100%; overflow: hidden; white-space: nowrap; position: relative;">
-        <p class="alerta-texto" style="margin: 0; display: inline-block; padding-left: 100%; animation: marquee-cyber 40s linear infinite; font-size: 0.9rem; letter-spacing: 0.5px; color: #e2e8f0; font-weight: 500;">
+        <p class="alerta-texto" style="margin: 0; display: inline-block; padding-left: 100%; animation: marquee-cyber 28s linear infinite; font-size: 0.9rem; letter-spacing: 0.5px; color: #e2e8f0; font-weight: 500;">
             <span style="color: #ffd700; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);">👑 ABYSSUS PREMIUM:</span> Desbloquea el verdadero poder del bot. Obtén acceso inmediato a comandos exclusivos, sistemas avanzados de economía, personalización sin límites y prioridad de soporte. 
             
             <span style="margin: 0 40px; color: #2f3136;">• ————— •</span>
@@ -482,8 +487,8 @@ body{
             <span class="etiqueta">Servidores</span>
         </div>
         <div class="stat-box">
-            <span class="valor">24/7</span>
-            <span class="etiqueta">Online</span>
+            <span class="valor" id="count-comandos">--</span> <!-- ID Vinculado correctamente con la API -->
+            <span class="etiqueta">Comandos Ejecutados</span>
         </div>
     </div>
 </div>
@@ -575,10 +580,9 @@ body{
         const countCmds = document.getElementById('count-comandos'); 
 
         try {
-            // CORRECCIÓN PARA EL PUERTO 3030: Apuntamos exactamente a /status
-           const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
-    headers: { 'Accept': 'application/json' }
-});
+            const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
+                headers: { 'Accept': 'application/json' }
+            });
             const data = await res.json();
 
             if (data.global && countSrv) {
@@ -693,13 +697,14 @@ body{
             <h3>Versión Base</h3>
             <div class="price">Gratis</div>
             <ul class="price-list">
-                <li>+200 Comandos</li>
+                <li>Sistemas de economía base</li>
                 <li>Moderación estándar</li>
                 <li>Dashboard Web (✅ Monitor)</li>
                 <li>Acceso a Comandos Públicos</li>
                 <li>Límite: 3 usos en IA y Seguridad</li>
             </ul>
-            <a href="#" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">Añadir Bot</a>
+            <!-- Invitación directa vinculada con el ID del bot -->
+            <a href="https://discord.com/oauth2/authorize?client_id=680897280433324081&scope=bot%20applications.commands&permissions=8" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">Añadir Bot</a>
         </div>
 
         <div class="price-card featured" style="padding: 30px 20px;">
