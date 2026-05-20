@@ -1,346 +1,838 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="utf-8">
-    <title>Abyssus Bot - Aviso de Privacidad</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
 
-    <meta name="description" content="Aviso de privacidad de Abyssus Bot. Información sobre el manejo de datos dentro de Discord.">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<head>
+
+    <meta charset="utf-8">
+
+    <title>
+        Abyssus Bot - Aviso de Privacidad
+    </title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Aviso de privacidad de Abyssus Bot."
+    >
+
+    <link
+        rel="icon"
+        href="img/favicon.ico"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="img/favicon-web.png"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
     <style>
-        :root {
-            --bg: #05070a;
-            --card: rgba(22, 27, 34, 0.7);
-            --accent: #58a6ff;
-            --accent-glow: rgba(88, 166, 255, 0.2);
-            --text: #e6edf3;
-            --text-dim: #8b949e;
-            --border: rgba(255, 255, 255, 0.08);
+
+        :root{
+
+            --bg:#05070a;
+
+            --card:rgba(22,27,34,.78);
+
+            --accent:#58a6ff;
+
+            --accent-glow:rgba(88,166,255,.15);
+
+            --text:#e6edf3;
+
+            --text-dim:#9aa4af;
+
+            --border:rgba(255,255,255,.08);
+
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        *{
+
+            margin:0;
+            padding:0;
+
+            box-sizing:border-box;
+
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% -20%, #161b22, transparent),
-                radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
-            color: var(--text);
-            line-height: 1.8; /* Más espacio entre líneas de texto */
-            overflow-x: hidden;
+        html{
+
+            scroll-behavior:smooth;
+
         }
 
-        nav {
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 15px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            border-bottom: 1px solid var(--border);
+        body{
+
+            font-family:'Plus Jakarta Sans',sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(88,166,255,.08),
+                    transparent 40%
+                ),
+
+                radial-gradient(
+                    circle at bottom left,
+                    rgba(88,166,255,.05),
+                    transparent 30%
+                ),
+
+                #05070a;
+
+            color:var(--text);
+
+            line-height:1.9;
+
+            overflow-x:hidden;
+
         }
 
-        nav a {
-            margin: 0 10px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-            padding: 5px 10px;
+        /* NAV */
+
+        nav{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:999;
+
+            padding:18px 20px;
+
+            text-align:center;
+
+            background:rgba(5,7,10,.8);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:1px solid var(--border);
+
         }
 
-        nav a:hover { color: var(--accent); }
+        nav a{
 
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(180deg, rgba(31, 111, 235, 0.15) 0%, transparent 100%);
+            color:var(--text-dim);
+
+            text-decoration:none;
+
+            margin:0 14px;
+
+            font-size:.85rem;
+
+            font-weight:700;
+
+            text-transform:uppercase;
+
+            letter-spacing:1px;
+
+            transition:.25s;
+
         }
 
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 8vw, 3.2rem);
-            background: linear-gradient(to bottom, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
+        nav a:hover{
+
+            color:var(--accent);
+
         }
 
-        header p { color: var(--text-dim); font-weight: 500; font-size: 0.95rem; }
+        /* HEADER */
 
-        main {
-            max-width: 900px;
-            margin: auto;
-            padding: 10px 15px 80px 15px;
+        header{
+
+            text-align:center;
+
+            padding:90px 20px 70px;
+
         }
 
-        .card {
-            background: var(--card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        header h1{
+
+            font-family:'Playfair Display',serif;
+
+            font-size:clamp(2.3rem,6vw,4rem);
+
+            background:linear-gradient(
+                to bottom,
+                #ffffff,
+                #8ec5ff
+            );
+
+            -webkit-background-clip:text;
+
+            -webkit-text-fill-color:transparent;
+
+            margin-bottom:20px;
+
         }
 
-        @media (min-width: 768px) {
-            header { padding: 90px 20px; }
-            main { padding: 20px 20px 100px 20px; }
-            .card { padding: 35px; border-radius: 24px; transform: translateY(30px); }
-            nav a { margin: 0 20px; font-size: 0.9rem; }
+        header p{
+
+            color:var(--text-dim);
+
+            font-size:1rem;
+
+            max-width:700px;
+
+            margin:auto;
+
         }
 
-        .card.visible { 
-            opacity: 1; 
-            transform: translateY(0); 
+        /* MAIN */
+
+        main{
+
+            width:min(100%,950px);
+
+            margin:auto;
+
+            padding:
+                10px
+                20px
+                100px;
+
         }
 
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 30px var(--accent-glow);
-            transform: translateY(-5px);
+        /* CARDS */
+
+        .card{
+
+            background:var(--card);
+
+            backdrop-filter:blur(18px);
+
+            border:1px solid var(--border);
+
+            border-radius:28px;
+
+            padding:38px;
+
+            margin-bottom:34px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,.35);
+
+            opacity:0;
+
+            transform:translateY(20px);
+
+            transition:
+                transform .35s ease,
+                opacity .35s ease,
+                border-color .35s ease,
+                box-shadow .35s ease;
+
         }
 
-        .card h2 {
-            color: var(--accent);
-            font-size: clamp(1.2rem, 5vw, 1.5rem);
-            font-weight: 800;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .card.visible{
+
+            opacity:1;
+
+            transform:translateY(0);
+
         }
 
-        .card p, .card li { 
-            color: #ced4da; 
-            margin-bottom: 18px; /* Espacio extra abajo de cada párrafo para que respire */
-            font-size: 0.95rem;
+        .card:hover{
+
+            border-color:rgba(88,166,255,.25);
+
+            box-shadow:
+                0 0 35px var(--accent-glow);
+
+            transform:translateY(-3px);
+
         }
 
-        ul { list-style: none; padding-left: 5px; }
-        ul li { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
-        ul li::before {
-            content: "•";
-            color: var(--accent);
-            font-weight: bold;
+        /* TITULOS */
+
+        .card h2{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+            color:var(--accent);
+
+            font-size:1.45rem;
+
+            font-weight:800;
+
+            margin-bottom:24px;
+
+            line-height:1.4;
+
         }
 
-        /* DISEÑO DE TEXTO RESALTADO TIPO TERMINAL SIN ENTRAR EN CONFLICTO */
-        .tech-badge {
-            background: rgba(0, 0, 0, 0.4) !important;
-            color: #58a6ff !important;
-            padding: 1px 6px !important;
-            margin: 0 3px !important;
-            border-radius: 6px !important;
-            font-family: 'Consolas', monospace !important;
-            font-size: 0.9em !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            display: inline-block !important;
-            line-height: 1.4 !important; /* Evita que choque con las líneas superiores e inferiores */
-            vertical-align: baseline !important;
+        /* TEXTO */
+
+        .card p{
+
+            color:#d0d7de;
+
+            margin-bottom:24px;
+
+            font-size:1rem;
+
+            line-height:1.95;
+
         }
 
-        /* DISEÑO EXCLUSIVO PARA EL COMANDO DE MODERACIÓN DE PURGA */
-        .cmd-highlight {
-            background: rgba(88, 166, 255, 0.15) !important;
-            color: #79c0ff !important;
-            border: 1px solid rgba(88, 166, 255, 0.25) !important;
-            font-weight: 600 !important;
+        /* LISTAS */
+
+        ul{
+
+            list-style:none;
+
+            padding-left:5px;
+
+            margin-top:20px;
+
         }
 
-        .contact-badge {
-            display: inline-block;
-            background: var(--accent);
-            color: #05070a;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 800;
-            text-decoration: none;
-            margin-top: 10px;
-            transition: 0.3s ease;
-            font-size: 0.9rem;
-            width: 100%;
-            text-align: center;
+        ul li{
+
+            position:relative;
+
+            padding-left:22px;
+
+            margin-bottom:18px;
+
+            color:#d0d7de;
+
+            line-height:1.9;
+
         }
 
-        @media (min-width: 480px) {
-            .contact-badge { width: auto; }
+        ul li::before{
+
+            content:"•";
+
+            position:absolute;
+
+            left:0;
+
+            top:0;
+
+            color:var(--accent);
+
+            font-size:1.2rem;
+
         }
 
-        .contact-badge:hover {
-            transform: scale(1.05);
-            background: #fff;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        /* BADGES */
+
+        .tech-badge{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            background:rgba(0,0,0,.4);
+
+            border:1px solid rgba(255,255,255,.08);
+
+            color:#79c0ff;
+
+            padding:3px 9px;
+
+            border-radius:8px;
+
+            font-family:'Consolas',monospace;
+
+            font-size:.88em;
+
+            margin:0 2px;
+
         }
 
-        #backToTop {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: #05070a;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        .cmd-highlight{
+
+            background:rgba(88,166,255,.15);
+
+            border:1px solid rgba(88,166,255,.25);
+
+            color:#8ec5ff;
+
+            font-weight:700;
+
         }
 
-        @media (min-width: 768px) {
-            #backToTop { width: 50px; height: 50px; bottom: 30px; right: 30px; border-radius: 15px; }
+        /* CONTACT BUTTON */
+
+        .contact-badge{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            margin-top:15px;
+
+            background:var(--accent);
+
+            color:#05070a;
+
+            padding:14px 28px;
+
+            border-radius:999px;
+
+            font-weight:800;
+
+            text-decoration:none;
+
+            transition:.3s;
+
+            min-width:240px;
+
         }
 
-        #backToTop.show { 
-            opacity: 1; 
-            visibility: visible; 
+        .contact-badge:hover{
+
+            transform:translateY(-2px);
+
+            background:white;
+
+            box-shadow:
+                0 0 25px rgba(255,255,255,.12);
+
         }
 
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-dim);
-            border-top: 1px solid var(--border);
-            font-size: 0.8rem;
+        /* FOOTER */
+
+        footer{
+
+            text-align:center;
+
+            padding:45px 20px;
+
+            border-top:1px solid var(--border);
+
+            color:var(--text-dim);
+
+            font-size:.85rem;
+
         }
+
+        /* TOP BUTTON */
+
+        #backToTop{
+
+            position:fixed;
+
+            bottom:25px;
+
+            right:25px;
+
+            width:52px;
+
+            height:52px;
+
+            border:none;
+
+            border-radius:16px;
+
+            background:var(--accent);
+
+            color:#05070a;
+
+            cursor:pointer;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            box-shadow:
+                0 10px 25px rgba(0,0,0,.35);
+
+            opacity:0;
+
+            visibility:hidden;
+
+            transition:.3s;
+
+            z-index:999;
+
+        }
+
+        #backToTop.show{
+
+            opacity:1;
+
+            visibility:visible;
+
+        }
+
+        #backToTop:hover{
+
+            transform:translateY(-3px);
+
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px){
+
+            header{
+
+                padding:70px 20px 50px;
+
+            }
+
+            .card{
+
+                padding:28px;
+
+                border-radius:22px;
+
+            }
+
+            .card h2{
+
+                font-size:1.2rem;
+
+            }
+
+            .card p,
+            ul li{
+
+                font-size:.95rem;
+
+                line-height:1.85;
+
+            }
+
+            nav a{
+
+                margin:0 8px;
+
+                font-size:.75rem;
+
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<nav>
-    <a href="index.html">Inicio</a>
-    <a href="commands.html">Comandos</a>
-</nav>
+    <nav>
 
-<header>
-    <h1>🔐 Privacidad y Datos</h1>
-    <p>Comprometidos con la transparencia • Versión 3.1 (Cloud Atlas)</p>
-</header>
+        <a href="index.html">
+            Inicio
+        </a>
 
-<main>
+        <a href="commands.html">
+            Comandos
+        </a>
 
-<section class="card fade-in">
-    <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <span class="tech-badge">Mr.Abyssus</span>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
-</section>
+    </nav>
 
-<section class="card fade-in">
-    <h2><i class="fa-solid fa-database"></i> Datos Recolectados y Almacenamiento</h2>
-    <p>Procesamos e indexamos la información técnica mínima necesaria para el funcionamiento del sistema de gestión. Esta información se aloja de forma persistente en nuestro clúster de **MongoDB Atlas**:</p>
-    <ul>
-        <li><strong>Identificadores de Discord:</strong> ID único del servidor (guildId) y del canal de texto asignado para las notificaciones.</li>
-        <li><strong>Configuraciones de Personalización:</strong> Parámetros estéticos del mensaje de bienvenida, que incluyen el título del embed, el cuerpo del mensaje, el texto del footer, la URL de la imagen y el color en formato hexadecimal.</li>
-    </ul>
-</section>
+    <header>
 
-<section class="card fade-in" style="border-left: 4px solid var(--accent);">
-    <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-    <p>Cuando accedes a nuestro panel de control centralizado, gestionamos credenciales efímeras mediante la API oficial de Discord a través de protocolos seguros:</p>
-    <ul>
-        <li><strong>Tokens de Acceso:</strong> Claves efímeras para validar tu identidad de administrador en el servidor. Nunca almacenamos ni solicitamos contraseñas.</li>
-        <li><strong>Sesiones Seguras:</strong> Cookies técnicas encriptadas estrictamente necesarias para sostener la sesión activa en el panel de control.</li>
-        <li><strong>Mapeo de Permisos:</strong> Lectura en tiempo real de los servidores donde posees facultades de gestión para permitirte modificar la configuración de bienvenida.</li>
-    </ul>
-</section>
+        <h1>
+            🔐 Privacidad y Datos
+        </h1>
 
-<section class="card fade-in">
-    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad e Infraestructura Cloud</h2>
-    <p>Hemos migrado el almacenamiento a un ecosistema en la nube protegido para garantizar la disponibilidad y la seguridad de los ajustes del servidor:</p>
-    <ul>
-        <li><strong>Cifrado en Tránsito:</strong> Toda comunicación entre tu navegador, el servidor Express y la base de datos de MongoDB Atlas se realiza bajo protocolos encriptados SSL/TLS de alta seguridad.</li>
-        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<span class="tech-badge">process.env</span>).</li>
-        <li><strong>Aislamiento de Configuraciones:</strong> Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</li>
-    </ul>
-</section>
+        <p>
+            Comprometidos con la transparencia •
+            Versión 3.1 (Cloud Atlas)
+        </p>
 
-<section class="card fade-in">
-    <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
-    <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos:</p>
-    <ul>
-        <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<span class="tech-badge">findOneAndUpdate</span>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
-        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <span class="tech-badge cmd-highlight">/modlogs borrar</span> directamente en tu servidor de Discord.</li>
-        <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</li>
-    </ul>
-</section>
+    </header>
 
-<section class="card fade-in">
-    <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
-    <p>Para soporte, dudas sobre el funcionamiento de la plataforma o solicitudes relacionadas con la gestión de tus datos:</p>
-    <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
-</section>
+    <main>
 
-</main>
+        <!-- RESPONSABLE -->
 
-<footer>
-    <p>© 2021–2026 Abyssus Bot System. Todos los derechos reservados.</p>
-</footer>
+        <section class="card fade-in">
 
-<button id="backToTop" title="Subir"><i class="fa-solid fa-arrow-up"></i></button>
+            <h2>
+                <i class="fa-solid fa-user-tie"></i>
+                Responsable
+            </h2>
 
-<script>
-    const btn = document.getElementById("backToTop");
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 300) {
-            btn.classList.add("show");
-        } else {
-            btn.classList.remove("show");
-        }
-    });
-    
-    btn.onclick = () => {
-        window.scrollTo({
-            top: 0, 
-            behavior: "smooth"
-        });
-    };
+            <p>
+                <strong>Abyssus Bot</strong>
+                es un servicio automatizado desarrollado por
+                <span class="tech-badge">Mr.Abyssus</span>.
+                Al integrar el bot en tu servidor,
+                el propietario y su equipo de soporte
+                actúan como responsables finales
+                del manejo y visualización
+                de las configuraciones
+                y registros dentro de su comunidad.
+            </p>
 
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
+        </section>
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
+        <!-- DATOS -->
+
+        <section class="card fade-in">
+
+            <h2>
+                <i class="fa-solid fa-database"></i>
+                Datos Recolectados y Almacenamiento
+            </h2>
+
+            <p>
+                Procesamos únicamente la información
+                técnica necesaria para el funcionamiento
+                del sistema dentro de Discord.
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>Identificadores de Discord:</strong>
+                    IDs del servidor y canales configurados.
+                </li>
+
+                <li>
+                    <strong>Configuraciones personalizadas:</strong>
+                    mensajes de bienvenida, embeds,
+                    colores e imágenes.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <!-- DASHBOARD -->
+
+        <section class="card fade-in">
+
+            <h2>
+                <i class="fa-solid fa-globe"></i>
+                Uso del Dashboard
+            </h2>
+
+            <p>
+                El panel utiliza autenticación oficial
+                mediante OAuth2 de Discord.
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>Tokens efímeros:</strong>
+                    utilizados únicamente
+                    para validar permisos.
+                </li>
+
+                <li>
+                    <strong>Sesiones seguras:</strong>
+                    cookies encriptadas
+                    necesarias para mantener
+                    la sesión activa.
+                </li>
+
+                <li>
+                    <strong>Mapeo de permisos:</strong>
+                    lectura temporal de servidores
+                    donde posees privilegios administrativos.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <!-- SEGURIDAD -->
+
+        <section class="card fade-in">
+
+            <h2>
+                <i class="fa-solid fa-shield-halved"></i>
+                Seguridad e Infraestructura
+            </h2>
+
+            <p>
+                La plataforma utiliza
+                infraestructura cloud protegida
+                para garantizar estabilidad
+                y seguridad.
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>Cifrado SSL/TLS:</strong>
+                    toda comunicación se encuentra protegida.
+                </li>
+
+                <li>
+                    <strong>Variables de entorno:</strong>
+                    credenciales protegidas mediante
+                    <span class="tech-badge">process.env</span>.
+                </li>
+
+                <li>
+                    <strong>Aislamiento de datos:</strong>
+                    cada servidor mantiene
+                    configuraciones independientes.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <!-- ELIMINACION -->
+
+        <section class="card fade-in">
+
+            <h2>
+                <i class="fa-solid fa-erasing-lines"></i>
+                Control y Eliminación
+            </h2>
+
+            <p>
+                Los administradores pueden
+                modificar o eliminar
+                configuraciones en cualquier momento.
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>Actualización dinámica:</strong>
+                    los cambios se reflejan inmediatamente.
+                </li>
+
+                <li>
+                    <strong>Purga de registros:</strong>
+                    mediante el comando
+                    <span class="tech-badge cmd-highlight">
+                        /modlogs borrar
+                    </span>
+                </li>
+
+                <li>
+                    <strong>Eliminación definitiva:</strong>
+                    limpieza manual desde el dashboard.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <!-- CONTACTO -->
+
+        <section class="card fade-in">
+
+            <h2>
+                <i class="fa-solid fa-envelope-open-text"></i>
+                Contacto
+            </h2>
+
+            <p>
+                Para soporte o solicitudes relacionadas
+                con privacidad y datos:
+            </p>
+
+            <a
+                href="mailto:soporte@abyssusbot.info"
+                class="contact-badge"
+            >
+                soporte@abyssusbot.info
+            </a>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>
+            © 2021–2026 Abyssus Bot System.
+            Todos los derechos reservados.
+        </p>
+
+    </footer>
+
+    <button
+        id="backToTop"
+        title="Subir"
+    >
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script>
+
+        const btn =
+            document.getElementById("backToTop");
+
+        window.addEventListener("scroll", () => {
+
+            if(window.scrollY > 300){
+
+                btn.classList.add("show");
+
+            } else {
+
+                btn.classList.remove("show");
+
             }
-        });
-    }, observerOptions);
 
-    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
-</script>
+        });
+
+        btn.onclick = () => {
+
+            window.scrollTo({
+
+                top:0,
+
+                behavior:"smooth"
+
+            });
+
+        };
+
+        const observer =
+            new IntersectionObserver((entries)=>{
+
+                entries.forEach(entry=>{
+
+                    if(entry.isIntersecting){
+
+                        entry.target.classList.add("visible");
+
+                    }
+
+                });
+
+            },{
+                threshold:.1
+            });
+
+        document
+            .querySelectorAll(".fade-in")
+            .forEach(el=>observer.observe(el));
+
+    </script>
 
 </body>
 </html>
-
 
 
 
