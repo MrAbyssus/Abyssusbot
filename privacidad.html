@@ -36,7 +36,7 @@
                 radial-gradient(circle at 50% -20%, #161b22, transparent),
                 radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7; /* Aumentado ligeramente para mayor legibilidad */
             overflow-x: hidden;
         }
 
@@ -133,38 +133,39 @@
 
         .card p, .card li { 
             color: #ced4da; 
-            margin-bottom: 12px; 
+            margin-bottom: 16px; /* Más espacio entre párrafos */
             font-size: 0.95rem;
         }
 
         ul { list-style: none; padding-left: 5px; }
-        ul li { display: flex; align-items: flex-start; gap: 8px; }
+        ul li { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
         ul li::before {
             content: "•";
             color: var(--accent);
             font-weight: bold;
         }
 
-        /* CONFIGURACIÓN DE TERMINAL OSCURA PARA ETIQUETAS CODE */
+        /* DISEÑO DE TERMINAL INTEGRADO Y CORREGIDO SIN AMONTONAMIENTO */
         code {
             background: rgba(0, 0, 0, 0.5) !important;
             color: #58a6ff !important;
-            padding: 3px 8px !important;
+            padding: 2px 6px !important;
+            margin: 0 2px !important;
             border-radius: 6px !important;
             font-family: 'Consolas', monospace !important;
             font-size: 0.9em !important;
             border: 1px solid rgba(255, 255, 255, 0.08) !important;
             word-break: break-all;
-            display: inline-block;
-            line-height: 1.2;
+            display: inline !important; /* Corregido para que no altere la altura de la línea */
+            vertical-align: middle !important;
         }
 
-        /* CLASE DESTACADA PARA EL COMANDO DE PURGA */
+        /* ESTILO INTEGRADO PARA EL COMANDO DE MODERACIÓN */
         .cmd-highlight {
             background: rgba(88, 166, 255, 0.15) !important;
             color: #79c0ff !important;
-            border: 1px solid rgba(88, 166, 255, 0.3) !important;
-            font-weight: bold !important;
+            border: 1px solid rgba(88, 166, 255, 0.25) !important;
+            font-weight: 600 !important;
         }
 
         .contact-badge {
