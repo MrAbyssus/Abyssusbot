@@ -230,7 +230,7 @@
 
 <header>
     <h1>🔐 Privacidad y Datos</h1>
-    <p>Comprometidos con la transparencia • Versión 3.0 (Cloud Atlas)</p>
+    <p>Comprometidos con la transparencia • Versión 3.1 (Cloud Atlas)</p>
 </header>
 
 <main>
@@ -271,9 +271,10 @@
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
-    <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel:</p>
+    <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos:</p>
     <ul>
         <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<code>findOneAndUpdate</code>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
+        <li><strong>Autogestión de Moderación:</strong> Cabe aclarar que todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <code>/modlogs borrar</code> directamente en el servidor.</li>
         <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</li>
     </ul>
 </section>
