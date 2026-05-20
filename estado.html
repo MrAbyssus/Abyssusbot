@@ -563,7 +563,13 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
 async function update() {
     const start = Date.now();
     try {
-        // ... (mantiene tu fetch de discordstatus igual)
+        // Fetch de discordstatus
+        fetch('https://discordstatus.com/api/v2/summary.json')
+            .then(r => r.json()).then(d => {
+                const hasIncident = d.incidents.length > 0;
+                discordText.innerText = hasIncident ? "ALERTA" : d.status.description.toUpperCase();
+                discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
+            });
 
         const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
             headers: { 'Accept': 'application/json' }
@@ -573,23 +579,34 @@ async function update() {
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
 
-        // ✅ CORRECCIÓN AQUÍ: Procesamiento dinámico del Uptime
+        // ✅ LÓGICA DE ESTADO DINÁMICO CORREGIDA
+        const totalClusters = data.clusters ? data.clusters.length : 0;
+        const clustersOnline = data.clusters ? data.clusters.filter(c => c.status === 'online').length : 0;
+        const clustersConnecting = data.clusters ? data.clusters.filter(c => c.status === 'connecting').length : 0;
+
+        if (totalClusters > 0 && clustersOnline === totalClusters) {
+            statusText.innerText = "ONLINE";
+            statusText.style.color = "#33ff00";
+        } else if (clustersConnecting > 0 && clustersOnline === 0) {
+            statusText.innerText = "CONECTANDO";
+            statusText.style.color = "#ffb86c";
+        } else if (clustersOnline > 0) {
+            statusText.innerText = "PARCIAL";
+            statusText.style.color = "#ffb86c";
+        } else {
+            statusText.innerText = "OFFLINE";
+            statusText.style.color = "#ff5555";
+        }
+
+        // ✅ UPTIME DINÁMICO
         if (data.global && typeof data.global.uptime === 'number') {
-            // Usamos la función formatUptime que definiste arriba para convertir los ms recibidos
             document.getElementById('res-uptime').innerText = formatUptime(data.global.uptime);
         } else {
-            // Fallback si la API no envía un número
             document.getElementById('res-uptime').innerText = "00d 00h 00m";
         }
 
-        // ... (el resto de tu lógica de clusters sigue exactamente igual)
-        // Asegúrate de borrar la línea que estaba fuera de la función: 
-        // document.getElementById('res-uptime').innerText = formatUptime(115748990); 
-        // ¡Esa línea es la que causaba el conflicto!
-
         let rawClusters = data.clusters || [];
-        // ... resto de tu código sin cambios
-
+        rawClusters.sort((a, b) => a.id - b.id);
         const totalCommands = data.global?.commands || 0;
 
         const clusters = rawClusters.map((c, index) => {
@@ -608,14 +625,13 @@ async function update() {
             };
         });
 
+        // ... (El resto de tu código después de esta línea sigue exactamente igual)
         const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
         const totalGuilds = data.global?.totalGuilds || 0;
-        const clustersOnline = clusters.filter(c => c.status === 'online').length;
-
+        
         updateTrends(totalRam, totalGuilds);
         document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
         document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
-        
         document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString();
 
         let servidoresPerdidosTotales = 0;
