@@ -230,58 +230,60 @@
 
 <header>
     <h1>🔐 Privacidad y Datos</h1>
-    <p>Comprometidos con la transparencia • Versión 2.1</p>
+    <p>Comprometidos con la transparencia • Versión 3.0 (Cloud Atlas)</p>
 </header>
 
 <main>
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-    <p><strong>Abyssus Bot</strong> es un servicio desarrollado por <code>Mr.Abyssus</code>. Al utilizar el bot en tu servidor, el propietario del servidor actúa como responsable del manejo de los registros (logs) dentro de su comunidad.</p>
+    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <code>Mr.Abyssus</code>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de los registros (logs) dentro de su comunidad.</p>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-database"></i> Datos Recolectados</h2>
-    <p>Procesamos únicamente la información técnica mínima necesaria para el funcionamiento de las herramientas:</p>
+    <h2><i class="fa-solid fa-database"></i> Datos Recolectados y Almacenamiento</h2>
+    <p>Procesamos e indexamos la información mínima técnica estructurada necesaria para el funcionamiento de los módulos interactivos. Esta información se aloja de forma persistente en nuestro clúster de **MongoDB Atlas**:</p>
     <ul>
-        <li>ID único de Discord de usuarios, servidores y canales.</li>
-        <li><strong>Perfil Público:</strong> Nombre de usuario y discriminador.</li>
-        <li><strong>Contenido:</strong> Mensajes de registro (si el módulo <code>modlogs</code> está activo).</li>
+        <li><strong>Identificadores de Red:</strong> ID único de Discord de usuarios, servidores (guilds) y canales de texto/voz.</li>
+        <li><strong>Perfil Público:</strong> Nombre de usuario, tags y metadatos de avatares para renders visuales en el Dashboard.</li>
+        <li><strong>Configuraciones de Servidor:</strong> Ajustes de bienvenida, canales asignados, colores hexadecimales y estructuras personalizadas.</li>
+        <li><strong>Módulos Activos:</strong> Datos acumulativos de economía virtual (AbyCoins), registros de moderación (modlogs) e indexación de invitaciones en tiempo real.</li>
     </ul>
 </section>
 
 <section class="card fade-in" style="border-left: 4px solid var(--accent);">
     <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-    <p>Si utilizas nuestro panel web, procesamos datos adicionales mediante la API oficial de Discord:</p>
+    <p>Cuando accedes a nuestro panel de control centralizado, gestionamos credenciales efímeras mediante la API oficial de Discord mediante protocolos seguros:</p>
     <ul>
-        <li><strong>Tokens OAuth2:</strong> Tokens efímeros para validar identidad. Nunca guardamos contraseñas.</li>
-        <li><strong>Cookies:</strong> Técnicas estrictamente necesarias para la sesión.</li>
-        <li><strong>Servidores:</strong> Lista de servidores donde tienes permisos de gestión.</li>
+        <li><strong>Tokens OAuth2:</strong> Claves efímeras de acceso para validar tu identidad de desarrollador o administrador. No almacenamos contraseñas.</li>
+        <li><strong>Sesiones Seguras:</strong> Cookies técnicas encriptadas estrictamente necesarias para sostener tu sesión en el panel de control.</li>
+        <li><strong>Mapeo de Permisos:</strong> Lectura en tiempo real de la lista de servidores donde posees facultades de gestión (Manage Guild / Administrator).</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad</h2>
-    <p>Los datos se guardan en sistemas protegidos con acceso restringido:</p>
+    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad e Infraestructura Cloud</h2>
+    <p>Hemos erradicado el almacenamiento en archivos planos locales (JSON), migrando a un ecosistema en la nube blindado:</p>
     <ul>
-        <li><strong>Economía:</strong> Saldos y transacciones virtuales.</li>
-        <li><strong>Niveles:</strong> Experiencia y rangos por actividad.</li>
-        <li><strong>Configuraciones:</strong> Ajustes personalizados de cada servidor.</li>
+        <li><strong>Cifrado en Tránsito:</strong> Toda comunicación entre el servidor Express, el cliente de Discord y la base de datos se realiza mediante TLS/SSL de alta seguridad.</li>
+        <li><strong>Restricción de Acceso:</strong> El clúster de MongoDB Atlas cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales encriptadas en variables de entorno (<code>process.env</code>).</li>
+        <li><strong>Aislamiento de Documentos:</strong> Los saldos de economía, configuraciones de bienvenida y datos analíticos se organizan mediante colecciones indexadas e independientes por cada ID de servidor.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
-    <h2><i class="fa-solid fa-erasing-lines"></i> Control y Purga</h2>
-    <p>Garantizamos la privacidad mediante herramientas de gestión administrativa:</p>
+    <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
+    <p>Garantizamos el derecho de supresión y el control total de los datos mediante herramientas del sistema:</p>
     <ul>
-        <li><strong>Eliminación:</strong> Administradores pueden purgar registros de moderación de forma definitiva.</li>
-        <li><strong>Derecho al Olvido:</strong> Eliminamos datos de servidores inactivos tras 90 días de desuso.</li>
+        <li><strong>Persistencia Dinámica:</strong> Las actualizaciones en el Dashboard ejecutan operaciones atómicas (<code>findOneAndUpdate</code>), sobreescribiendo registros antiguos de forma inmediata en caliente.</li>
+        <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden purgar las colecciones de datos o configuraciones específicas desde el panel web, eliminando el documento de la base de datos permanentemente.</li>
+        <li><strong>Derecho al Olvido (Purga Automática):</strong> Si Abyssus es expulsado de un servidor o este permanece inactivo, los datos vinculados en el clúster se eliminan de forma automatizada tras 90 días de desuso.</li>
     </ul>
 </section>
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
-    <p>Para soporte o dudas sobre tus datos:</p>
+    <p>Para solicitudes de auditoría de datos, baja inmediata de tu ID del sistema o soporte técnico:</p>
     <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
 </section>
 
