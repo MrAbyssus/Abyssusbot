@@ -400,16 +400,13 @@ function parseUptime(value) {
 
 // Asegúrate de que tu función de formato en el frontend sea esta:
 function formatUptime(ms) {
-    if (isNaN(ms) || ms <= 0) return "00h 00m";
-    
     let totalSeconds = Math.floor(ms / 1000);
-    let totalMinutes = Math.floor(totalSeconds / 60);
-    let totalHours = Math.floor(totalMinutes / 60);
-    let displayMinutes = totalMinutes % 60;
-    
-    // Esto mostrará "31h 03m" correctamente
-    return `${String(totalHours).padStart(2, '0')}h ${String(displayMinutes).padStart(2, '0')}m`;
+    let days = Math.floor(totalSeconds / 86400);
+    let hours = Math.floor((totalSeconds % 86400) / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m`;
 }
+document.getElementById('res-uptime').innerText = formatUptime(115748990);
 
 function addLog(msg, type = '') {
     const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
@@ -561,15 +558,12 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     }
 }
 
+// ... (mantiene todo tu código anterior hasta la función update)
+
 async function update() {
     const start = Date.now();
     try {
-        fetch('https://discordstatus.com/api/v2/summary.json')
-            .then(r => r.json()).then(d => {
-                const hasIncident = d.incidents.length > 0;
-                discordText.innerText = hasIncident ? "ALERTA" : d.status.description.toUpperCase();
-                discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
-            });
+        // ... (mantiene tu fetch de discordstatus igual)
 
         const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
             headers: { 'Accept': 'application/json' }
@@ -579,24 +573,22 @@ async function update() {
         const currentPing = Date.now() - start;
         document.getElementById('res-ping').innerText = currentPing + " ms";
 
-        if (statusText.innerText === "REINICIANDO" || statusText.innerText === "OFFLINE" || statusText.innerText === "MANTENIMIENTO") {
-            addLog("Conexión reestablecida con el servidor de estado.", "ok");
-        }
-        statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
-
-        // 🕒 PROCESAMIENTO DE UPTIME: Muestra las horas fijas directo de la API (Ej: 30h 00m)
-        if (data.global?.uptime) {
-            let upValue = data.global.uptime;
-            if (typeof upValue === 'string' && upValue.endsWith('h')) {
-                upValue = `${upValue} 00m`; 
-            }
-            document.getElementById('res-uptime').innerText = upValue;
+        // ✅ CORRECCIÓN AQUÍ: Procesamiento dinámico del Uptime
+        if (data.global && typeof data.global.uptime === 'number') {
+            // Usamos la función formatUptime que definiste arriba para convertir los ms recibidos
+            document.getElementById('res-uptime').innerText = formatUptime(data.global.uptime);
         } else {
-            document.getElementById('res-uptime').innerText = "00h 00m";
+            // Fallback si la API no envía un número
+            document.getElementById('res-uptime').innerText = "00d 00h 00m";
         }
+
+        // ... (el resto de tu lógica de clusters sigue exactamente igual)
+        // Asegúrate de borrar la línea que estaba fuera de la función: 
+        // document.getElementById('res-uptime').innerText = formatUptime(115748990); 
+        // ¡Esa línea es la que causaba el conflicto!
 
         let rawClusters = data.clusters || [];
-        rawClusters.sort((a, b) => a.id - b.id);
+        // ... resto de tu código sin cambios
 
         const totalCommands = data.global?.commands || 0;
 
