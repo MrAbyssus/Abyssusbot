@@ -57,7 +57,6 @@
             color: var(--text-dim);
             text-decoration: none;
             font-weight: 600;
-            transition: 0.3s;
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -146,14 +145,26 @@
             font-weight: bold;
         }
 
+        /* CONFIGURACIÓN DE TERMINAL OSCURA PARA ETIQUETAS CODE */
         code {
-            background: rgba(88, 166, 255, 0.1);
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9em;
+            background: rgba(0, 0, 0, 0.5) !important;
+            color: #58a6ff !important;
+            padding: 3px 8px !important;
+            border-radius: 6px !important;
+            font-family: 'Consolas', monospace !important;
+            font-size: 0.9em !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
             word-break: break-all;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        /* CLASE DESTACADA PARA EL COMANDO DE PURGA */
+        .cmd-highlight {
+            background: rgba(88, 166, 255, 0.15) !important;
+            color: #79c0ff !important;
+            border: 1px solid rgba(88, 166, 255, 0.3) !important;
+            font-weight: bold !important;
         }
 
         .contact-badge {
@@ -228,7 +239,64 @@
     <a href="commands.html">Comandos</a>
 </nav>
 
+<header>
+    <h1>🔐 Privacidad y Datos</h1>
+    <p>Comprometidos con la transparencia • Versión 3.1 (Cloud Atlas)</p>
+</header>
 
+<main>
+
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
+    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <code>Mr.Abyssus</code>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
+</section>
+
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-database"></i> Datos Recolectados y Almacenamiento</h2>
+    <p>Procesamos e indexamos la información técnica mínima necesaria para el funcionamiento del sistema de gestión. Esta información se aloja de forma persistente en nuestro clúster de **MongoDB Atlas**:</p>
+    <ul>
+        <li><strong>Identificadores de Discord:</strong> ID único del servidor (guildId) y del canal de texto asignado para las notificaciones.</li>
+        <li><strong>Configuraciones de Personalización:</strong> Parámetros estéticos del mensaje de bienvenida, que incluyen el título del embed, el cuerpo del mensaje, el texto del footer, la URL de la imagen y el color en formato hexadecimal.</li>
+    </ul>
+</section>
+
+<section class="card fade-in" style="border-left: 4px solid var(--accent);">
+    <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
+    <p>Cuando accedes a nuestro panel de control centralizado, gestionamos credenciales efímeras mediante la API oficial de Discord a través de protocolos seguros:</p>
+    <ul>
+        <li><strong>Tokens de Acceso:</strong> Claves efímeras para validar tu identidad de administrador en el servidor. Nunca almacenamos ni solicitamos contraseñas.</li>
+        <li><strong>Sesiones Seguras:</strong> Cookies técnicas encriptadas estrictamente necesarias para sostener la sesión activa en el panel de control.</li>
+        <li><strong>Mapeo de Permisos:</strong> Lectura en tiempo real de los servidores donde posees facultades de gestión para permitirte modificar la configuración de bienvenida.</li>
+    </ul>
+</section>
+
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-shield-halved"></i> Seguridad e Infraestructura Cloud</h2>
+    <p>Hemos migrado el almacenamiento a un ecosistema en la nube protegido para garantizar la disponibilidad y la seguridad de los ajustes del servidor:</p>
+    <ul>
+        <li><strong>Cifrado en Tránsito:</strong> Toda comunicación entre tu navegador, el servidor Express y la base de datos de MongoDB Atlas se realiza bajo protocolos encriptados SSL/TLS de alta seguridad.</li>
+        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<code>process.env</code>).</li>
+        <li><strong>Aislamiento de Configuraciones:</strong> Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</li>
+    </ul>
+</section>
+
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
+    <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos:</p>
+    <ul>
+        <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<code>findOneAndUpdate</code>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
+        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <code class="cmd-highlight">/modlogs borrar</code> directamente en tu servidor de Discord.</li>
+        <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</li>
+    </ul>
+</section>
+
+<section class="card fade-in">
+    <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
+    <p>Para soporte, dudas sobre el funcionamiento de la plataforma o solicitudes relacionadas con la gestión de tus datos:</p>
+    <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
+</section>
+
+</main>
 
 <footer>
     <p>© 2021–2026 Abyssus Bot System. Todos los derechos reservados.</p>
