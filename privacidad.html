@@ -234,10 +234,30 @@
 </header>
 
 <main>
+<style>
+    code {
+        background: rgba(0, 0, 0, 0.4) !important;
+        color: var(--accent) !important;
+        padding: 3px 6px !important;
+        border-radius: 6px !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        font-size: 0.9rem !important;
+        border: 1px solid var(--border) !important;
+        display: inline-block;
+        line-height: 1;
+        word-break: break-word;
+    }
+    .cmd-highlight {
+        background: rgba(56, 189, 248, 0.15) !important;
+        color: #38bdf8 !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        font-weight: bold !important;
+    }
+</style>
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <code style="background: rgba(0, 0, 0, 0.4); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-family: monospace; border: 1px solid var(--border);">Mr.Abyssus</code>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
+    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <code>Mr.Abyssus</code>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
 </section>
 
 <section class="card fade-in">
@@ -264,7 +284,7 @@
     <p>Hemos migrado el almacenamiento a un ecosistema en la nube protegido para garantizar la disponibilidad y la seguridad de los ajustes del servidor:</p>
     <ul>
         <li><strong>Cifrado en Tránsito:</strong> Toda comunicación entre tu navegador, el servidor Express y la base de datos de MongoDB Atlas se realiza bajo protocolos encriptados SSL/TLS de alta seguridad.</li>
-        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<code style="background: rgba(0, 0, 0, 0.4); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-family: monospace; border: 1px solid var(--border);">process.env</code>).</li>
+        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<code>process.env</code>).</li>
         <li><strong>Aislamiento de Configuraciones:</strong> Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</li>
     </ul>
 </section>
@@ -274,7 +294,7 @@
     <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos:</p>
     <ul>
         <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<code>findOneAndUpdate</code>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
-        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <code style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 4px 8px; border-radius: 8px; font-family: monospace; font-weight: bold; border: 1px solid rgba(56, 189, 248, 0.3);">/modlogs borrar</code> directamente en tu servidor de Discord.</li>
+        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <code class="cmd-highlight">/modlogs borrar</code> directamente en tu servidor de Discord.</li>
         <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</li>
     </ul>
 </section>
