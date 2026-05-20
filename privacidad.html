@@ -36,7 +36,7 @@
                 radial-gradient(circle at 50% -20%, #161b22, transparent),
                 radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
             color: var(--text);
-            line-height: 1.7; /* Aumentado ligeramente para mayor legibilidad */
+            line-height: 1.8; /* Más espacio entre líneas de texto */
             overflow-x: hidden;
         }
 
@@ -133,34 +133,34 @@
 
         .card p, .card li { 
             color: #ced4da; 
-            margin-bottom: 16px; /* Más espacio entre párrafos */
+            margin-bottom: 18px; /* Espacio extra abajo de cada párrafo para que respire */
             font-size: 0.95rem;
         }
 
         ul { list-style: none; padding-left: 5px; }
-        ul li { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+        ul li { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
         ul li::before {
             content: "•";
             color: var(--accent);
             font-weight: bold;
         }
 
-        /* DISEÑO DE TERMINAL INTEGRADO Y CORREGIDO SIN AMONTONAMIENTO */
-        code {
-            background: rgba(0, 0, 0, 0.5) !important;
+        /* DISEÑO DE TEXTO RESALTADO TIPO TERMINAL SIN ENTRAR EN CONFLICTO */
+        .tech-badge {
+            background: rgba(0, 0, 0, 0.4) !important;
             color: #58a6ff !important;
-            padding: 2px 6px !important;
-            margin: 0 2px !important;
+            padding: 1px 6px !important;
+            margin: 0 3px !important;
             border-radius: 6px !important;
             font-family: 'Consolas', monospace !important;
             font-size: 0.9em !important;
             border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            word-break: break-all;
-            display: inline !important; /* Corregido para que no altere la altura de la línea */
-            vertical-align: middle !important;
+            display: inline-block !important;
+            line-height: 1.4 !important; /* Evita que choque con las líneas superiores e inferiores */
+            vertical-align: baseline !important;
         }
 
-        /* ESTILO INTEGRADO PARA EL COMANDO DE MODERACIÓN */
+        /* DISEÑO EXCLUSIVO PARA EL COMANDO DE MODERACIÓN DE PURGA */
         .cmd-highlight {
             background: rgba(88, 166, 255, 0.15) !important;
             color: #79c0ff !important;
@@ -249,7 +249,7 @@
 
 <section class="card fade-in">
     <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <code>Mr.Abyssus</code>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
+    <p><strong>Abyssus Bot</strong> es un servicio automatizado desarrollado por <span class="tech-badge">Mr.Abyssus</span>. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
 </section>
 
 <section class="card fade-in">
@@ -276,7 +276,7 @@
     <p>Hemos migrado el almacenamiento a un ecosistema en la nube protegido para garantizar la disponibilidad y la seguridad de los ajustes del servidor:</p>
     <ul>
         <li><strong>Cifrado en Tránsito:</strong> Toda comunicación entre tu navegador, el servidor Express y la base de datos de MongoDB Atlas se realiza bajo protocolos encriptados SSL/TLS de alta seguridad.</li>
-        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<code>process.env</code>).</li>
+        <li><strong>Restricción de Acceso:</strong> El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (<span class="tech-badge">process.env</span>).</li>
         <li><strong>Aislamiento de Configuraciones:</strong> Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</li>
     </ul>
 </section>
@@ -285,8 +285,8 @@
     <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
     <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos:</p>
     <ul>
-        <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<code>findOneAndUpdate</code>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
-        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <code class="cmd-highlight">/modlogs borrar</code> directamente en tu servidor de Discord.</li>
+        <li><strong>Actualización Dinámica:</strong> Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (<span class="tech-badge">findOneAndUpdate</span>) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</li>
+        <li><strong>Autogestión de Moderación:</strong> Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando <span class="tech-badge cmd-highlight">/modlogs borrar</span> directamente en tu servidor de Discord.</li>
         <li><strong>Eliminación Definitiva:</strong> Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</li>
     </ul>
 </section>
