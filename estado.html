@@ -387,47 +387,30 @@ const timerText = document.getElementById('refresh-timer');
 const statusText = document.getElementById('sistema-status');
 const discordText = document.getElementById('discord-status');
 
-function getTimestamp24h() {
-    const ahora = new Date();
-    return `${ahora.getHours().toString().padStart(2, '0')}:${ahora.getMinutes().toString().padStart(2, '0')}:${ahora.getSeconds().toString().padStart(2, '0')}`;
-}
-
 function parseUptime(value) {
     if (typeof value === 'number') return value;
     if (typeof value !== 'string') return 0;
-    if (!/[dhms]/i.test(value)) return parseFloat(value);
-
-    let totalMs = 0;
-    const matches = value.match(/(\d+(?:\.\d+)?)\s*([dhms])/gi);
-    if (matches) {
-        matches.forEach(match => {
-            const unit = match.replace(/[\d\s.]/g, '').toLowerCase();
-            const val = parseFloat(match);
-            if (unit === 'd') totalMs += val * 86400000;
-            else if (unit === 'h') totalMs += val * 3600000;
-            else if (unit === 'm') totalMs += val * 60000;
-            else if (unit === 's') totalMs += val * 1000;
-        });
-        return totalMs;
-    }
-    return parseFloat(value) || 0; 
+    const val = parseFloat(value);
+    if (value.includes('d')) return val * 86400000;
+    if (value.includes('h')) return val * 3600000;
+    if (value.includes('m')) return val * 60000;
+    if (value.includes('s')) return val * 1000;
+    return val; 
 }
 
-// CORRECCIÓN: Cálculo acumulativo para mostrar +24h correctamente
 function formatUptime(ms) {
     if (isNaN(ms) || ms <= 0) return "00h 00m";
-    
-    let totalSeconds = Math.floor(ms / 1000);
-    let totalMinutes = Math.floor(totalSeconds / 60);
-    let totalHours = Math.floor(totalMinutes / 60);
-    let displayMinutes = totalMinutes % 60;
-    
-    // Esto mostrará "31h 03m" correctamente
-    return `${String(totalHours).padStart(2, '0')}h ${String(displayMinutes).padStart(2, '0')}m`;
+    let segundos = Math.floor(ms / 1000);
+    let minutos = Math.floor(segundos / 60);
+    let horas = Math.floor(minutos / 60);
+    segundos %= 60; minutos %= 60;
+    const h = horas.toString().padStart(2, '0');
+    const m = minutes.toString().padStart(2, '0');
+    return `${h}h ${m}m`;
 }
 
 function addLog(msg, type = '') {
-    const time = getTimestamp24h(); 
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
     const entryData = { time, msg, type };
     let storedLogs = JSON.parse(localStorage.getItem('abyssus_logs') || '[]');
     storedLogs.push(entryData);
@@ -453,16 +436,24 @@ function renderLogs(shouldScroll = false) {
     if(shouldScroll) logBox.scrollTop = logBox.scrollHeight;
 }
 
+function clearLogs() {
+    if(confirm('¿Borrar historial?')) {
+        localStorage.removeItem('abyssus_logs');
+        logBox.innerHTML = '';
+        addLog("Historial vaciado.", "warn");
+    }
+}
+
 function updateTrends(currentRam, currentGuilds) {
     const rTrend = document.getElementById('trend-ram');
     const gTrend = document.getElementById('trend-guilds');
     if(lastRamValue > 0) {
-        if(currentRam > lastRamValue) { rTrend.innerHTML = '▲'; rTrend.className = 'trend trend-up'; }
-        else if(currentRam < lastRamValue) { rTrend.innerHTML = '▼'; rTrend.className = 'trend trend-down'; }
+        if(currentRam > lastRamValue) rTrend.innerHTML = '▲', rTrend.className = 'trend trend-up';
+        else if(currentRam < lastRamValue) rTrend.innerHTML = '▼', rTrend.className = 'trend trend-down';
     }
     if(lastGuildsValue > 0) {
-        if(currentGuilds > lastGuildsValue) { gTrend.innerHTML = '▲'; gTrend.className = 'trend trend-up'; }
-        else if(currentGuilds < lastGuildsValue) { gTrend.innerHTML = '▼'; gTrend.className = 'trend trend-down'; }
+        if(currentGuilds > lastGuildsValue) gTrend.innerHTML = '▲', gTrend.className = 'trend trend-up';
+        else if(currentGuilds < lastGuildsValue) gTrend.innerHTML = '▼', gTrend.className = 'trend trend-down';
     }
     lastRamValue = currentRam;
     lastGuildsValue = currentGuilds;
@@ -472,8 +463,52 @@ function initChart() {
     const ctx = document.getElementById('ramChart');
     ramChart = new Chart(ctx, {
         type: 'line',
-        data: { labels: labelHistory, datasets: [{ label: 'RAM', data: ramHistory, borderColor: '#33ff00', backgroundColor: 'rgba(51, 255, 0, 0.04)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] },
-        options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#626772', font: { size: 10 } } }, x: { display: false } } }
+        data: {
+            labels: labelHistory,
+            datasets: [{
+                label: 'RAM',
+                data: ramHistory, 
+                borderColor: '#33ff00', 
+                backgroundColor: 'rgba(51, 255, 0, 0.04)',
+                fill: true, 
+                tension: 0.4, 
+                pointRadius: 0, 
+                pointHoverRadius: 5, 
+                pointHoverBackgroundColor: '#33ff00',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true, 
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0a0b0f',
+                    titleColor: '#ffffff',
+                    bodyColor: '#e2e4e9',
+                    borderColor: '#33ff00',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        title: function(context) { return `🕒 Registro: ${labelHistory[context[0].dataIndex] || 'S/D'}`; },
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            let lineas = [`📊 RAM Total: ${context.parsed.y.toFixed(1)} MB`];
+                            if (extraClustersActivos[index] !== undefined) lineas.push(`⚡ Clusters Activos: ${extraClustersActivos[index]} / ${extraClustersTotales[index]}`);
+                            if (extraServidores[index] !== undefined) lineas.push(`🌐 Servidores: ${extraServidores[index].toLocaleString()}`);
+                            return lineas;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#626772', font: { size: 10 } } },
+                x: { display: false }
+            }
+        }
     });
 }
 
@@ -481,58 +516,243 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     const panel = document.getElementById('cluster-details');
     const placeholder = document.getElementById('panel-placeholder');
     const content = document.getElementById('panel-content');
+    
     if (clusterSeleccionadoId === id) {
         clusterSeleccionadoId = null;
         panel.classList.remove('illuminated');
         content.style.display = 'none';
         placeholder.style.display = 'block';
+        const activeBox = document.querySelector('.box.active-node');
+        if (activeBox) activeBox.classList.remove('active-node');
         return;
     }
+    
     clusterSeleccionadoId = id;
     placeholder.style.display = 'none';
     content.style.display = 'flex';
     panel.classList.add('illuminated');
+    
+    document.querySelectorAll('#status-grid .box').forEach(box => {
+        const textSpan = box.querySelector('span');
+        if (textSpan && parseInt(textSpan.innerText) === id) box.classList.add('active-node');
+        else box.classList.remove('active-node');
+    });
+    
     document.getElementById('details-node-title').innerText = `CLUSTER #${String(id).padStart(2, '0')}`;
     document.getElementById('det-status').innerText = String(status).toUpperCase();
     document.getElementById('det-servers').innerText = Number(guilds).toLocaleString();
     document.getElementById('det-ping').innerText = (ping === '--' || ping === undefined || ping === '-1') ? '--' : ping + ' ms';
     document.getElementById('det-cpu').innerText = (cpu === undefined) ? '0 %' : cpu + ' %';
     document.getElementById('det-commands').innerText = Number(commands || 0).toLocaleString();
+    
+    const statusCard = document.getElementById('det-status').parentElement;
+    const statusTarget = document.getElementById('det-status');
+    if (status === 'online') {
+        statusCard.style.borderLeftColor = 'var(--online)'; statusTarget.style.color = 'var(--online)';
+        panel.style.borderColor = 'rgba(51, 255, 0, 0.25)';
+    } else if (status === 'connecting') {
+        statusCard.style.borderLeftColor = 'var(--warning)'; statusTarget.style.color = 'var(--warning)';
+        panel.style.borderColor = 'rgba(255, 184, 108, 0.25)';
+    } else {
+        statusCard.style.borderLeftColor = 'var(--offline)'; statusTarget.style.color = 'var(--offline)';
+        panel.style.borderColor = 'rgba(255, 85, 85, 0.25)';
+    }
 }
 
 async function update() {
     const start = Date.now();
     try {
-        const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now());
-        const data = await res.json();
-        
-        // CORRECCIÓN INTEGRADA:
-        if (data.global?.uptime) {
-            document.getElementById('res-uptime').innerText = formatUptime(parseUptime(data.global.uptime));
-        }
+        fetch('https://discordstatus.com/api/v2/summary.json')
+            .then(r => r.json()).then(d => {
+                const hasIncident = d.incidents.length > 0;
+                discordText.innerText = hasIncident ? "ALERTA" : d.status.description.toUpperCase();
+                discordText.style.color = hasIncident ? "#ffb86c" : "#33ff00";
+            });
 
-        const clusters = (data.clusters || []).sort((a,b) => a.id - b.id);
-        const totalCommands = data.global?.commands || 0;
-        const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
-        const totalGuilds = data.global?.totalGuilds || 0;
-        
-        document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
-        document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
+        const res = await fetch('https://abyssus-status.duckdns.org:3031/api/status?json=true&t=' + Date.now(), {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        const data = await res.json();
+        const currentPing = Date.now() - start;
+        document.getElementById('res-ping').innerText = currentPing + " ms";
+
+        if (statusText.innerText === "REINICIANDO" || statusText.innerText === "OFFLINE" || statusText.innerText === "MANTENIMIENTO") {
+            addLog("Conexión reestablecida con el servidor de estado.", "ok");
+        }
         statusText.innerText = "ONLINE"; statusText.style.color = "#33ff00";
 
-        // (Resto de tu lógica de DOM se mantiene igual para no romper el layout)
+        // 🕒 PROCESAMIENTO DE UPTIME: Muestra las horas fijas directo de la API (Ej: 30h 00m)
+        if (data.global?.uptime) {
+            let upValue = data.global.uptime;
+            if (typeof upValue === 'string' && upValue.endsWith('h')) {
+                upValue = `${upValue} 00m`; 
+            }
+            document.getElementById('res-uptime').innerText = upValue;
+        } else {
+            document.getElementById('res-uptime').innerText = "00h 00m";
+        }
+
+        let rawClusters = data.clusters || [];
+        rawClusters.sort((a, b) => a.id - b.id);
+
+        const totalCommands = data.global?.commands || 0;
+
+        const clusters = rawClusters.map((c, index) => {
+            const clusterId = index + 1;
+            const numGuilds = c.guilds || c.servers || 0;
+            memoriaUltimosServidores[clusterId] = numGuilds;
+            return {
+                id: clusterId, 
+                idOriginal: c.id,
+                status: c.status,
+                ram: c.ram,
+                cpu: c.cpu,
+                ping: (c.ping === undefined || c.ping < 0) ? '--' : c.ping,
+                guilds: numGuilds,
+                commands: totalCommands 
+            };
+        });
+
+        const totalRam = clusters.reduce((acc, c) => acc + (parseFloat(c.ram || 0)), 0);
+        const totalGuilds = data.global?.totalGuilds || 0;
+        const clustersOnline = clusters.filter(c => c.status === 'online').length;
+
+        updateTrends(totalRam, totalGuilds);
+        document.getElementById('res-ram').innerText = totalRam.toFixed(1) + " MB";
+        document.getElementById('stat-clusters').innerText = `${clustersOnline} / ${clusters.length}`;
+        
+        document.getElementById('res-comandos-global').innerText = totalCommands.toLocaleString();
+
+        let servidoresPerdidosTotales = 0;
+        clusters.forEach(c => {
+            const statusActual = (c.status || 'offline').toLowerCase();
+            const statusPrevio = lastClustersState[c.id];
+            if (statusActual !== 'online') {
+                let perdidosEsteCluster = c.guilds;
+                if (!perdidosEsteCluster && totalGuilds > 0 && clusters.length > 0) perdidosEsteCluster = Math.round(totalGuilds / clusters.length);
+                servidoresPerdidosTotales += perdidosEsteCluster;
+            }
+            if (statusPrevio && statusPrevio !== statusActual) {
+                if (statusActual === 'online') addLog(`Cluster #${c.id} restablecido exitosamente (ONLINE).`, "ok");
+                else if (statusActual === 'connecting') addLog(`Cluster #${c.id} está intentando conectarse a Discord.`, "warn");
+                else {
+                    let servidoresPerdidos = c.guilds;
+                    if (!servidoresPerdidos && totalGuilds > 0 && clusters.length > 0) servidoresPerdidos = Math.round(totalGuilds / clusters.length);
+                    const formatLost = servidoresPerdidos > 0 ? ` [~${servidoresPerdidos.toLocaleString()} servidores afectados]` : '';
+                    addLog(`Cluster #${c.id} se encuentra inactivo (OFFLINE).${formatLost}`, "err");
+                }
+            }
+            lastClustersState[c.id] = statusActual;
+        });
+
+        const perdidosContainer = document.getElementById('res-perdidos');
+        if (servidoresPerdidosTotales > 0) {
+            perdidosContainer.innerText = servidoresPerdidosTotales.toLocaleString();
+            perdidosContainer.style.color = "var(--offline)"; 
+        } else {
+            perdidosContainer.innerText = "0";
+            perdidosContainer.style.color = "var(--online)"; 
+        }
+
+        document.getElementById('res-servidores').innerText = totalGuilds.toLocaleString();
+
+        document.getElementById('status-grid').innerHTML = clusters.map(c => {
+            const s = (c.status || 'offline').toLowerCase();
+            const cl = s === 'online' ? 'online' : (s === 'connecting' ? 'warning' : 'offline');
+            const ramValue = parseFloat(c.ram || 0).toFixed(0);
+            const guildInfo = c.guilds ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
+            const commandsInfo = `<br>• Comandos: ${c.commands.toLocaleString()}`;
+            const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
+            return `<div class="box ${cl} ${activeClass}">
+                <span>${c.id}</span>
+                <span class="box-ram">${ramValue}M</span>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• ${s.toUpperCase()}<br>• RAM: ${c.ram}MB<br>• Ping: ${c.ping}ms${guildInfo}${commandsInfo}</div>
+            </div>`;
+        }).join('');
+
+        if (clusterSeleccionadoId !== null) {
+            const cActivo = clusters.find(c => c.id === clusterSeleccionadoId);
+            if (cActivo) {
+                document.getElementById('det-status').innerText = cActivo.status.toUpperCase();
+                document.getElementById('det-servers').innerText = cActivo.guilds.toLocaleString();
+                document.getElementById('det-ping').innerText = cActivo.ping === '--' ? '--' : cActivo.ping + ' ms';
+                document.getElementById('det-cpu').innerText = (cActivo.cpu === undefined ? '0' : cActivo.cpu) + ' %';
+                document.getElementById('det-commands').innerText = cActivo.commands.toLocaleString();
+            }
+        }
+
         if (ramChart) {
-            ramHistory.push(totalRam); labelHistory.push(getTimestamp24h());
-            if(ramHistory.length > 40) { ramHistory.shift(); labelHistory.shift(); }
+            const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            ramHistory.push(totalRam); labelHistory.push(horaActual);
+            extraClustersActivos.push(clustersOnline); extraClustersTotales.push(clusters.length);
+            extraServidores.push(totalGuilds); extraPingApi.push(currentPing + " ms"); extraComandosUsados.push(comandosEnEsteIntervalo);
+            comandosEnEsteIntervalo = 0; 
+            if(ramHistory.length > 40) { 
+                ramHistory.shift(); labelHistory.shift(); extraClustersActivos.shift();
+                extraClustersTotales.shift(); extraServidores.shift(); extraPingApi.shift(); extraComandosUsados.shift();
+            }
             ramChart.update();
         }
     } catch (e) {
+        if (statusText.innerText !== "MANTENIMIENTO") addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
         statusText.innerText = "MANTENIMIENTO"; statusText.style.color = "var(--offline)";
+        document.getElementById('res-ping').innerText = "-- ms";
+        let servidoresCaidosCalculados = 0;
+        let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
+            const guildsDelCluster = memoriaUltimosServidores[id] || 0;
+            servidoresCaidosCalculados += guildsDelCluster;
+            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0, commands: 0 };
+        });
+        if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
+        document.getElementById('stat-clusters').innerText = "0 / 6";
+        document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
+        document.getElementById('res-perdidos').style.color = "var(--offline)";
+
+        document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
+            const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
+            const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
+            return `<div class="box offline ${activeClass}">
+                <span>${c.id}</span>
+                <span class="box-ram">0M</span>
+                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}<br>• Comandos: 0</div>
+            </div>`;
+        }).join('');
+
+        if (clusterSeleccionadoId !== null) {
+            document.getElementById('det-status').innerText = "OFFLINE"; document.getElementById('det-status').style.color = "var(--offline)";
+            document.getElementById('det-ping').innerText = "--"; document.getElementById('det-cpu').innerText = "--"; document.getElementById('det-commands').innerText = "0";
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart(); renderLogs(true); update();
+    
+    document.getElementById('status-grid').addEventListener('click', function(e) {
+        const box = e.target.closest('.box');
+        if (!box) return; 
+        const idSpan = box.querySelector('span');
+        if (!idSpan) return;
+        const id = parseInt(idSpan.innerText);
+        let status = 'offline';
+        if (box.classList.contains('online')) status = 'online';
+        if (box.classList.contains('warning')) status = 'connecting';
+        
+        const tooltipText = box.querySelector('.tooltip').innerHTML;
+        const pingMatch = tooltipText.match(/Ping:\s*([^\s<]+)/);
+        const serversMatch = tooltipText.match(/Servers:\s*([^\s<]+)/);
+        const commandsMatch = tooltipText.match(/Comandos:\s*([^\s<]+)/);
+        
+        const ping = pingMatch ? pingMatch[1].replace('ms', '').trim() : '--';
+        const servers = serversMatch ? parseInt(serversMatch[1].replace(/,/g, '')) : 0;
+        const commands = commandsMatch ? parseInt(commandsMatch[1].replace(/,/g, '')) : 0;
+        const cpuMatch = tooltipText.match(/CPU:\s*([^\s<]+)/);
+        const cpu = cpuMatch ? cpuMatch[1].replace('%', '').trim() : 0;
+        
+        seleccionarCluster(id, status, servers, ping, cpu, commands);
+    });
+
     setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) { timeLeft = 3; update(); }
