@@ -275,12 +275,11 @@
         <p>Aislamiento de Configuraciones: Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</p>
     </section>
 
-    <section class="card fade-in">
+ <section class="card fade-in">
         <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
         <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos.</p>
-        <p>Actualización Dinámica: Al guardar los cambios en el Dashboard, se ejecuta una operación atómica (findOneAndUpdate) que sobrescribe de manera inmediata los valores antiguos en la base de datos.</p>
-        <p>Autogestión de Moderación: Todos los datos obtenidos por las herramientas de moderación pueden ser purgados y eliminados de forma definitiva en cualquier momento utilizando el comando /modlogs borrar directamente en tu servidor de Discord.</p>
-        <p>Eliminación Definitiva: Los administradores autorizados pueden modificar o limpiar los campos del formulario en el panel web, actualizando el documento de forma directa en el clúster.</p>
+        <p>Actualización Dinámica: Al modificar y guardar los cambios en el Dashboard, los nuevos parámetros sobrescriben de manera inmediata los valores anteriores en la base de datos.</p>
+        <p>Autogestión de Datos Locales: Todos los registros obtenidos por las funciones de moderación y economía pueden ser purgados en cualquier momento utilizando el comando /modlogs borrar directamente en tu servidor de Discord. Esto elimina de forma definitiva los datos de los archivos locales modlogs.json y economia.json; este comando no altera ni elimina registros almacenados en la base de datos de MongoDB.</p>
     </section>
 
     <section class="card fade-in">
