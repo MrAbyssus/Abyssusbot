@@ -2,131 +2,64 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>404 - Perdido en el Abismo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-web.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>404 // ABYSSUS_OFFLINE</title>
     <style>
-        :root {
-            --bg: #05070a;
-            --accent: #58a6ff;
-            --text: #e6edf3;
-            --text-dim: #8b949e;
+        /* Ajusta este color al de tu bot (ejemplo: un azul eléctrico o púrpura) */
+        :root { --accent: #58a6ff; --bg-dark: #05070a; }
+        
+        body { 
+            margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: var(--bg-dark);
+            font-family: 'Inter', system-ui, sans-serif; color: white; overflow: hidden;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Efecto de luz ambiental en el fondo */
+        .glow { position: absolute; width: 300px; height: 300px; background: var(--accent); 
+                filter: blur(150px); opacity: 0.1; border-radius: 50%; pointer-events: none; }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% 50%, #161b22, transparent),
-                radial-gradient(circle at 0% 100%, rgba(31, 111, 235, 0.05), transparent);
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            overflow: hidden;
+        .card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 40px; border-radius: 20px;
+            text-align: center; 
+            max-width: 400px;
+            transition: transform 0.4s ease-out;
+            cursor: default;
         }
 
-        .container {
-            padding: 20px;
-            z-index: 2;
+        h1 { font-size: 80px; margin: 0; color: var(--accent); font-weight: 800; letter-spacing: -2px; }
+        .status-text { color: #8b949e; margin: 15px 0 30px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .btn { 
+            display: inline-block; padding: 12px 25px; 
+            background: transparent; border: 1px solid var(--accent);
+            color: var(--accent); border-radius: 8px; font-weight: 600; 
+            text-decoration: none; transition: 0.3s; font-size: 14px;
         }
-
-        .error-code {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(6rem, 15vw, 10rem);
-            font-weight: 700;
-            line-height: 1;
-            background: linear-gradient(to bottom, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            animation: glitch 3s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-
-        h2 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-bottom: 15px;
-            color: var(--text);
-        }
-
-        p {
-            color: var(--text-dim);
-            max-width: 500px;
-            margin: 0 auto 30px;
-            font-size: 1.1rem;
-        }
-
-        .btn-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--accent);
-            color: #05070a;
-            padding: 15px 30px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 800;
-            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.2);
-        }
-
-        .btn-home:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: #fff;
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Elementos decorativos de fondo */
-        .orb {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--accent);
-            filter: blur(150px);
-            border-radius: 50%;
-            opacity: 0.1;
-            z-index: 1;
-            animation: move 10s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(-20%, -20%); }
-            to { transform: translate(20%, 20%); }
-        }
+        .btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(88, 166, 255, 0.3); }
     </style>
 </head>
 <body>
 
-    <div class="orb"></div>
+    <div class="glow"></div>
 
-    <div class="container">
-        <div class="error-code">404</div>
-        <h2>Creo que te has perdido</h2>
-        <p>Parece que la página que buscas ha sido purgada o nunca existió en este sector del sistema.</p>
-        
-        <a href="index.html" class="btn-home">
-            <i class="fa-solid fa-house-signal"></i> Volver a la superficie
-        </a>
+    <div class="card" id="card">
+        <h1>404</h1>
+        <p>SECTOR NO ENCONTRADO</p>
+        <div class="status-text">La red Abyssus no ha podido mapear esta ubicación.</div>
+        <a href="index.html" class="btn">RECONECTAR_NODO</a>
     </div>
 
+    <script>
+        // Efecto visual de seguimiento suave
+        const card = document.getElementById('card');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 15;
+            const y = (e.clientY / window.innerHeight - 0.5) * 15;
+            card.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
+        });
+    </script>
 </body>
 </html>
 
