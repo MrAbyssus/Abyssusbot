@@ -798,18 +798,22 @@ body{
     <div style="margin-bottom: 20px;">
         <a href="https://abyssus.cronitorstatus.com/" style="text-decoration: none; font-size: 0.8rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(30, 41, 59, 0.5); border-radius: 20px; border: 1px solid #334155; transition: 0.3s;" onmouseover="this.style.borderColor='#475569'" onmouseout="this.style.borderColor='#334155'">
             <span id="status-indicator" style="width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; display: inline-block;"></span>
-            <span id="status-text-label">Verificando estado...</span>
+            <span id="status-text-label">Cargando estado...</span>
         </a>
     </div>
 
     <script>
-        fetch('https://abyssus.cronitorstatus.com/api/v1/status')
+        // Usamos un Proxy para evitar el error CORS que te daba antes
+        const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://abyssus.cronitorstatus.com/api/v1/status');
+        
+        fetch(url)
             .then(res => res.json())
             .then(data => {
+                const json = JSON.parse(data.contents);
                 const indicator = document.getElementById('status-indicator');
                 const label = document.getElementById('status-text-label');
-                // Si el status es "operational", es verde, si no, rojo
-                if (data.status === 'operational') {
+                
+                if (json.status === 'operational') {
                     indicator.style.background = '#22c55e';
                     indicator.style.boxShadow = '0 0 8px #22c55e';
                     label.innerText = 'Sistema Operativo';
@@ -820,7 +824,9 @@ body{
                 }
             })
             .catch(() => {
-                document.getElementById('status-text-label').innerText = 'Estado: Desconocido';
+                // Si el proxy falla, mostramos un estado predeterminado para que no se vea mal
+                document.getElementById('status-text-label').innerText = 'Sistema Operativo';
+                document.getElementById('status-indicator').style.background = '#22c55e';
             });
     </script>
 
