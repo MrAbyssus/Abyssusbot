@@ -796,13 +796,33 @@ body{
     <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #2f3136, transparent); margin-bottom: 20px; width: 60%;">
 
     <div style="margin-bottom: 20px;">
-        <a href="https://abyssus.cronitorstatus.com/" style="text-decoration: none; font-size: 0.8rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; background: rgba(30, 41, 59, 0.5); border-radius: 20px; border: 1px solid #334155; transition: 0.3s;" onmouseover="this.style.borderColor='#475569'" onmouseout="this.style.borderColor='#334155'">
-            <object data="https://abyssus.cronitorstatus.com/badge.svg" type="image/svg+xml" style="height: 16px; pointer-events: none;">
-                <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e;"></span>
-            </object>
-            <span style="opacity: 0.7;">| Sistema</span>
+        <a href="https://abyssus.cronitorstatus.com/" style="text-decoration: none; font-size: 0.8rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(30, 41, 59, 0.5); border-radius: 20px; border: 1px solid #334155; transition: 0.3s;" onmouseover="this.style.borderColor='#475569'" onmouseout="this.style.borderColor='#334155'">
+            <span id="status-indicator" style="width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; display: inline-block;"></span>
+            <span id="status-text-label">Verificando estado...</span>
         </a>
     </div>
+
+    <script>
+        fetch('https://abyssus.cronitorstatus.com/api/v1/status')
+            .then(res => res.json())
+            .then(data => {
+                const indicator = document.getElementById('status-indicator');
+                const label = document.getElementById('status-text-label');
+                // Si el status es "operational", es verde, si no, rojo
+                if (data.status === 'operational') {
+                    indicator.style.background = '#22c55e';
+                    indicator.style.boxShadow = '0 0 8px #22c55e';
+                    label.innerText = 'Sistema Operativo';
+                } else {
+                    indicator.style.background = '#ef4444';
+                    indicator.style.boxShadow = '0 0 8px #ef4444';
+                    label.innerText = 'Sistema con Incidencias';
+                }
+            })
+            .catch(() => {
+                document.getElementById('status-text-label').innerText = 'Estado: Desconocido';
+            });
+    </script>
 
     <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: #94a3b8;">
         © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
@@ -816,10 +836,7 @@ body{
 
     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap;">
         <span>¿Necesitas ayuda?</span>
-        <a href="https://discord.gg/qegCgXX99z" 
-            style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);"
-            onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" 
-            onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
+        <a href="https://discord.gg/qegCgXX99z" style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);" onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
             Servidor de Soporte
         </a>
