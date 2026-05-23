@@ -705,35 +705,56 @@ async function update() {
             ramChart.update();
         }
     } catch (e) {
-        if (statusText.innerText !== "MANTENIMIENTO") addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
-        statusText.innerText = "MANTENIMIENTO"; statusText.style.color = "var(--offline)";
-        document.getElementById('res-ping').innerText = "-- ms";
-        let servidoresCaidosCalculados = 0;
-        let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
-            const guildsDelCluster = memoriaUltimosServidores[id] || 0;
-            servidoresCaidosCalculados += guildsDelCluster;
-            return { id: id, ram: 0, status: 'offline', ping: '--', guilds: guildsDelCluster, cpu: 0, commands: 0 };
-        });
-        if (servidoresCaidosCalculados === 0) servidoresCaidosCalculados = 665;
-        document.getElementById('stat-clusters').innerText = "0 / 6";
-        document.getElementById('res-perdidos').innerText = servidoresCaidosCalculados.toLocaleString();
-        document.getElementById('res-perdidos').style.color = "var(--offline)";
+    if (statusText.innerText !== "MANTENIMIENTO") 
+        addLog("El servidor no responde. Posible actualización o mantenimiento.", "warn");
 
-        document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
-            const infoServidores = c.guilds > 0 ? `<br>• Servers: ${c.guilds.toLocaleString()}` : '';
-            const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
-            return `<div class="box offline ${activeClass}">
-                <span>${c.id}</span>
-                <span class="box-ram">0M</span>
-                <div class="tooltip"><b>CLUSTER #${c.id}</b><br>• OFFLINE<br>• RAM: 0MB<br>• Ping: --ms${infoServidores}<br>• Comandos: 0</div>
-            </div>`;
-        }).join('');
+    statusText.innerText = "MANTENIMIENTO"; 
+    statusText.style.color = "var(--offline)";
+    document.getElementById('res-ping').innerText = "-- ms";
 
-        if (clusterSeleccionadoId !== null) {
-            document.getElementById('det-status').innerText = "OFFLINE"; document.getElementById('det-status').style.color = "var(--offline)";
-            document.getElementById('det-ping').innerText = "--"; document.getElementById('det-cpu').innerText = "--"; document.getElementById('det-commands').innerText = "0";
-        }
+    // Calcular servidores caídos de forma real
+    let servidoresCaidosCalculados = 0;
+    let fallbackClusters = [1, 2, 3, 4, 5, 6].map(id => {
+        const guildsDelCluster = memorialUltimosServidores[id] || 0;
+        servidoresCaidosCalculados += guildsDelCluster;
+        return { 
+            id: id, 
+            ram: 0, 
+            status: 'offline', 
+            ping: '--', 
+            guilds: guildsDelCluster, 
+            cpu: 0, 
+            commands: 0 
+        };
+    });
+
+    // Ya no forzamos 665, usamos el cálculo real
+    const totalServidoresReales = servidoresCaidosCalculados;
+
+    document.getElementById('stat-clusters').innerText = `0 / ${fallbackClusters.length}`;
+    document.getElementById('res-perdidos').innerText = totalServidoresReales.toLocaleString();
+    document.getElementById('res-perdidos').style.color = "var(--offline)";
+
+    document.getElementById('status-grid').innerHTML = fallbackClusters.map(c => {
+        const infoServidores = c.guilds > 0 ? `<br>Servers: ${c.guilds.toLocaleString()}` : '';
+        const activeClass = (clusterSeleccionadoId === c.id) ? 'active-node' : '';
+        return `<div class="box offline ${activeClass}">
+            <span>${c.id}</span>
+            <span class="box-ram">0MB</span>
+            <div class="tooltip">CLUSTER #${c.id}<br>OFFLINE<br>RAM: 0MB<br>Ping: --ms${infoServidores}<br>Comandos: 0</div>
+        </div>`;
+    }).join('');
+
+    if (clusterSeleccionadoId !== null) {
+        document.getElementById('det-status').innerText = "OFFLINE";
+        document.getElementById('det-status').style.color = "var(--offline)";
+        document.getElementById('det-ping').innerText = "--";
+        document.getElementById('det-ram').innerText = "0MB";
+        document.getElementById('det-cpu').innerText = "--";
+        document.getElementById('det-commands').innerText = "0";
     }
+  }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
