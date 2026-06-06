@@ -1,77 +1,73 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MrAbyssus/Abyssusbot/refs/heads/main/img/AbyssusBanner.png" width="95%"/>
+  <img src="https://raw.githubusercontent.com/MrAbyssus/Abyssusbot/refs/heads/main/img/Bannernuevo.png" width="95%"/>
 </p>
 
 
-👁️‍🗨️ ¿Y si tu servidor tuviera un alma?
+# 🤖 Abyssus Bot — Automatización, Moderación y Control Inteligente para Discord
 
-Unente que susurra horóscopos, lanza retos imposibles, crea drama donde no lo hay, y responde con sabiduría o sarcasmo según el clima cósmico. Este bot no es solo comandos: es caos con propósito, humor con veneno, y magia digital en cada línea.
+Abyssus Bot transforma tu servidor en una comunidad más organizada, segura y automatizada.
 
-Con más de 150 comandos únicos, transforma cualquier canal en un escenario donde todo puede pasar. Desde astrología hasta duelos entre usuarios, desde consejos que nadie pidió hasta memes que salvan días grises.
-
-🧿 ¿Qué puede hacer?
-
-🔮 Leer tu carta astral y revelar secretos cósmicos
-
-♈ Mostrar tu horóscopo diario con un toque de ironía  
-
-🃏 Interpretar el tarot como si fuera tu abuela mística 
-
-💸 Economía con tienda, productos y eventos temáticos 
-
-🛡 Moderación inteligente: baneos, kicks, warns 
-
-🎭 Juegos sociales como Loba, Mafia, Verdadero o Falso 
-
-🧠 Consejos, retos y respuestas que oscilan entre lo sabio y lo absurdo  
-
-🧬 ¿Por qué invocarlo?
-
-Porque tu servidor merece personalidad  
-Porque el aburrimiento no tiene cabida  
-Porque cada comando es una chispa de caos controlado  
-
-🔗 Agrégalo hoy. Deja que Abyssus desate el caos cósmico. Tu comunidad no volverá a ser la misma.
+Con un dashboard moderno, herramientas avanzadas de moderación, sistemas automáticos y enfoque real en privacidad, Abyssus está diseñado para comunidades que quieren estabilidad sin sacrificar personalidad.
 
 ---
 
+## ⚡ Características principales
 
-Gracias por la paciencia y por apoyar el desarrollo del bot. ¡Seguimos mejorando! 💪
-
-Solo Invitalo - [https://top.gg/bot/680897280433324081/invite](https://top.gg/bot/680897280433324081/invite)
-
----
-
-## 🔒 Aviso de Privacidad 
-
-Abyssus Bot ha sido diseñado con un principio fundamental: **la privacidad del usuario es intocable**.
-
-- No recopila ni almacena datos personales.
-- No rastrea actividad fuera de Discord.
-- No comparte información con terceros.
-- Toda la información se guarda localmente en el servidor.
-
-Para más detalles, consultá el archivo [📄 Aviso de Privacidad](https://mrabyssus.github.io/Abyssusbot/privacidad.html).
-
+🤝 Sistema automático de alianzas
+📊 Dashboard modular con métricas en tiempo real
+🛡 Moderación inteligente y configurable
+📜 Logs automáticos y auditoría del servidor
+☁️ Backups automáticos de configuración
+🔐 Seguridad inteligente contra actividad sospechosa
+🎚 Sistema de niveles y experiencia
+🎫 Tickets y herramientas de soporte
+🧠 Automatización avanzada para servidores modernos
+🌐 Arquitectura optimizada con MongoDB y soporte cluster
 
 ---
 
-**Tu privacidad es prioridad. Abyssus Bot no guarda, no analiza y no comparte. Simplemente funciona.**
+## 🚀 ¿Por qué Abyssus?
+
+Porque administrar un servidor no debería ser complicado.
+
+Abyssus combina:
+
+* automatización,
+* rendimiento,
+* diseño moderno,
+* privacidad,
+* y herramientas avanzadas
+
+en una sola plataforma diseñada para Discord.
 
 ---
 
-# 🔒 Filosofía de Abyssus Bot
+## 🔒 Privacidad primero
 
-Abyssus fue creado con una visión clara: moderar sin invadir.
+Abyssus fue construido bajo una filosofía clara:
 
-- No guarda mensajes ni datos personales.
-- No usa bases de datos externas.
-- No rastrea actividad fuera del servidor.
-- Todos los registros son locales y visibles solo para administradores.
+* No vende datos.
+* No incluye rastreadores.
+* No analiza actividad fuera de Discord.
+* Los administradores mantienen control total sobre su servidor.
+* Incluye herramientas de limpieza y derecho al olvido.
 
-🧠 Abyssus cree en la autonomía, la transparencia y el respeto por la privacidad.  
-📌 Si estás usando Abyssus, estás eligiendo moderar con integridad.
+La privacidad no es una función premium.
+Es parte del núcleo del proyecto.
 
+---
+
+## 📈 Un proyecto en constante evolución
+
+Abyssus continúa creciendo con nuevas funciones, optimizaciones y mejoras constantes impulsadas por la comunidad.
+
+Gracias por formar parte del proyecto 💙
+
+---
+
+## 🔗 Invita Abyssus
+
+https://top.gg/bot/680897280433324081/invite
 
