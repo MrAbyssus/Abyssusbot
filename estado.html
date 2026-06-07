@@ -344,7 +344,24 @@
   box-shadow:
     0 0 12px rgba(51,255,0,.10),
     inset 0 0 14px rgba(51,255,0,.035);
-}           
+}        
+
+.live-center{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#fff;
+  font-family:monospace;
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+
+.live-center span{
+  color:var(--online);
+  text-shadow:0 0 8px rgba(51,255,0,.4);
+}
+            
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>    
@@ -371,27 +388,24 @@
         </div>
     </section>
 
-    <div class="refresh-area">Próximo scan: <span id="refresh-timer">3</span>s</div>
+   <div class="system-live-bar">
 
-    <section class="section">
-        <div class="section-title">Electrocardiograma de Abyssus Bot 🩺</div>
-        <div class="chart-container">
-            <canvas id="ramChart"></canvas>
-        </div>
-    </section>
-
-
-    <div class="system-live-bar">
   <div class="live-left">
     <span class="live-dot"></span>
     ABYSSUS INFRASTRUCTURE LIVE
   </div>
 
-  <div class="live-right">
-    Monitoreo en tiempo real • Auto refresh
+  <div class="live-center">
+    🌐 <span id="liveServers">677</span> servidores
+    •
+    👥 <span id="liveUsers">10K+</span> usuarios
   </div>
-</div>
-    
+
+  <div class="live-right">
+    ⚡ Auto refresh
+  </div>
+
+</div>    
     
     <section class="section">
         <div class="section-title">Clusters</div>
