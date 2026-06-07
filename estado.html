@@ -278,90 +278,6 @@
         }
         @media (min-width: 600px) { .box .tooltip { width: 160px; font-size: 0.75rem; } }
         .box:hover .tooltip, .box:active .tooltip { visibility: visible; opacity: 1; }
-
-
-.system-live-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 14px;
-  border-radius:12px;
-  background:linear-gradient(135deg, rgba(51,255,0,.08), rgba(0,229,255,.04));
-  border:1px solid rgba(51,255,0,.16);
-  box-shadow:0 0 25px rgba(51,255,0,.05);
-  font-family:monospace;
-}
-
-.live-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--online);
-  box-shadow:0 0 12px var(--online);
-  animation:livePulse 1.5s infinite;
-}
-
-@keyframes livePulse{
-  0%,100%{opacity:.45; transform:scale(1);}
-  50%{opacity:1; transform:scale(1.35);}
-}
-
-.live-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:#fff;
-  font-weight:900;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-
-.live-right{
-  color:var(--text-muted);
-  font-size:.75rem;
-}
-
-.tech-item{
-  background:linear-gradient(145deg, rgba(255,255,255,.035), rgba(0,0,0,.25));
-  border:1px solid rgba(255,255,255,.055);
-  border-left:3px solid rgba(51,255,0,.35);
-  box-shadow:inset 0 0 18px rgba(255,255,255,.015);
-}
-
-.tech-item:hover{
-  transform:translateY(-2px);
-  border-left-color:var(--online);
-  box-shadow:0 0 18px rgba(51,255,0,.06);
-}
-
-.box{
-  background:linear-gradient(145deg, rgba(255,255,255,.045), rgba(0,0,0,.22));
-  box-shadow:inset 0 0 12px rgba(255,255,255,.015);
-}
-
-.box.online{
-  box-shadow:
-    0 0 12px rgba(51,255,0,.10),
-    inset 0 0 14px rgba(51,255,0,.035);
-}        
-
-.live-center{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  color:#fff;
-  font-family:monospace;
-  font-size:.78rem;
-  font-weight:700;
-  letter-spacing:.5px;
-}
-
-.live-center span{
-  color:var(--online);
-  text-shadow:0 0 8px rgba(51,255,0,.4);
-}
-            
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>    
@@ -388,25 +304,15 @@
         </div>
     </section>
 
-   <div class="system-live-bar">
+    <div class="refresh-area">Próximo scan: <span id="refresh-timer">3</span>s</div>
 
-  <div class="live-left">
-    <span class="live-dot"></span>
-    ABYSSUS INFRASTRUCTURE LIVE
-  </div>
+    <section class="section">
+        <div class="section-title">Electrocardiograma de Abyssus Bot 🩺</div>
+        <div class="chart-container">
+            <canvas id="ramChart"></canvas>
+        </div>
+    </section>
 
-  <div class="live-center">
-    🌐 <span id="liveServers">677</span> servidores
-    •
-    👥 <span id="liveUsers">10K+</span> usuarios
-  </div>
-
-  <div class="live-right">
-    ⚡ Auto refresh
-  </div>
-
-</div>    
-    
     <section class="section">
         <div class="section-title">Clusters</div>
         <div id="status-grid" class="grid"></div>
@@ -652,19 +558,6 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     }
 }
 
-const liveUsers =
-  document.getElementById('liveUsers');
-
-if(liveUsers){
-
-  const estimatedUsers =
-    totalGuilds * 120;
-
-  liveUsers.innerText =
-    estimatedUsers.toLocaleString();
-
-}
-    
 // ... (mantiene todo tu código anterior hasta la función update)
 
 async function update() {
