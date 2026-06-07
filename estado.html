@@ -278,8 +278,84 @@
         }
         @media (min-width: 600px) { .box .tooltip { width: 160px; font-size: 0.75rem; } }
         .box:hover .tooltip, .box:active .tooltip { visibility: visible; opacity: 1; }
+
+   .section{
+  padding:28px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17,18,23,.96),
+      rgba(11,12,16,.98)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.05);
+}
+
+.tech-grid{
+  gap:18px;
+}
+
+.details-grid{
+  gap:16px;
+}
+
+.tech-item{
+  backdrop-filter:blur(12px);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.04),
+      rgba(0,0,0,.22)
+    );
+
+  box-shadow:
+    inset 0 0 12px rgba(255,255,255,.02),
+    0 0 18px rgba(0,0,0,.25);
+}
+
+.box,
+.tech-item,
+.detail-card{
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    border-color .28s ease,
+    background .28s ease;
+}
+
+.box.active-node{
+  box-shadow:
+    0 0 12px rgba(51,255,0,.14),
+    inset 0 0 6px rgba(51,255,0,.05);
+}
+
+.box.online::after{
+  opacity:.25;
+  filter:blur(2px);
+}
+
+.navbar{
+  backdrop-filter:blur(18px);
+  background:rgba(6,7,9,.72);
+}
+
+.nav-logo span{
+  text-shadow:
+    0 0 8px rgba(51,255,0,.45),
+    0 0 18px rgba(51,255,0,.18);
+}
+
+body::before{
+  opacity:.18;
+}         
+            
+            
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>    
 <body>
 
