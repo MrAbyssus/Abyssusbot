@@ -652,6 +652,19 @@ function seleccionarCluster(id, status, guilds, ping, cpu, commands) {
     }
 }
 
+const liveUsers =
+  document.getElementById('liveUsers');
+
+if(liveUsers){
+
+  const estimatedUsers =
+    totalGuilds * 120;
+
+  liveUsers.innerText =
+    estimatedUsers.toLocaleString();
+
+}
+    
 // ... (mantiene todo tu código anterior hasta la función update)
 
 async function update() {
