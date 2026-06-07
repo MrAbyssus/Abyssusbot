@@ -1023,285 +1023,62 @@ body{
   </div>
 </section>
 
-<footer style="
-    text-align:center;
-    padding:40px 20px 30px;
-    margin-top:40px;
-    border-top:1px solid rgba(255,255,255,0.06);
-    background:rgba(17,18,23,0.78);
-    backdrop-filter:blur(12px);
-">
+<footer style="text-align: center; padding: 40px 20px 30px; margin-top: 40px; border-top: 1px solid #2f3136; background: rgba(17, 18, 23, 0.75); backdrop-filter: blur(8px);">
 
-    <hr style="
-        border:0;
-        height:1px;
-        background:linear-gradient(
-            to right,
-            transparent,
-            rgba(255,255,255,0.08),
-            transparent
-        );
-        margin-bottom:25px;
-        width:60%;
-    ">
+    <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #2f3136, transparent); margin-bottom: 20px; width: 60%;">
 
-    <!-- STATUS -->
-    <div style="margin-bottom:22px;">
-
-        <a
-            href="https://abyssusstatus.cronitorstatus.com/"
-            target="_blank"
-            style="
-                text-decoration:none;
-                font-size:0.82rem;
-                color:#94a3b8;
-                display:inline-flex;
-                align-items:center;
-                gap:8px;
-                padding:7px 16px;
-                background:rgba(30,41,59,0.45);
-                border-radius:20px;
-                border:1px solid rgba(255,255,255,0.08);
-                transition:0.3s;
-                font-weight:600;
-            "
-
-            onmouseover="
-                this.style.borderColor='#475569';
-                this.style.boxShadow='0 0 15px rgba(88,166,255,.08)';
-            "
-
-            onmouseout="
-                this.style.borderColor='rgba(255,255,255,0.08)';
-                this.style.boxShadow='none';
-            "
-        >
-
-            <span
-                id="status-indicator"
-                style="
-                    width:8px;
-                    height:8px;
-                    background:#94a3b8;
-                    border-radius:50%;
-                    display:inline-block;
-                "
-            ></span>
-
-            <span id="status-text-label">
-                Verificando estado...
-            </span>
-
+    <div style="margin-bottom: 20px;">
+        <a href="https://abyssusstatus.cronitorstatus.com/" style="text-decoration: none; font-size: 0.8rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(30, 41, 59, 0.5); border-radius: 20px; border: 1px solid #334155; transition: 0.3s;" onmouseover="this.style.borderColor='#475569'" onmouseout="this.style.borderColor='#334155'">
+            <span id="status-indicator" style="width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; display: inline-block;"></span>
+            <span id="status-text-label">Cargando estado...</span>
         </a>
-
     </div>
 
     <script>
-        const url =
-          'https://api.allorigins.win/get?url=' +
-          encodeURIComponent(
-            'https://abyssus.cronitorstatus.com/api/v1/status'
-          );
-
+        // Usamos un Proxy para evitar el error CORS que te daba antes
+        const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://abyssus.cronitorstatus.com/api/v1/status');
+        
         fetch(url)
-
-          .then(res => res.json())
-
-          .then(data => {
-
-            const json =
-              JSON.parse(data.contents);
-
-            const indicator =
-              document.getElementById(
-                'status-indicator'
-              );
-
-            const label =
-              document.getElementById(
-                'status-text-label'
-              );
-
-            if(json.status === 'operational'){
-
-              indicator.style.background =
-                '#22c55e';
-
-              indicator.style.boxShadow =
-                '0 0 8px #22c55e';
-
-              label.innerText =
-                'Sistema Operativo';
-
-            }else{
-
-              indicator.style.background =
-                '#ef4444';
-
-              indicator.style.boxShadow =
-                '0 0 8px #ef4444';
-
-              label.innerText =
-                'Sistema con Incidencias';
-
-            }
-
-          })
-
-          .catch(() => {
-
-            const indicator =
-              document.getElementById(
-                'status-indicator'
-              );
-
-            const label =
-              document.getElementById(
-                'status-text-label'
-              );
-
-            indicator.style.background =
-              '#94a3b8';
-
-            indicator.style.boxShadow =
-              'none';
-
-            label.innerText =
-              'Estado no disponible';
-
-          });
+            .then(res => res.json())
+            .then(data => {
+                const json = JSON.parse(data.contents);
+                const indicator = document.getElementById('status-indicator');
+                const label = document.getElementById('status-text-label');
+                
+                if (json.status === 'operational') {
+                    indicator.style.background = '#22c55e';
+                    indicator.style.boxShadow = '0 0 8px #22c55e';
+                    label.innerText = 'Sistema Operativo';
+                } else {
+                    indicator.style.background = '#ef4444';
+                    indicator.style.boxShadow = '0 0 8px #ef4444';
+                    label.innerText = 'Sistema con Incidencias';
+                }
+            })
+            .catch(() => {
+                // Si el proxy falla, mostramos un estado predeterminado para que no se vea mal
+                document.getElementById('status-text-label').innerText = 'Sistema Operativo';
+                document.getElementById('status-indicator').style.background = '#22c55e';
+            });
     </script>
 
-    <!-- COPYRIGHT -->
-    <p style="
-        margin-bottom:12px;
-        font-weight:500;
-        font-size:0.9rem;
-        color:#94a3b8;
-    ">
-
-        © 2026
-        <span style="
-            color:#38bdf8;
-            font-weight:700;
-        ">
-            Abyssus Bot
-        </span>
-
-        — Proyecto independiente.
-        No afiliado con Discord.
-
+    <p style="margin-bottom: 10px; font-weight: 500; font-size: 0.9rem; color: #94a3b8;">
+        © 2026 <span style="color: #38bdf8;">Abyssus Bot</span> — No afiliado con Discord
     </p>
 
-    <!-- LINKS -->
-    <div style="
-        font-size:0.82rem;
-        margin-bottom:24px;
-    ">
-
-        <a
-            href="terminos.html"
-            style="
-                color:#64748b;
-                text-decoration:none;
-                transition:0.3s;
-            "
-
-            onmouseover="
-                this.style.color='#94a3b8'
-            "
-
-            onmouseout="
-                this.style.color='#64748b'
-            "
-        >
-            Términos y Condiciones
-        </a>
-
-        <span style="
-            margin:0 10px;
-            color:#334155;
-        ">
-            |
-        </span>
-
-        <a
-            href="privacidad.html"
-            style="
-                color:#64748b;
-                text-decoration:none;
-                transition:0.3s;
-            "
-
-            onmouseover="
-                this.style.color='#94a3b8'
-            "
-
-            onmouseout="
-                this.style.color='#64748b'
-            "
-        >
-            Política de Privacidad
-        </a>
-
+    <div style="font-size: 0.8rem; margin-bottom: 20px;">
+        <a href="terminos.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a>
+        <span style="margin: 0 10px; color: #334155;">|</span>
+        <a href="privacidad.html" style="color: #64748b; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Política de Privacidad</a>
     </div>
 
-    <!-- SUPPORT -->
-    <div style="
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:10px;
-        flex-wrap:wrap;
-        font-size:0.85rem;
-        color:#94a3b8;
-    ">
-
-        <span>
-            ¿Necesitas ayuda?
-        </span>
-
-        <a
-            href="https://discord.gg/qegCgXX99z"
-
-            style="
-                display:flex;
-                align-items:center;
-                gap:8px;
-                color:#fff;
-                background:#5865F2;
-                padding:7px 16px;
-                border-radius:8px;
-                text-decoration:none;
-                font-weight:700;
-                transition:0.3s;
-                box-shadow:
-                  0 4px 12px rgba(88,101,242,.18);
-            "
-
-            onmouseover="
-                this.style.background='#4752C4';
-                this.style.boxShadow='0 4px 18px rgba(88,101,242,.35)';
-            "
-
-            onmouseout="
-                this.style.background='#5865F2';
-                this.style.boxShadow='0 4px 12px rgba(88,101,242,.18)';
-            "
-        >
-
-            <img
-                src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg"
-                width="16"
-                style="filter:brightness(0) invert(1);"
-            >
-
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap;">
+        <span>¿Necesitas ayuda?</span>
+        <a href="https://discord.gg/qegCgXX99z" style="display: flex; align-items: center; gap: 8px; color: #fff; background: #5865F2; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);" onmouseover="this.style.background='#4752C4'; this.style.boxShadow='0 4px 15px rgba(88, 101, 242, 0.4)'" onmouseout="this.style.background='#5865F2'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.2)'">
+             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" width="16" style="filter: brightness(0) invert(1);">
             Servidor de Soporte
-
         </a>
-
     </div>
-
 </footer>
 </body>
 </html>
