@@ -230,6 +230,27 @@
             border-top: 1px solid var(--border);
             font-size: 0.8rem;
         }
+
+header::after{
+  content:'';
+  position:absolute;
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(88,166,255,.12),
+      transparent 70%
+    );
+
+  pointer-events:none;
+}
+
+        header{
+  position:relative;
+  overflow:hidden;
+}
+        
     </style>
 </head>
 
