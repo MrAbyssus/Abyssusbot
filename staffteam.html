@@ -55,55 +55,129 @@
         .header p { color: #949ba4; font-size: 1.1rem; }
 
         /* ===== GRID & CARDS ===== */
-        .staff-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 30px; 
-            width: 90%; 
-            max-width: 1000px; 
-            margin-bottom: 50px; 
-        }
+   /* ===== STAFF SECTIONS ===== */
 
-        .staff-card { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border); 
-            padding: 40px; 
-            border-radius: 20px; 
-            text-align: center; 
-            backdrop-filter: blur(5px); 
-            transition: 0.3s; 
-        }
-        .staff-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+.staff-wrapper{
+    width:90%;
+    max-width:1100px;
+    margin:0 auto 60px;
+}
 
-        .avatar-container { width: 120px; height: 120px; margin: 0 auto 20px; }
-        .staff-avatar { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--border); object-fit: cover; }
+.staff-section{
+    margin-bottom:45px;
+}
 
-        .staff-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
-        
-        .discord-tag {
-            display: inline-block;
-            font-size: 0.85rem;
-            color: var(--discord);
-            background: rgba(88, 101, 242, 0.1);
-            padding: 4px 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
+.rank-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+    padding:14px 20px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+}
 
-        .staff-role { 
-            display: block;
-            font-size: 0.7rem; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            padding: 6px 0;
-            margin-bottom: 20px;
-            font-weight: 700;
-            color: #38bdf8;
-            border-radius: 8px;
-        }
+.rank-header span{
+    font-size:1.4rem;
+}
 
-        .staff-bio { color: #949ba4; font-size: 0.95rem; line-height: 1.6; }
+.rank-header h2{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:800;
+}
+
+.founder-rank{
+    border-color:rgba(56,189,248,.35);
+    box-shadow:0 0 20px rgba(56,189,248,.08);
+}
+
+.cofounder-rank{
+    border-color:rgba(245,158,11,.35);
+    box-shadow:0 0 20px rgba(245,158,11,.08);
+}
+
+.support-rank{
+    border-color:rgba(34,197,94,.35);
+    box-shadow:0 0 20px rgba(34,197,94,.08);
+}
+
+.staff-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px, 340px));
+    justify-content:center;
+    gap:30px;
+    width:100%;
+}
+
+.staff-card{
+    width:100%;
+    max-width:340px;
+    min-height:430px;
+    margin:0 auto;
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    backdrop-filter:blur(5px);
+    transition:.3s;
+}
+
+.staff-card:hover{
+    transform:translateY(-5px);
+    border-color:var(--accent);
+}
+
+.avatar-container{
+    width:120px;
+    height:120px;
+    margin:0 auto 20px;
+}
+
+.staff-avatar{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:3px solid var(--border);
+    object-fit:cover;
+}
+
+.staff-name{
+    font-size:1.6rem;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.discord-tag{
+    display:inline-block;
+    font-size:.85rem;
+    color:var(--discord);
+    background:rgba(88,101,242,.1);
+    padding:4px 12px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-weight:600;
+}
+
+.staff-role{
+    display:block;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    padding:6px 0;
+    margin-bottom:20px;
+    font-weight:700;
+    color:#38bdf8;
+    border-radius:8px;
+}
+
+.staff-bio{
+    color:#949ba4;
+    font-size:.95rem;
+    line-height:1.6;
+}
 
         /* ===== FOOTER REFACTORIZADO TERMINAL SYSTEM ===== */
         .main-footer {
@@ -213,6 +287,23 @@
             .footer-divider {
                 width: 80%;
             }
+
+
+          @media (max-width: 768px) {
+    .staff-wrapper{
+        width:95%;
+    }
+
+    .staff-grid{
+        grid-template-columns:1fr;
+    }
+
+    .staff-card{
+        max-width:100%;
+        padding:30px 20px;
+    }
+}
+
         }
     </style>
 </head>
@@ -238,48 +329,104 @@
         <p>El equipo detrás de Abyssus Bot.</p>
     </header>
 
-    <main class="staff-grid">
-        <div class="staff-card" style="border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
-            <div class="avatar-container">
-                <img src="img/perfil.jpg" class="staff-avatar" style="border-color: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow));">
-            </div>
-            <h2 class="staff-name">Mr.Abyssus</h2>
-            <div class="discord-tag">@mr.abyssus</div>
-            
-            <span class="staff-role" style="
-                background: linear-gradient(90deg, #0ea5e9, #6366f1);
-                color: #fff;
-                border: none;
-                font-weight: 800;
-                box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-                padding: 6px 20px;
-            ">Desarrollador & Founder</span>
-            
-            <p class="staff-bio">Desarrollador principal y arquitecto de sistemas. Liderando la visión técnica y el desarrollo del core de Abyssus Bot.</p>
+   <main class="staff-wrapper">
+
+    <section class="staff-section">
+        <div class="rank-header founder-rank">
+            <span>👑</span>
+            <h2>Founder</h2>
         </div>
 
-        <div class="staff-card">
-            <div class="avatar-container">
-                <img src="img/hiken.jpg" class="staff-avatar">
+        <div class="staff-grid">
+            <div class="staff-card" style="border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
+                <div class="avatar-container">
+                    <img src="img/perfil.jpg" class="staff-avatar" style="border-color: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow));">
+                </div>
+
+                <h2 class="staff-name">Mr.Abyssus</h2>
+                <div class="discord-tag">@mr.abyssus</div>
+
+                <span class="staff-role" style="
+                    background: linear-gradient(90deg, #0ea5e9, #6366f1);
+                    color: #fff;
+                    border: none;
+                    font-weight: 800;
+                    box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+                    padding: 6px 20px;
+                ">
+                    Desarrollador & Founder
+                </span>
+
+                <p class="staff-bio">
+                    Desarrollador principal y arquitecto de sistemas. Liderando la visión técnica y el desarrollo del core de Abyssus Bot.
+                </p>
             </div>
-            <h2 class="staff-name">HIKEN D RASEC</h2>
-            <div class="discord-tag">@hiken_rasec</div>
-            <span class="staff-role" style="border: 1px solid #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">Co-Founder & Partner</span>
-            <p class="staff-bio">Cofundador de Abyssus. Figura clave en la creación del proyecto y pilar fundamental en la comunidad desde sus inicios.</p>
+        </div>
+    </section>
+
+    <section class="staff-section">
+        <div class="rank-header cofounder-rank">
+            <span>🤝</span>
+            <h2>Co-Founder</h2>
         </div>
 
-                <div class="staff-card">
-            <div class="avatar-container">
-                <img src="img/IMG_20260613_223448.jpg" class="staff-avatar">
+        <div class="staff-grid">
+            <div class="staff-card">
+                <div class="avatar-container">
+                    <img src="img/hiken.jpg" class="staff-avatar">
+                </div>
+
+                <h2 class="staff-name">HIKEN D RASEC</h2>
+                <div class="discord-tag">@hiken_rasec</div>
+
+                <span class="staff-role" style="
+                    border: 1px solid #f59e0b;
+                    color: #f59e0b;
+                    background: rgba(245, 158, 11, 0.1);
+                    border-radius: 8px;
+                ">
+                    Co-Founder & Partner
+                </span>
+
+                <p class="staff-bio">
+                    Cofundador de Abyssus. Figura clave en la creación del proyecto y pilar fundamental en la comunidad desde sus inicios.
+                </p>
             </div>
-            <h2 class="staff-name">𝘬𝘺𝘰𝘬𝘰 𝘷𝘢𝘯</h2>
-            <div class="discord-tag">@𝘬𝘺𝘰𝘬𝘰 𝘷𝘢𝘯</div>
-          <span class="staff-role" style="border: 1px solid #22c55e; color: #22c55e; background: rgba(34, 197, 94, 0.1); border-radius: 8px;">Support Team</span>
-            <p class="staff-bio">Encargado de brindar asistencia a la comunidad, resolver dudas, atender reportes y ofrecer soporte técnico relacionado con Abyssus Bot y sus sistemas.</p>
+        </div>
+    </section>
+
+    <section class="staff-section">
+        <div class="rank-header support-rank">
+            <span>🛠️</span>
+            <h2>Support Team</h2>
         </div>
 
-     
-    </main>
+        <div class="staff-grid">
+            <div class="staff-card">
+                <div class="avatar-container">
+                    <img src="img/IMG_20260613_223448.jpg" class="staff-avatar">
+                </div>
+
+                <h2 class="staff-name">𝘬𝘺𝘰𝘬𝘰 𝘷𝘢𝘯</h2>
+                <div class="discord-tag">@𝘬𝘺𝘰𝘬𝘰 𝘷𝘢𝘯</div>
+
+                <span class="staff-role" style="
+                    border: 1px solid #22c55e;
+                    color: #22c55e;
+                    background: rgba(34, 197, 94, 0.1);
+                    border-radius: 8px;
+                ">
+                    Support Team
+                </span>
+
+                <p class="staff-bio">
+                    Encargado de brindar asistencia a la comunidad, resolver dudas, atender reportes y ofrecer soporte técnico relacionado con Abyssus Bot y sus sistemas.
+                </p>
+            </div>
+        </div>
+    </section>
+
+</main>
 
     <footer class="main-footer">
         <hr class="footer-divider">
