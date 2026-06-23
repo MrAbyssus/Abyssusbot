@@ -263,50 +263,92 @@ header::after{
 
 <header>
     <h1>🔐 Privacidad y Datos</h1>
-    <p>Comprometidos con la transparencia • Versión 3.1 (Cloud Atlas)</p>
+    <p>Comprometidos con la transparencia • Versión 4.0 (Abyssus Cloud Infrastructure)</p>
 </header>
 
 <main>
 
     <section class="card fade-in">
         <h2><i class="fa-solid fa-user-tie"></i> Responsable</h2>
-        <p>Abyssus Bot es un servicio automatizado desarrollado por Mr.Abyssus. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables finales del manejo y visualización de las configuraciones y registros dentro de su comunidad.</p>
+        <p>Abyssus Bot es un servicio automatizado desarrollado por Mr.Abyssus. Al integrar el bot en tu servidor, el propietario y su equipo de soporte actúan como responsables técnicos del funcionamiento, mantenimiento y visualización de configuraciones y registros dentro de la comunidad administrada.</p>
     </section>
 
     <section class="card fade-in">
         <h2><i class="fa-solid fa-database"></i> Datos Recolectados y Almacenamiento</h2>
-        <p>Procesamos e indexamos la información técnica mínima necesaria para el funcionamiento del sistema de gestión. Esta información se aloja de forma persistente en nuestro clúster de MongoDB Atlas.</p>
-        <p>Identificadores de Discord: ID único del servidor (guildId) y del canal de texto asignado para las notificaciones.</p>
-        <p>Configuraciones de Personalización: Parámetros estéticos del mensaje de bienvenida, que incluyen el título del embed, el cuerpo del mensaje, el texto del footer, la URL de la imagen y el color en formato hexadecimal.</p>
+
+        <p>Abyssus procesa y almacena únicamente la información necesaria para ofrecer sus funciones de administración, automatización y análisis.</p>
+
+        <p><strong>Identificadores de Discord:</strong> ID del servidor, canales, roles, usuarios y mensajes necesarios para el funcionamiento de los sistemas internos.</p>
+
+        <p><strong>Configuraciones del Servidor:</strong> Ajustes realizados desde comandos o Dashboard, incluyendo módulos de moderación, automatización, economía, niveles, alianzas, autoroles, logs, bienvenida y sistemas similares.</p>
+
+        <p><strong>Registros Operativos:</strong> Dependiendo de las funciones activadas, Abyssus puede almacenar registros de moderación, advertencias, economía, niveles, alianzas, auditorías y configuraciones administrativas.</p>
+
+        <p>Todos estos datos son almacenados de forma persistente en nuestra infraestructura basada en MongoDB Atlas.</p>
     </section>
 
     <section class="card fade-in" style="border-left: 4px solid var(--accent);">
         <h2><i class="fa-solid fa-globe"></i> Uso del Dashboard (Web)</h2>
-        <p>Cuando accedes a nuestro panel de control centralizado, gestionamos credenciales efímeras mediante la API oficial de Discord a través de protocolos seguros.</p>
-        <p>Tokens de Acceso: Claves efímeras para validar tu identidad de administrador en el servidor. Nunca almacenamos ni solicitamos contraseñas.</p>
-        <p>Sesiones Seguras: Cookies técnicas encriptadas estrictamente necesarias para sostener la sesión activa en el panel de control.</p>
-        <p>Mapeo de Permisos: Lectura en tiempo real de los servidores donde posees facultades de gestión para permitirte modificar la configuración de bienvenida.</p>
+
+        <p>Cuando accedes al panel de control centralizado, Abyssus utiliza exclusivamente la API oficial de Discord para autenticar tu identidad.</p>
+
+        <p><strong>Tokens de Acceso:</strong> Se utilizan credenciales temporales proporcionadas por Discord OAuth2. Nunca almacenamos contraseñas de usuarios.</p>
+
+        <p><strong>Sesiones Seguras:</strong> Se utilizan cookies técnicas cifradas estrictamente necesarias para mantener la sesión activa.</p>
+
+        <p><strong>Permisos:</strong> Abyssus consulta los servidores donde posees permisos administrativos para permitir la gestión remota únicamente sobre aquellos donde dispones de autorización.</p>
     </section>
 
     <section class="card fade-in">
         <h2><i class="fa-solid fa-shield-halved"></i> Seguridad e Infraestructura Cloud</h2>
-        <p>Hemos migrado el almacenamiento a un ecosistema en la nube protegido para garantizar la disponibilidad y la seguridad de los ajustes del servidor.</p>
-        <p>Cifrado en Tránsito: Toda comunicación entre tu navegador, el servidor Express y la base de datos de MongoDB Atlas se realiza bajo protocolos encriptados SSL/TLS de alta seguridad.</p>
-        <p>Restricción de Acceso: El clúster de base de datos cuenta con seguridad a nivel de red (IP Whitelisting) y credenciales protegidas mediante variables de entorno (process.env).</p>
-        <p>Aislamiento de Configuraciones: Los datos de cada comunidad se organizan de forma independiente mediante un modelo indexado por el ID único de cada servidor.</p>
+
+        <p>Toda la infraestructura de Abyssus opera sobre servicios cloud protegidos.</p>
+
+        <p><strong>Cifrado:</strong> Todas las comunicaciones entre navegador, API, Discord y MongoDB Atlas utilizan conexiones seguras SSL/TLS.</p>
+
+        <p><strong>Protección de Credenciales:</strong> Las credenciales sensibles se almacenan mediante variables de entorno seguras y nunca son expuestas públicamente.</p>
+
+        <p><strong>Restricción de Acceso:</strong> El acceso a la infraestructura está limitado mediante autenticación y controles de red.</p>
+
+        <p><strong>Aislamiento de Datos:</strong> Los datos de cada comunidad permanecen aislados mediante identificadores únicos por servidor.</p>
     </section>
 
- <section class="card fade-in">
-        <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Purga</h2>
-        <p>Garantizamos el derecho de supresión y el control total de los datos almacenados mediante las herramientas del panel y comandos directos.</p>
-        <p>Actualización Dinámica: Al modificar y guardar los cambios en el Dashboard, los nuevos parámetros sobrescriben de manera inmediata los valores anteriores en la base de datos.</p>
-        <p>Autogestión de Datos Locales: Todos los registros obtenidos por las funciones de moderación y economía pueden ser purgados en cualquier momento utilizando el comando /modlogs borrar directamente en tu servidor de Discord. Esto elimina de forma definitiva los datos de los archivos locales modlogs.json y economia.json; este comando no altera ni elimina registros almacenados en la base de datos de MongoDB.</p>
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-erasing-lines"></i> Control, Modificación y Eliminación de Datos</h2>
+
+        <p>Los administradores mantienen control total sobre la información almacenada por Abyssus.</p>
+
+        <p><strong>Actualización Dinámica:</strong> Los cambios realizados desde el Dashboard o comandos administrativos actualizan inmediatamente la información almacenada.</p>
+
+        <p><strong>Eliminación de Registros:</strong> Determinados sistemas permiten eliminar registros mediante comandos administrativos como <code>/modlogs borrar</code>, eliminando permanentemente la información asociada desde la base de datos.</p>
+
+        <p><strong>Desinstalación:</strong> La expulsión del bot del servidor puede provocar la eliminación automática o programada de configuraciones y datos asociados.</p>
+    </section>
+
+    <section class="card fade-in">
+        <h2><i class="fa-solid fa-scale-balanced"></i> Uso de la Información</h2>
+
+        <p>La información almacenada es utilizada exclusivamente para:</p>
+
+        <ul>
+            <li>Proporcionar funcionalidades administrativas.</li>
+            <li>Mantener configuraciones persistentes.</li>
+            <li>Generar estadísticas y rankings internos.</li>
+            <li>Prevenir abusos y mejorar la estabilidad del servicio.</li>
+            <li>Desarrollar nuevas funcionalidades para la plataforma.</li>
+        </ul>
+
+        <p>Abyssus no vende, comercializa ni comparte información personal con terceros.</p>
     </section>
 
     <section class="card fade-in">
         <h2><i class="fa-solid fa-envelope-open-text"></i> Contacto</h2>
-        <p>Para soporte, dudas sobre el funcionamiento de la plataforma o solicitudes relacionadas con la gestión de tus datos:</p>
-        <a href="mailto:soporte@abyssusbot.info" class="contact-badge">soporte@abyssusbot.info</a>
+
+        <p>Para soporte técnico, dudas relacionadas con privacidad o solicitudes relacionadas con tus datos:</p>
+
+        <a href="mailto:soporte@abyssusbot.info" class="contact-badge">
+            soporte@abyssusbot.info
+        </a>
     </section>
 
 </main>
