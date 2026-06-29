@@ -6,69 +6,197 @@
 <title>Área de Miembros | Abyssus</title>
 
 <style>
+:root{
+  --bg:#07080c;
+  --card:#111827;
+  --card2:#0f172a;
+  --border:rgba(255,255,255,.08);
+  --text:#ffffff;
+  --dim:#9ca3af;
+  --accent:#5865F2;
+  --accent2:#38bdf8;
+  --success:#22c55e;
+  --warning:#f59e0b;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#07080c;
-    color:white;
+  font-family:Arial,sans-serif;
+  background:
+    radial-gradient(circle at top,rgba(88,101,242,.16),transparent 45%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
 }
 
 header{
-    text-align:center;
-    padding:60px 20px;
-    background:
-        radial-gradient(circle at top,
-        rgba(88,101,242,.2),
-        transparent 60%);
+  text-align:center;
+  padding:60px 20px 35px;
 }
 
 header h1{
-    font-size:3rem;
+  font-size:2.8rem;
+  margin-bottom:10px;
+}
+
+header p{
+  color:var(--dim);
 }
 
 .container{
-    width:90%;
-    max-width:1200px;
-    margin:auto;
+  width:92%;
+  max-width:1200px;
+  margin:auto;
+}
+
+.panel-menu{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:35px;
+}
+
+.panel-menu button{
+  background:#111827;
+  color:white;
+  border:1px solid var(--border);
+  padding:12px 16px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.panel-menu button:hover,
+.panel-menu button.active{
+  background:var(--accent);
+}
+
+.panel{
+  display:none;
+  animation:fade .25s ease;
+}
+
+.panel.active{
+  display:block;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
 .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:20px;
-    margin:40px 0;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+  margin:25px 0;
 }
 
 .card{
-    background:#111827;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:20px;
-    padding:25px;
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
 }
 
-.card h2{
-    margin-top:0;
+.card h3{
+  margin-bottom:10px;
 }
 
-.card p{
-    color:#9ca3af;
+.card p,
+.card li{
+  color:var(--dim);
+  line-height:1.5;
+}
+
+.card ul{
+  padding-left:18px;
+  margin-top:10px;
+}
+
+.status{
+  font-weight:900;
+}
+
+.online{
+  color:var(--success);
+}
+
+.warning{
+  color:var(--warning);
+}
+
+.badge{
+  display:inline-block;
+  background:rgba(88,101,242,.18);
+  color:#9aa7ff;
+  border:1px solid rgba(88,101,242,.35);
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:800;
+  margin-bottom:10px;
 }
 
 .btn{
-    display:inline-block;
-    margin-top:15px;
-    padding:12px 18px;
-    background:#5865F2;
-    color:white;
-    border-radius:12px;
-    text-decoration:none;
-    font-weight:bold;
+  display:inline-block;
+  margin-top:14px;
+  background:var(--accent);
+  color:white;
+  padding:11px 16px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:800;
+  border:none;
+  cursor:pointer;
+}
+
+.roadmap-item{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#0f172a;
+  margin-bottom:12px;
+}
+
+.poll button{
+  display:block;
+  width:100%;
+  margin-top:10px;
+  background:#0f172a;
+  color:white;
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.poll button:hover{
+  background:var(--accent);
+}
+
+.result{
+  margin-top:12px;
+  color:var(--success);
+  font-weight:800;
 }
 
 footer{
-    text-align:center;
-    padding:30px;
-    color:#9ca3af;
+  text-align:center;
+  padding:35px;
+  color:var(--dim);
+  margin-top:50px;
+  border-top:1px solid var(--border);
 }
 </style>
 </head>
@@ -76,77 +204,210 @@ footer{
 <body>
 
 <header>
-    <h1>👤 Área de Miembros</h1>
-    <p>
-        Centro exclusivo para miembros y colaboradores de Abyssus.
-    </p>
+  <span class="badge">Zona de Miembros</span>
+  <h1>👤 Área de Miembros Abyssus</h1>
+  <p>Centro informativo para miembros, colaboradores y comunidad de Abyssus.</p>
 </header>
 
 <div class="container">
 
+  <div class="panel-menu">
+    <button class="active" onclick="showPanel('noticias', this)">📰 Noticias</button>
+    <button onclick="showPanel('roadmap', this)">🗺️ Roadmap</button>
+    <button onclick="showPanel('premium', this)">💎 Premium</button>
+    <button onclick="showPanel('anuncios', this)">📢 Anuncios</button>
+    <button onclick="showPanel('encuestas', this)">🗳️ Encuestas</button>
+    <button onclick="showPanel('recursos', this)">📚 Recursos</button>
+  </div>
+
+  <section id="noticias" class="panel active">
+    <h2>📰 Noticias internas</h2>
+
     <div class="grid">
+      <div class="card">
+        <h3>Dashboard migrado</h3>
+        <p>El Dashboard de Abyssus fue migrado a una nueva infraestructura para mejorar estabilidad y reducir problemas de rate limits.</p>
+      </div>
 
-        <div class="card">
-            <h2>📰 Noticias</h2>
-            <p>
-                Últimas novedades, mantenimientos y anuncios importantes.
-            </p>
+      <div class="card">
+        <h3>Sistema de Alianzas operativo</h3>
+        <p>El sistema de alianzas fue restaurado y actualmente se encuentra funcionando correctamente.</p>
+      </div>
 
-            <a href="#" class="btn">Ver noticias</a>
-        </div>
-
-        <div class="card">
-            <h2>🗺️ Roadmap</h2>
-            <p>
-                Consulta qué sistemas están en desarrollo y futuras mejoras.
-            </p>
-
-            <a href="#" class="btn">Ver roadmap</a>
-        </div>
-
-        <div class="card">
-            <h2>💎 Premium</h2>
-            <p>
-                Beneficios exclusivos y formas de apoyar el proyecto.
-            </p>
-
-            <a href="#" class="btn">Más información</a>
-        </div>
-
-        <div class="card">
-            <h2>📢 Anuncios</h2>
-            <p>
-                Información importante para la comunidad.
-            </p>
-
-            <a href="#" class="btn">Ver anuncios</a>
-        </div>
-
-        <div class="card">
-            <h2>🗳️ Encuestas</h2>
-            <p>
-                Participa en decisiones sobre el futuro de Abyssus.
-            </p>
-
-            <a href="#" class="btn">Participar</a>
-        </div>
-
-        <div class="card">
-            <h2>📚 Recursos</h2>
-            <p>
-                Guías, documentación y material exclusivo.
-            </p>
-
-            <a href="#" class="btn">Explorar</a>
-        </div>
-
+      <div class="card">
+        <h3>Protección de autenticación</h3>
+        <p>Se agregó un tiempo de enfriamiento entre inicios de sesión para proteger el sistema contra bloqueos temporales.</p>
+      </div>
     </div>
+  </section>
+
+  <section id="roadmap" class="panel">
+    <h2>🗺️ Roadmap del proyecto</h2>
+
+    <div class="roadmap-item">
+      <strong>✅</strong>
+      <div>
+        <h3>Dashboard estable</h3>
+        <p>Panel migrado y funcionando correctamente.</p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <strong>✅</strong>
+      <div>
+        <h3>Sistema de alianzas</h3>
+        <p>Sistema restaurado y disponible para la comunidad.</p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <strong>🟡</strong>
+      <div>
+        <h3>Premium Abyssus</h3>
+        <p>Beneficios, soporte prioritario y recompensas en revisión.</p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <strong>🔜</strong>
+      <div>
+        <h3>Mejoras web</h3>
+        <p>Área de miembros, recursos, documentación y paneles informativos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="premium" class="panel">
+    <h2>💎 Abyssus Premium</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>⭐ Beneficios</h3>
+        <ul>
+          <li>Soporte prioritario.</li>
+          <li>Acceso anticipado a funciones.</li>
+          <li>Reconocimiento especial.</li>
+          <li>Funciones premium seleccionadas.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🖥️ Apoyo al proyecto</h3>
+        <p>Las contribuciones ayudan a mantener VPS, Dashboard, base de datos y desarrollo continuo.</p>
+      </div>
+
+      <div class="card">
+        <h3>🎁 Recompensas</h3>
+        <p>Los miembros premium podrán recibir insignias, menciones especiales y acceso a novedades anticipadas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="anuncios" class="panel">
+    <h2>📢 Anuncios</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>✅ Sistemas operativos</h3>
+        <p>Dashboard, alianzas, bot y sistemas principales se encuentran funcionando correctamente.</p>
+      </div>
+
+      <div class="card">
+        <h3>⏳ Enfriamiento de login</h3>
+        <p>Si intentas iniciar sesión varias veces seguidas, el sistema puede pedir esperar un momento. Esto es normal.</p>
+      </div>
+
+      <div class="card">
+        <h3>🎫 Soporte</h3>
+        <p>Para dudas o reportes, abre un ticket o menciona a soporte en el canal adecuado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="encuestas" class="panel">
+    <h2>🗳️ Encuestas</h2>
+
+    <div class="grid">
+      <div class="card poll">
+        <h3>¿Qué debería priorizar Abyssus?</h3>
+        <button onclick="vote('Estabilidad')">Estabilidad</button>
+        <button onclick="vote('Dashboard')">Dashboard</button>
+        <button onclick="vote('Premium')">Premium</button>
+        <button onclick="vote('Comunidad')">Comunidad</button>
+        <div id="voteResult" class="result"></div>
+      </div>
+
+      <div class="card">
+        <h3>Notas</h3>
+        <p>Por ahora esta encuesta es visual. Después puede conectarse a backend o Google Forms.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="recursos" class="panel">
+    <h2>📚 Recursos</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>📄 Documentación</h3>
+        <p>Guías de uso, comandos y configuración básica de Abyssus.</p>
+        <a class="btn" href="#">Ver documentación</a>
+      </div>
+
+      <div class="card">
+        <h3>🔗 Enlaces útiles</h3>
+        <ul>
+          <li>Servidor de soporte.</li>
+          <li>Invitar Abyssus.</li>
+          <li>Política de privacidad.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🛠️ Reportes</h3>
+        <p>Reporta errores, problemas de configuración o fallos del sistema mediante tickets.</p>
+      </div>
+    </div>
+  </section>
 
 </div>
 
 <footer>
-    Abyssus Bot © Todos los derechos reservados
+  Abyssus Bot © Área de Miembros
 </footer>
+
+<script>
+function showPanel(id, button){
+  document.querySelectorAll('.panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
+
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.panel-menu button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+function vote(option){
+  localStorage.setItem('abyssus_vote', option);
+  document.getElementById('voteResult').textContent =
+    '✅ Voto registrado visualmente: ' + option;
+}
+
+const savedVote = localStorage.getItem('abyssus_vote');
+if(savedVote){
+  document.getElementById('voteResult').textContent =
+    '✅ Voto registrado visualmente: ' + savedVote;
+}
+</script>
 
 </body>
 </html>
