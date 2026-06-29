@@ -120,18 +120,6 @@ header p{
   margin-top:10px;
 }
 
-.status{
-  font-weight:900;
-}
-
-.online{
-  color:var(--success);
-}
-
-.warning{
-  color:var(--warning);
-}
-
 .badge{
   display:inline-block;
   background:rgba(88,101,242,.18);
@@ -214,7 +202,7 @@ footer{
   <div class="panel-menu">
     <button class="active" onclick="showPanel('noticias', this)">📰 Noticias</button>
     <button onclick="showPanel('roadmap', this)">🗺️ Roadmap</button>
-    <button onclick="showPanel('premium', this)">💎 Premium</button>
+    <button onclick="showPanel('premium', this)">💎 Colaboradores</button>
     <button onclick="showPanel('anuncios', this)">📢 Anuncios</button>
     <button onclick="showPanel('encuestas', this)">🗳️ Encuestas</button>
     <button onclick="showPanel('recursos', this)">📚 Recursos</button>
@@ -263,8 +251,8 @@ footer{
     <div class="roadmap-item">
       <strong>🟡</strong>
       <div>
-        <h3>Premium Abyssus</h3>
-        <p>Beneficios, soporte prioritario y recompensas en revisión.</p>
+        <h3>Sistema de colaboradores</h3>
+        <p>Beneficios, reconocimiento y apoyo voluntario al proyecto en revisión.</p>
       </div>
     </div>
 
@@ -272,33 +260,46 @@ footer{
       <strong>🔜</strong>
       <div>
         <h3>Mejoras web</h3>
-        <p>Área de miembros, recursos, documentación y paneles informativos.</p>
+        <p>Recursos, documentación, guías y paneles informativos para la comunidad.</p>
       </div>
     </div>
   </section>
 
   <section id="premium" class="panel">
-    <h2>💎 Abyssus Premium</h2>
+    <h2>💎 Beneficios para Colaboradores</h2>
 
     <div class="grid">
       <div class="card">
+        <h3>💜 Apoya Abyssus</h3>
+        <p>Abyssus seguirá ofreciendo funciones gratuitas. Las donaciones son una forma voluntaria de apoyar el desarrollo, la infraestructura y el mantenimiento del proyecto.</p>
+      </div>
+
+      <div class="card">
         <h3>⭐ Beneficios</h3>
         <ul>
-          <li>Soporte prioritario.</li>
-          <li>Acceso anticipado a funciones.</li>
-          <li>Reconocimiento especial.</li>
-          <li>Funciones premium seleccionadas.</li>
+          <li>Rol exclusivo dentro de la comunidad.</li>
+          <li>Insignia especial de colaborador.</li>
+          <li>Acceso anticipado a noticias y novedades.</li>
+          <li>Participación en pruebas beta.</li>
+          <li>Prioridad en soporte y asistencia.</li>
+          <li>Participación en decisiones y encuestas del proyecto.</li>
         </ul>
       </div>
 
       <div class="card">
-        <h3>🖥️ Apoyo al proyecto</h3>
-        <p>Las contribuciones ayudan a mantener VPS, Dashboard, base de datos y desarrollo continuo.</p>
+        <h3>🖥️ ¿En qué ayuda tu apoyo?</h3>
+        <ul>
+          <li>Mantenimiento de VPS.</li>
+          <li>Hosting del Dashboard.</li>
+          <li>Base de datos y servicios externos.</li>
+          <li>Desarrollo de nuevas mejoras.</li>
+          <li>Apoyo al equipo que mantiene Abyssus.</li>
+        </ul>
       </div>
 
       <div class="card">
-        <h3>🎁 Recompensas</h3>
-        <p>Los miembros premium podrán recibir insignias, menciones especiales y acceso a novedades anticipadas.</p>
+        <h3>🎁 Reconocimiento</h3>
+        <p>Los colaboradores podrán aparecer en espacios especiales de la comunidad como agradecimiento por ayudar a que Abyssus siga creciendo.</p>
       </div>
     </div>
   </section>
@@ -332,14 +333,14 @@ footer{
         <h3>¿Qué debería priorizar Abyssus?</h3>
         <button onclick="vote('Estabilidad')">Estabilidad</button>
         <button onclick="vote('Dashboard')">Dashboard</button>
-        <button onclick="vote('Premium')">Premium</button>
+        <button onclick="vote('Sistema de colaboradores')">Sistema de colaboradores</button>
         <button onclick="vote('Comunidad')">Comunidad</button>
         <div id="voteResult" class="result"></div>
       </div>
 
       <div class="card">
         <h3>Notas</h3>
-        <p>Por ahora esta encuesta es visual. Después puede conectarse a backend o Google Forms.</p>
+        <p>Por ahora esta encuesta es visual. Después puede conectarse a backend o formularios externos.</p>
       </div>
     </div>
   </section>
