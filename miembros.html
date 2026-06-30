@@ -265,13 +265,17 @@ footer{
         </div>
     </section>
 
-    <section id="premium" class="panel">
+ <section id="premium" class="panel">
     <div class="card">
         <h3>💜 Apoya Abyssus</h3>
         <p>
             Las donaciones ayudan a mantener la infraestructura, servidores VPS,
             servicios externos y el desarrollo continuo.
         </p>
+
+        <a class="unlock-btn" href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" target="_blank">
+            💜 Donar / Apoyar
+        </a>
     </div>
 
     <div class="premium-zone">
@@ -287,41 +291,101 @@ footer{
 
         <div id="premiumContent" class="premium-locked">
             <div class="grid">
-                <div class="card">
+                <div class="card action-card" onclick="openModal('🧪 Beta Testing','Aquí se publicarán pruebas anticipadas de funciones nuevas antes de su lanzamiento oficial.')">
                     <h3>🧪 Beta Testing</h3>
-                    <p>Prueba nuevas funciones antes de su lanzamiento oficial.</p>
+                    <p>Ver funciones en prueba.</p>
                 </div>
 
-                <div class="card">
+                <div class="card action-card" onclick="openModal('📰 Noticias Anticipadas','Aquí aparecerán novedades, cambios internos y adelantos antes de ser anunciados públicamente.')">
                     <h3>📰 Noticias Anticipadas</h3>
-                    <p>Acceso temprano a novedades y futuras características.</p>
+                    <p>Ver adelantos del proyecto.</p>
                 </div>
 
-                <div class="card">
+                <div class="card action-card" onclick="openModal('📥 Recursos Exclusivos','Próximamente: wallpapers, logos, banners y recursos para servidores colaboradores.')">
                     <h3>📥 Recursos Exclusivos</h3>
-                    <p>Wallpapers, logos y contenido exclusivo.</p>
+                    <p>Explorar recursos.</p>
                 </div>
 
-                <div class="card">
+                <div class="card action-card" onclick="openModal('🗳️ Encuestas Privadas','Próximamente podrás votar en decisiones internas del proyecto Abyssus.')">
                     <h3>🗳️ Encuestas Privadas</h3>
-                    <p>Participa en decisiones importantes del proyecto.</p>
+                    <p>Participar en votaciones.</p>
                 </div>
 
-                <div class="card">
+                <div class="card action-card" onclick="openModal('🎖️ Reconocimiento Especial','Los colaboradores podrán aparecer en menciones especiales, muro de apoyo e insignias de comunidad.')">
                     <h3>🎖️ Reconocimiento Especial</h3>
-                    <p>Insignia y reconocimiento dentro de la comunidad.</p>
+                    <p>Ver reconocimiento.</p>
                 </div>
 
-                <div class="card">
+                <div class="card action-card" onclick="contactSupport()">
                     <h3>🎫 Soporte Prioritario</h3>
-                    <p>Atención preferencial dentro del servidor de soporte.</p>
+                    <p>Contactar soporte directo.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<div id="infoModal" class="modal hidden">
+    <div class="modal-box">
+        <h2 id="modalTitle"></h2>
+        <p id="modalText"></p>
+        <button onclick="closeModal()">Cerrar</button>
+    </div>
 </div>
+
+<style>
+.action-card{
+    cursor:pointer;
+    transition:.2s;
+}
+
+.action-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(88,101,242,.45);
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    z-index:9999;
+}
+
+.modal.hidden{
+    display:none;
+}
+
+.modal-box{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:20px;
+    padding:28px;
+    max-width:520px;
+    width:100%;
+    color:white;
+    text-align:center;
+}
+
+.modal-box p{
+    color:#9ca3af;
+    line-height:1.7;
+    margin:15px 0;
+}
+
+.modal-box button{
+    padding:12px 18px;
+    border:none;
+    border-radius:12px;
+    background:#5865F2;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+</style>
 
 <footer>
     Abyssus Bot © Área de Miembros
@@ -364,6 +428,20 @@ function showPanel(id, button){
     });
 
     button.classList.add('active');
+}
+
+function openModal(title, text){
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalText').textContent = text;
+    document.getElementById('infoModal').classList.remove('hidden');
+}
+
+function closeModal(){
+    document.getElementById('infoModal').classList.add('hidden');
+}
+
+function contactSupport(){
+    window.open('https://discord.gg/qegCgXX99z', '_blank');
 }
 
 function logout(){
