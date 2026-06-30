@@ -266,54 +266,60 @@ footer{
     </section>
 
     <section id="premium" class="panel">
-        <div class="card">
-            <h3>💜 Apoya Abyssus</h3>
-            <p>Las donaciones ayudan a mantener la infraestructura, servidores VPS, servicios externos y el desarrollo continuo.</p>
-        </div>
+    <div class="card">
+        <h3>💜 Apoya Abyssus</h3>
+        <p>
+            Las donaciones ayudan a mantener la infraestructura, servidores VPS,
+            servicios externos y el desarrollo continuo.
+        </p>
+    </div>
 
-        <div class="premium-zone">
-            <h2>💎 Zona de Colaboradores</h2>
-            <p>Como agradecimiento, los colaboradores tendrán acceso a contenido y ventajas exclusivas.</p>
+    <div class="premium-zone">
+        <h2>💎 Zona de Colaboradores</h2>
 
-            <button class="unlock-btn" onclick="unlockPremium()">
-                Simular acceso de colaborador
-            </button>
+        <p>
+            Esta sección está reservada exclusivamente para colaboradores del proyecto.
+        </p>
 
-            <div id="premiumContent" class="premium-locked">
-                <div class="grid">
-                    <div class="card">
-                        <h3>🧪 Beta Testing</h3>
-                        <p>Prueba nuevas funciones antes de su lanzamiento oficial.</p>
-                    </div>
+        <p id="premiumStatus" style="margin-top:15px;color:#fbbf24;font-weight:bold;">
+            🔒 Contenido bloqueado.
+        </p>
 
-                    <div class="card">
-                        <h3>📰 Noticias Anticipadas</h3>
-                        <p>Acceso temprano a novedades y futuras características.</p>
-                    </div>
+        <div id="premiumContent" class="premium-locked">
+            <div class="grid">
+                <div class="card">
+                    <h3>🧪 Beta Testing</h3>
+                    <p>Prueba nuevas funciones antes de su lanzamiento oficial.</p>
+                </div>
 
-                    <div class="card">
-                        <h3>📥 Recursos Exclusivos</h3>
-                        <p>Wallpapers, logos y contenido exclusivo.</p>
-                    </div>
+                <div class="card">
+                    <h3>📰 Noticias Anticipadas</h3>
+                    <p>Acceso temprano a novedades y futuras características.</p>
+                </div>
 
-                    <div class="card">
-                        <h3>🗳️ Encuestas Privadas</h3>
-                        <p>Participa en decisiones importantes del proyecto.</p>
-                    </div>
+                <div class="card">
+                    <h3>📥 Recursos Exclusivos</h3>
+                    <p>Wallpapers, logos y contenido exclusivo.</p>
+                </div>
 
-                    <div class="card">
-                        <h3>🎖️ Reconocimiento Especial</h3>
-                        <p>Insignia y reconocimiento dentro de la comunidad.</p>
-                    </div>
+                <div class="card">
+                    <h3>🗳️ Encuestas Privadas</h3>
+                    <p>Participa en decisiones importantes del proyecto.</p>
+                </div>
 
-                    <div class="card">
-                        <h3>🎫 Soporte Prioritario</h3>
-                        <p>Atención preferencial dentro del servidor de soporte.</p>
-                    </div>
+                <div class="card">
+                    <h3>🎖️ Reconocimiento Especial</h3>
+                    <p>Insignia y reconocimiento dentro de la comunidad.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎫 Soporte Prioritario</h3>
+                    <p>Atención preferencial dentro del servidor de soporte.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 </div>
 
@@ -333,6 +339,19 @@ if(user){
         `Bienvenido <strong>${user}</strong> al centro de la comunidad de Abyssus.`;
 }
 
+const colaboradores = [
+    'Alex',
+    'MrAbyssus',
+    'AbyssusAdmin'
+];
+
+if(user && colaboradores.includes(user)){
+    document.getElementById('premiumContent').classList.remove('premium-locked');
+    document.getElementById('premiumStatus').innerHTML =
+        '✅ Acceso de colaborador activo.';
+    document.getElementById('premiumStatus').style.color = '#22c55e';
+}
+
 function showPanel(id, button){
     document.querySelectorAll('.panel').forEach(panel=>{
         panel.classList.remove('active');
@@ -345,11 +364,6 @@ function showPanel(id, button){
     });
 
     button.classList.add('active');
-}
-
-function unlockPremium(){
-    document.getElementById('premiumContent')
-        .classList.remove('premium-locked');
 }
 
 function logout(){
