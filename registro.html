@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Área de Miembros | Abyssus</title>
+<title>Login | Abyssus</title>
 
 <style>
 :root{
@@ -30,8 +30,6 @@ body{
     color:var(--text);
     min-height:100vh;
 }
-
-/* LOGIN / REGISTRO */
 
 .auth-container{
     min-height:100vh;
@@ -114,135 +112,13 @@ body{
 .hidden{
     display:none;
 }
-
-/* ÁREA DE MIEMBROS */
-
-.members-area{
-    display:none;
-    padding:50px 8%;
-}
-
-header{
-    text-align:center;
-    margin-bottom:40px;
-}
-
-header h1{
-    font-size:3rem;
-    margin-bottom:10px;
-}
-
-header p{
-    color:var(--dim);
-}
-
-.menu{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:35px;
-}
-
-.menu button{
-    padding:12px 18px;
-    border:none;
-    border-radius:14px;
-    background:#111827;
-    color:white;
-    cursor:pointer;
-    font-weight:700;
-    border:1px solid var(--border);
-}
-
-.menu button:hover,
-.menu button.active{
-    background:var(--accent);
-}
-
-.panel{
-    display:none;
-}
-
-.panel.active{
-    display:block;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-}
-
-.card{
-    background:linear-gradient(145deg,var(--card),var(--card2));
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:25px;
-}
-
-.card h3{
-    margin-bottom:10px;
-}
-
-.card p,
-.card li{
-    color:var(--dim);
-    line-height:1.6;
-}
-
-.card ul{
-    padding-left:18px;
-    margin-top:10px;
-}
-
-.logout{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.logout button{
-    background:#dc2626;
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.premium-locked{
-    opacity:.4;
-    filter:blur(2px);
-    pointer-events:none;
-}
-
-.unlock-btn{
-    margin-top:15px;
-    padding:12px 16px;
-    border:none;
-    border-radius:12px;
-    background:var(--accent);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-footer{
-    text-align:center;
-    padding:40px;
-    color:var(--dim);
-}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN / REGISTRO -->
+<div class="auth-container">
 
-<div class="auth-container" id="authContainer">
-
-    <!-- LOGIN -->
     <div class="auth-box" id="loginBox">
         <h1>👤 Iniciar Sesión</h1>
         <p>Accede al Área de Miembros de Abyssus.</p>
@@ -267,7 +143,6 @@ footer{
         </div>
     </div>
 
-    <!-- REGISTRO -->
     <div class="auth-box hidden" id="registerBox">
         <h1>📝 Registro</h1>
         <p>Crea una cuenta para acceder a la comunidad.</p>
@@ -299,114 +174,6 @@ footer{
 
 </div>
 
-<!-- ÁREA DE MIEMBROS -->
-
-<div class="members-area" id="membersArea">
-
-    <div class="logout">
-        <button onclick="logout()">Cerrar Sesión</button>
-    </div>
-
-    <header>
-        <h1>👤 Área de Miembros</h1>
-        <p id="welcomeText"></p>
-    </header>
-
-    <div class="menu">
-        <button class="active" onclick="showPanel('noticias',this)">📰 Noticias</button>
-        <button onclick="showPanel('roadmap',this)">🗺️ Roadmap</button>
-        <button onclick="showPanel('recursos',this)">📚 Recursos</button>
-        <button onclick="showPanel('premium',this)">💎 Colaboradores</button>
-    </div>
-
-    <section id="noticias" class="panel active">
-        <div class="grid">
-            <div class="card">
-                <h3>🚀 Dashboard Migrado</h3>
-                <p>El Dashboard fue migrado a nueva infraestructura.</p>
-            </div>
-
-            <div class="card">
-                <h3>🛡️ Sistemas Estables</h3>
-                <p>Todos los sistemas principales se encuentran operativos.</p>
-            </div>
-
-            <div class="card">
-                <h3>⚡ Mejoras</h3>
-                <p>Se siguen desarrollando nuevas características.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="roadmap" class="panel">
-        <div class="grid">
-            <div class="card">
-                <h3>✅ Dashboard</h3>
-                <p>Completado.</p>
-            </div>
-
-            <div class="card">
-                <h3>🟡 Sistema Premium</h3>
-                <p>En desarrollo.</p>
-            </div>
-
-            <div class="card">
-                <h3>🔜 Nuevas Funciones</h3>
-                <p>Próximamente.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="recursos" class="panel">
-        <div class="grid">
-            <div class="card">
-                <h3>📄 Documentación</h3>
-                <p>Guías y tutoriales.</p>
-            </div>
-
-            <div class="card">
-                <h3>🔗 Recursos</h3>
-                <p>Herramientas y enlaces útiles.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="premium" class="panel">
-        <div class="card">
-            <h3>💜 Apoya Abyssus</h3>
-            <p>Las donaciones ayudan a mantener el proyecto activo.</p>
-
-            <button class="unlock-btn" onclick="unlockPremium()">
-                Simular acceso de colaborador
-            </button>
-        </div>
-
-        <br>
-
-        <div id="premiumContent" class="grid premium-locked">
-            <div class="card">
-                <h3>🧪 Beta Testing</h3>
-                <p>Acceso anticipado a nuevas funciones.</p>
-            </div>
-
-            <div class="card">
-                <h3>📰 Noticias Anticipadas</h3>
-                <p>Conoce antes que nadie las novedades.</p>
-            </div>
-
-            <div class="card">
-                <h3>🎖️ Reconocimiento</h3>
-                <p>Insignia especial de colaborador.</p>
-            </div>
-        </div>
-    </section>
-
-</div>
-
-<footer>
-    Abyssus Bot © Área de Miembros
-</footer>
-
 <script>
 function showRegister(){
     document.getElementById('loginBox').classList.add('hidden');
@@ -429,9 +196,9 @@ function register(){
     }
 
     const account = {
-        user,
-        email,
-        password
+        user: user,
+        email: email,
+        password: password
     };
 
     localStorage.setItem('abyssus_account', JSON.stringify(account));
@@ -459,58 +226,16 @@ function login(){
     if(account.user === user && account.password === password){
         localStorage.setItem('abyssus_logged', 'true');
         localStorage.setItem('abyssus_user', account.user);
-        loadMembers();
+
+        window.location.href = 'miembros.html';
     }else{
         alert('Usuario o contraseña incorrectos');
     }
 }
 
-function loadMembers(){
-    const account = JSON.parse(localStorage.getItem('abyssus_account'));
-
-    if(!account){
-        return;
-    }
-
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('membersArea').style.display = 'block';
-
-    document.getElementById('welcomeText').textContent =
-        'Bienvenido ' + account.user + ' al Área de Miembros de Abyssus.';
-}
-
-function logout(){
-    localStorage.removeItem('abyssus_logged');
-    localStorage.removeItem('abyssus_user');
-
-    document.getElementById('membersArea').style.display = 'none';
-    document.getElementById('authContainer').style.display = 'flex';
-
-    showLogin();
-}
-
-function showPanel(id, button){
-    document.querySelectorAll('.panel').forEach(panel=>{
-        panel.classList.remove('active');
-    });
-
-    document.getElementById(id).classList.add('active');
-
-    document.querySelectorAll('.menu button').forEach(btn=>{
-        btn.classList.remove('active');
-    });
-
-    button.classList.add('active');
-}
-
-function unlockPremium(){
-    document.getElementById('premiumContent')
-        .classList.remove('premium-locked');
-}
-
 window.onload = () => {
     if(localStorage.getItem('abyssus_logged') === 'true'){
-        loadMembers();
+        window.location.href = 'miembros.html';
     }
 };
 </script>
