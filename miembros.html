@@ -129,14 +129,15 @@ header p{
 .premium-zone h2{margin-bottom:10px;}
 
 .premium-locked{
-    opacity:.4;
+    opacity:.35;
     filter:blur(2px);
     pointer-events:none;
     transition:.3s;
 }
 
 .unlock-btn{
-    margin:20px 0;
+    display:inline-block;
+    margin-top:20px;
     padding:14px 20px;
     border:none;
     border-radius:14px;
@@ -144,6 +145,73 @@ header p{
     color:white;
     cursor:pointer;
     font-weight:700;
+    text-decoration:none;
+}
+
+.action-card{
+    cursor:pointer;
+    transition:.2s;
+}
+
+.action-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(88,101,242,.45);
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    z-index:9999;
+}
+
+.modal.hidden{
+    display:none;
+}
+
+.modal-box{
+    position:relative;
+    background:#111827;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;
+    padding:30px;
+    max-width:700px;
+    width:100%;
+    max-height:80vh;
+    overflow:auto;
+    color:white;
+}
+
+.modal-box h2{
+    margin-bottom:18px;
+}
+
+.modal-box p,
+.modal-box li{
+    color:#9ca3af;
+    line-height:1.7;
+}
+
+.modal-box ul{
+    padding-left:20px;
+    margin-top:12px;
+}
+
+.modal-close{
+    position:absolute;
+    top:14px;
+    right:16px;
+    background:#dc2626;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:6px 10px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
 footer{
@@ -159,10 +227,7 @@ footer{
 
 <header>
     <h1>👤 Área de Miembros</h1>
-
-    <p id="welcomeText">
-        Bienvenido al centro de la comunidad de Abyssus.
-    </p>
+    <p id="welcomeText">Bienvenido al centro de la comunidad de Abyssus.</p>
 </header>
 
 <div class="container">
@@ -265,127 +330,75 @@ footer{
         </div>
     </section>
 
- <section id="premium" class="panel">
-    <div class="card">
-        <h3>💜 Apoya Abyssus</h3>
-        <p>
-            Las donaciones ayudan a mantener la infraestructura, servidores VPS,
-            servicios externos y el desarrollo continuo.
-        </p>
+    <section id="premium" class="panel">
+        <div class="card">
+            <h3>💜 Apoya Abyssus</h3>
+            <p>
+                Las donaciones ayudan a mantener la infraestructura, servidores VPS,
+                servicios externos y el desarrollo continuo.
+            </p>
 
-        <a class="unlock-btn" href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" target="_blank">
-            💜 Donar / Apoyar
-        </a>
-    </div>
+            <a class="unlock-btn" href="https://www.paypal.com/donate/?hosted_button_id=DMFBBR5VNYV94" target="_blank">
+                💜 Donar / Apoyar
+            </a>
+        </div>
 
-    <div class="premium-zone">
-        <h2>💎 Zona de Colaboradores</h2>
+        <div class="premium-zone">
+            <h2>💎 Zona de Colaboradores</h2>
 
-        <p>
-            Esta sección está reservada exclusivamente para colaboradores del proyecto.
-        </p>
+            <p>
+                Esta sección está reservada exclusivamente para colaboradores del proyecto.
+            </p>
 
-        <p id="premiumStatus" style="margin-top:15px;color:#fbbf24;font-weight:bold;">
-            🔒 Contenido bloqueado.
-        </p>
+            <p id="premiumStatus" style="margin-top:15px;color:#fbbf24;font-weight:bold;">
+                🔒 Contenido bloqueado.
+            </p>
 
-        <div id="premiumContent" class="premium-locked">
-            <div class="grid">
-                <div class="card action-card" onclick="openModal('🧪 Beta Testing','Aquí se publicarán pruebas anticipadas de funciones nuevas antes de su lanzamiento oficial.')">
-                    <h3>🧪 Beta Testing</h3>
-                    <p>Ver funciones en prueba.</p>
-                </div>
+            <div id="premiumContent" class="premium-locked">
+                <div class="grid">
+                    <div class="card action-card" onclick="openModal('🧪 Beta Testing', betaContent)">
+                        <h3>🧪 Beta Testing</h3>
+                        <p>Ver funciones en prueba.</p>
+                    </div>
 
-                <div class="card action-card" onclick="openModal('📰 Noticias Anticipadas','Aquí aparecerán novedades, cambios internos y adelantos antes de ser anunciados públicamente.')">
-                    <h3>📰 Noticias Anticipadas</h3>
-                    <p>Ver adelantos del proyecto.</p>
-                </div>
+                    <div class="card action-card" onclick="openModal('📰 Noticias Anticipadas', newsContent)">
+                        <h3>📰 Noticias Anticipadas</h3>
+                        <p>Ver adelantos del proyecto.</p>
+                    </div>
 
-                <div class="card action-card" onclick="openModal('📥 Recursos Exclusivos','Próximamente: wallpapers, logos, banners y recursos para servidores colaboradores.')">
-                    <h3>📥 Recursos Exclusivos</h3>
-                    <p>Explorar recursos.</p>
-                </div>
+                    <div class="card action-card" onclick="openModal('📥 Recursos Exclusivos', resourcesContent)">
+                        <h3>📥 Recursos Exclusivos</h3>
+                        <p>Explorar recursos.</p>
+                    </div>
 
-                <div class="card action-card" onclick="openModal('🗳️ Encuestas Privadas','Próximamente podrás votar en decisiones internas del proyecto Abyssus.')">
-                    <h3>🗳️ Encuestas Privadas</h3>
-                    <p>Participar en votaciones.</p>
-                </div>
+                    <div class="card action-card" onclick="openModal('🗳️ Encuestas Privadas', pollsContent)">
+                        <h3>🗳️ Encuestas Privadas</h3>
+                        <p>Participar en votaciones.</p>
+                    </div>
 
-                <div class="card action-card" onclick="openModal('🎖️ Reconocimiento Especial','Los colaboradores podrán aparecer en menciones especiales, muro de apoyo e insignias de comunidad.')">
-                    <h3>🎖️ Reconocimiento Especial</h3>
-                    <p>Ver reconocimiento.</p>
-                </div>
+                    <div class="card action-card" onclick="openModal('🎖️ Reconocimiento Especial', recognitionContent)">
+                        <h3>🎖️ Reconocimiento Especial</h3>
+                        <p>Ver reconocimiento.</p>
+                    </div>
 
-                <div class="card action-card" onclick="contactSupport()">
-                    <h3>🎫 Soporte Prioritario</h3>
-                    <p>Contactar soporte directo.</p>
+                    <div class="card action-card" onclick="contactSupport()">
+                        <h3>🎫 Soporte Prioritario</h3>
+                        <p>Contactar soporte directo.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+</div>
 
 <div id="infoModal" class="modal hidden">
     <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">×</button>
         <h2 id="modalTitle"></h2>
-        <p id="modalText"></p>
-        <button onclick="closeModal()">Cerrar</button>
+        <div id="modalContent"></div>
     </div>
 </div>
-
-<style>
-.action-card{
-    cursor:pointer;
-    transition:.2s;
-}
-
-.action-card:hover{
-    transform:translateY(-4px);
-    border-color:rgba(88,101,242,.45);
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.72);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    z-index:9999;
-}
-
-.modal.hidden{
-    display:none;
-}
-
-.modal-box{
-    background:#111827;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:20px;
-    padding:28px;
-    max-width:520px;
-    width:100%;
-    color:white;
-    text-align:center;
-}
-
-.modal-box p{
-    color:#9ca3af;
-    line-height:1.7;
-    margin:15px 0;
-}
-
-.modal-box button{
-    padding:12px 18px;
-    border:none;
-    border-radius:12px;
-    background:#5865F2;
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-}
-</style>
 
 <footer>
     Abyssus Bot © Área de Miembros
@@ -416,6 +429,51 @@ if(user && colaboradores.includes(user)){
     document.getElementById('premiumStatus').style.color = '#22c55e';
 }
 
+const betaContent = `
+<p>Funciones en prueba disponibles para colaboradores:</p>
+<ul>
+    <li>Pruebas anticipadas de nuevos sistemas.</li>
+    <li>Acceso a funciones antes de su salida pública.</li>
+    <li>Reporte directo de errores y mejoras.</li>
+</ul>
+`;
+
+const newsContent = `
+<p>Noticias y cambios antes de publicarse oficialmente.</p>
+<ul>
+    <li>Avances del desarrollo.</li>
+    <li>Próximas actualizaciones.</li>
+    <li>Cambios internos del proyecto.</li>
+</ul>
+`;
+
+const resourcesContent = `
+<p>Recursos exclusivos para colaboradores:</p>
+<ul>
+    <li>Wallpapers oficiales.</li>
+    <li>Logos y banners.</li>
+    <li>Material para servidores.</li>
+</ul>
+`;
+
+const pollsContent = `
+<p>Encuestas privadas para decidir mejoras del proyecto.</p>
+<ul>
+    <li>Prioridades de desarrollo.</li>
+    <li>Ideas futuras.</li>
+    <li>Opinión directa de colaboradores.</li>
+</ul>
+`;
+
+const recognitionContent = `
+<p>Reconocimiento especial dentro de Abyssus.</p>
+<ul>
+    <li>Insignia de colaborador.</li>
+    <li>Mención en la comunidad.</li>
+    <li>Participación en el muro de agradecimientos.</li>
+</ul>
+`;
+
 function showPanel(id, button){
     document.querySelectorAll('.panel').forEach(panel=>{
         panel.classList.remove('active');
@@ -430,9 +488,9 @@ function showPanel(id, button){
     button.classList.add('active');
 }
 
-function openModal(title, text){
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalText').textContent = text;
+function openModal(title, content){
+    document.getElementById('modalTitle').innerHTML = title;
+    document.getElementById('modalContent').innerHTML = content;
     document.getElementById('infoModal').classList.remove('hidden');
 }
 
