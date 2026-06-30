@@ -16,17 +16,11 @@
     --accent:#5865F2;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
     font-family:'Segoe UI',sans-serif;
-    background:
-        radial-gradient(circle at top,rgba(88,101,242,.15),transparent 50%),
-        var(--bg);
+    background:radial-gradient(circle at top,rgba(88,101,242,.15),transparent 50%),var(--bg);
     color:var(--text);
     min-height:100vh;
 }
@@ -54,6 +48,22 @@ header p{
     margin:auto;
 }
 
+.top-actions{
+    display:flex;
+    justify-content:center;
+    margin-bottom:25px;
+}
+
+.logout-btn{
+    padding:12px 18px;
+    border:none;
+    border-radius:14px;
+    background:#dc2626;
+    color:white;
+    cursor:pointer;
+    font-weight:700;
+}
+
 .menu{
     display:flex;
     justify-content:center;
@@ -79,13 +89,8 @@ header p{
     background:var(--accent);
 }
 
-.panel{
-    display:none;
-}
-
-.panel.active{
-    display:block;
-}
+.panel{display:none;}
+.panel.active{display:block;}
 
 .grid{
     display:grid;
@@ -100,9 +105,7 @@ header p{
     padding:25px;
 }
 
-.card h3{
-    margin-bottom:12px;
-}
+.card h3{margin-bottom:12px;}
 
 .card p,
 .card li{
@@ -123,9 +126,7 @@ header p{
     background:rgba(88,101,242,.08);
 }
 
-.premium-zone h2{
-    margin-bottom:10px;
-}
+.premium-zone h2{margin-bottom:10px;}
 
 .premium-locked{
     opacity:.4;
@@ -153,19 +154,22 @@ footer{
 }
 </style>
 </head>
+
 <body>
 
 <header>
     <h1>👤 Área de Miembros</h1>
 
-    <p>
+    <p id="welcomeText">
         Bienvenido al centro de la comunidad de Abyssus.
-        Aquí podrás consultar novedades, anuncios, recursos,
-        participar en decisiones del proyecto y acceder a contenido exclusivo.
     </p>
 </header>
 
 <div class="container">
+
+    <div class="top-actions">
+        <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+    </div>
 
     <div class="menu">
         <button class="active" onclick="showPanel('noticias',this)">📰 Noticias</button>
@@ -175,42 +179,27 @@ footer{
         <button onclick="showPanel('premium',this)">💎 Colaboradores</button>
     </div>
 
-    <!-- NOTICIAS -->
     <section id="noticias" class="panel active">
         <div class="grid">
-
             <div class="card">
                 <h3>🚀 Dashboard Migrado</h3>
-                <p>
-                    El Dashboard ahora funciona en una nueva infraestructura VPS,
-                    mejorando la estabilidad y reduciendo problemas de acceso.
-                </p>
+                <p>El Dashboard ahora funciona en una nueva infraestructura VPS, mejorando la estabilidad y reduciendo problemas de acceso.</p>
             </div>
 
             <div class="card">
                 <h3>🛡️ Sistemas Estables</h3>
-                <p>
-                    Dashboard, alianzas y sistemas principales
-                    funcionan correctamente.
-                </p>
+                <p>Dashboard, alianzas y sistemas principales funcionan correctamente.</p>
             </div>
 
             <div class="card">
                 <h3>⚡ Protección Anti Rate Limit</h3>
-                <p>
-                    Se añadieron nuevas protecciones para evitar bloqueos
-                    temporales durante el inicio de sesión.
-                </p>
+                <p>Se añadieron nuevas protecciones para evitar bloqueos temporales durante el inicio de sesión.</p>
             </div>
-
         </div>
     </section>
 
-    <!-- ROADMAP -->
     <section id="roadmap" class="panel">
-
         <div class="grid">
-
             <div class="card">
                 <h3>✅ Dashboard</h3>
                 <p>Completado y estable.</p>
@@ -230,67 +219,42 @@ footer{
                 <h3>🔜 Mejoras Web</h3>
                 <p>Nuevas herramientas y recursos para la comunidad.</p>
             </div>
-
         </div>
-
     </section>
 
-    <!-- ANUNCIOS -->
     <section id="anuncios" class="panel">
-
         <div class="grid">
-
             <div class="card">
                 <h3>📢 Estado General</h3>
-                <p>
-                    Todos los sistemas principales de Abyssus
-                    se encuentran operativos.
-                </p>
+                <p>Todos los sistemas principales de Abyssus se encuentran operativos.</p>
             </div>
 
             <div class="card">
                 <h3>🎫 Soporte</h3>
-                <p>
-                    Para dudas o reportes, abre un ticket
-                    en el servidor oficial.
-                </p>
+                <p>Para dudas o reportes, abre un ticket en el servidor oficial.</p>
             </div>
 
             <div class="card">
                 <h3>⏳ Sistema de Enfriamiento</h3>
-                <p>
-                    Si realizas múltiples inicios de sesión seguidos,
-                    deberás esperar unos minutos antes de volver a intentarlo.
-                </p>
+                <p>Si realizas múltiples inicios de sesión seguidos, deberás esperar unos minutos antes de volver a intentarlo.</p>
             </div>
-
         </div>
-
     </section>
 
-    <!-- RECURSOS -->
     <section id="recursos" class="panel">
-
         <div class="grid">
-
             <div class="card">
                 <h3>📄 Documentación</h3>
-                <p>
-                    Aprende a configurar Abyssus y aprovechar todas sus funciones.
-                </p>
+                <p>Aprende a configurar Abyssus y aprovechar todas sus funciones.</p>
             </div>
 
             <div class="card">
                 <h3>📚 Guías</h3>
-                <p>
-                    Tutoriales paso a paso para moderación, automatización
-                    y configuración del Dashboard.
-                </p>
+                <p>Tutoriales paso a paso para moderación, automatización y configuración.</p>
             </div>
 
             <div class="card">
                 <h3>🔗 Enlaces Útiles</h3>
-
                 <ul>
                     <li>Servidor de Soporte</li>
                     <li>Dashboard</li>
@@ -298,88 +262,57 @@ footer{
                     <li>Política de Privacidad</li>
                 </ul>
             </div>
-
         </div>
-
     </section>
 
-    <!-- PREMIUM -->
     <section id="premium" class="panel">
-
         <div class="card">
             <h3>💜 Apoya Abyssus</h3>
-
-            <p>
-                Las donaciones ayudan a mantener la infraestructura,
-                servidores VPS, Dashboard, servicios externos y el desarrollo continuo.
-            </p>
+            <p>Las donaciones ayudan a mantener la infraestructura, servidores VPS, servicios externos y el desarrollo continuo.</p>
         </div>
 
         <div class="premium-zone">
-
             <h2>💎 Zona de Colaboradores</h2>
-
-            <p>
-                Como agradecimiento, los colaboradores tendrán acceso
-                a contenido y ventajas exclusivas.
-            </p>
+            <p>Como agradecimiento, los colaboradores tendrán acceso a contenido y ventajas exclusivas.</p>
 
             <button class="unlock-btn" onclick="unlockPremium()">
                 Simular acceso de colaborador
             </button>
 
             <div id="premiumContent" class="premium-locked">
-
                 <div class="grid">
-
                     <div class="card">
                         <h3>🧪 Beta Testing</h3>
-                        <p>
-                            Prueba nuevas funciones antes de su lanzamiento oficial.
-                        </p>
+                        <p>Prueba nuevas funciones antes de su lanzamiento oficial.</p>
                     </div>
 
                     <div class="card">
                         <h3>📰 Noticias Anticipadas</h3>
-                        <p>
-                            Acceso temprano a novedades y futuras características.
-                        </p>
+                        <p>Acceso temprano a novedades y futuras características.</p>
                     </div>
 
                     <div class="card">
                         <h3>📥 Recursos Exclusivos</h3>
-                        <p>
-                            Wallpapers, logos y contenido exclusivo.
-                        </p>
+                        <p>Wallpapers, logos y contenido exclusivo.</p>
                     </div>
 
                     <div class="card">
                         <h3>🗳️ Encuestas Privadas</h3>
-                        <p>
-                            Participa en decisiones importantes del proyecto.
-                        </p>
+                        <p>Participa en decisiones importantes del proyecto.</p>
                     </div>
 
                     <div class="card">
                         <h3>🎖️ Reconocimiento Especial</h3>
-                        <p>
-                            Insignia y reconocimiento dentro de la comunidad.
-                        </p>
+                        <p>Insignia y reconocimiento dentro de la comunidad.</p>
                     </div>
 
                     <div class="card">
                         <h3>🎫 Soporte Prioritario</h3>
-                        <p>
-                            Atención preferencial dentro del servidor de soporte.
-                        </p>
+                        <p>Atención preferencial dentro del servidor de soporte.</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
 </div>
@@ -389,9 +322,18 @@ footer{
 </footer>
 
 <script>
+if(localStorage.getItem('abyssus_logged') !== 'true'){
+    window.location.href = 'login.html';
+}
+
+const user = localStorage.getItem('abyssus_user');
+
+if(user){
+    document.getElementById('welcomeText').innerHTML =
+        `Bienvenido <strong>${user}</strong> al centro de la comunidad de Abyssus.`;
+}
 
 function showPanel(id, button){
-
     document.querySelectorAll('.panel').forEach(panel=>{
         panel.classList.remove('active');
     });
@@ -410,6 +352,12 @@ function unlockPremium(){
         .classList.remove('premium-locked');
 }
 
+function logout(){
+    localStorage.removeItem('abyssus_logged');
+    localStorage.removeItem('abyssus_user');
+
+    window.location.href = 'login.html';
+}
 </script>
 
 </body>
