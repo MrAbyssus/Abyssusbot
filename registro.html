@@ -6,12 +6,6 @@
 <title>Área de Miembros | Abyssus</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
 :root{
     --bg:#07080c;
     --card:#111827;
@@ -22,16 +16,22 @@
     --accent:#5865F2;
 }
 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
 body{
     font-family:'Segoe UI',sans-serif;
     background:
-        radial-gradient(circle at top, rgba(88,101,242,.15), transparent 50%),
+        radial-gradient(circle at top,rgba(88,101,242,.15),transparent 50%),
         var(--bg);
     color:var(--text);
     min-height:100vh;
 }
 
-/* LOGIN Y REGISTRO */
+/* LOGIN / REGISTRO */
 
 .auth-container{
     min-height:100vh;
@@ -103,6 +103,7 @@ body{
 .switch-link{
     text-align:center;
     margin-top:20px;
+    color:var(--dim);
 }
 
 .switch-link a{
@@ -114,7 +115,7 @@ body{
     display:none;
 }
 
-/* AREA DE MIEMBROS */
+/* ÁREA DE MIEMBROS */
 
 .members-area{
     display:none;
@@ -207,12 +208,24 @@ header p{
     padding:12px 18px;
     border-radius:12px;
     cursor:pointer;
+    font-weight:bold;
 }
 
 .premium-locked{
     opacity:.4;
     filter:blur(2px);
     pointer-events:none;
+}
+
+.unlock-btn{
+    margin-top:15px;
+    padding:12px 16px;
+    border:none;
+    border-radius:12px;
+    background:var(--accent);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 footer{
@@ -222,27 +235,26 @@ footer{
 }
 </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN / REGISTRO -->
 
 <div class="auth-container" id="authContainer">
 
     <!-- LOGIN -->
     <div class="auth-box" id="loginBox">
-
         <h1>👤 Iniciar Sesión</h1>
-
         <p>Accede al Área de Miembros de Abyssus.</p>
 
         <div class="input-group">
             <label>Usuario</label>
-            <input id="loginUser" type="text">
+            <input id="loginUser" type="text" placeholder="Tu usuario">
         </div>
 
         <div class="input-group">
             <label>Contraseña</label>
-            <input id="loginPassword" type="password">
+            <input id="loginPassword" type="password" placeholder="Tu contraseña">
         </div>
 
         <button class="auth-btn" onclick="login()">
@@ -251,33 +263,28 @@ footer{
 
         <div class="switch-link">
             ¿No tienes cuenta?
-            <a href="#" onclick="showRegister()">
-                Regístrate
-            </a>
+            <a href="#" onclick="showRegister()">Regístrate</a>
         </div>
-
     </div>
 
     <!-- REGISTRO -->
     <div class="auth-box hidden" id="registerBox">
-
         <h1>📝 Registro</h1>
-
         <p>Crea una cuenta para acceder a la comunidad.</p>
 
         <div class="input-group">
             <label>Usuario</label>
-            <input id="registerUser" type="text">
+            <input id="registerUser" type="text" placeholder="Crea un usuario">
         </div>
 
         <div class="input-group">
             <label>Correo</label>
-            <input id="registerEmail" type="email">
+            <input id="registerEmail" type="email" placeholder="correo@ejemplo.com">
         </div>
 
         <div class="input-group">
             <label>Contraseña</label>
-            <input id="registerPassword" type="password">
+            <input id="registerPassword" type="password" placeholder="Crea una contraseña">
         </div>
 
         <button class="auth-btn" onclick="register()">
@@ -286,16 +293,13 @@ footer{
 
         <div class="switch-link">
             ¿Ya tienes cuenta?
-            <a href="#" onclick="showLogin()">
-                Inicia sesión
-            </a>
+            <a href="#" onclick="showLogin()">Inicia sesión</a>
         </div>
-
     </div>
 
 </div>
 
-<!-- AREA DE MIEMBROS -->
+<!-- ÁREA DE MIEMBROS -->
 
 <div class="members-area" id="membersArea">
 
@@ -309,60 +313,33 @@ footer{
     </header>
 
     <div class="menu">
-        <button class="active" onclick="showPanel('noticias',this)">
-            📰 Noticias
-        </button>
-
-        <button onclick="showPanel('roadmap',this)">
-            🗺️ Roadmap
-        </button>
-
-        <button onclick="showPanel('recursos',this)">
-            📚 Recursos
-        </button>
-
-        <button onclick="showPanel('premium',this)">
-            💎 Colaboradores
-        </button>
+        <button class="active" onclick="showPanel('noticias',this)">📰 Noticias</button>
+        <button onclick="showPanel('roadmap',this)">🗺️ Roadmap</button>
+        <button onclick="showPanel('recursos',this)">📚 Recursos</button>
+        <button onclick="showPanel('premium',this)">💎 Colaboradores</button>
     </div>
 
-    <!-- NOTICIAS -->
-
     <section id="noticias" class="panel active">
-
         <div class="grid">
-
             <div class="card">
                 <h3>🚀 Dashboard Migrado</h3>
-                <p>
-                    El Dashboard fue migrado a nueva infraestructura.
-                </p>
+                <p>El Dashboard fue migrado a nueva infraestructura.</p>
             </div>
 
             <div class="card">
                 <h3>🛡️ Sistemas Estables</h3>
-                <p>
-                    Todos los sistemas principales se encuentran operativos.
-                </p>
+                <p>Todos los sistemas principales se encuentran operativos.</p>
             </div>
 
             <div class="card">
                 <h3>⚡ Mejoras</h3>
-                <p>
-                    Se siguen desarrollando nuevas características.
-                </p>
+                <p>Se siguen desarrollando nuevas características.</p>
             </div>
-
         </div>
-
     </section>
 
-    <!-- ROADMAP -->
-
     <section id="roadmap" class="panel">
-
         <div class="grid">
-
             <div class="card">
                 <h3>✅ Dashboard</h3>
                 <p>Completado.</p>
@@ -377,17 +354,11 @@ footer{
                 <h3>🔜 Nuevas Funciones</h3>
                 <p>Próximamente.</p>
             </div>
-
         </div>
-
     </section>
 
-    <!-- RECURSOS -->
-
     <section id="recursos" class="panel">
-
         <div class="grid">
-
             <div class="card">
                 <h3>📄 Documentación</h3>
                 <p>Guías y tutoriales.</p>
@@ -397,27 +368,22 @@ footer{
                 <h3>🔗 Recursos</h3>
                 <p>Herramientas y enlaces útiles.</p>
             </div>
-
         </div>
-
     </section>
 
-    <!-- PREMIUM -->
-
     <section id="premium" class="panel">
-
         <div class="card">
             <h3>💜 Apoya Abyssus</h3>
+            <p>Las donaciones ayudan a mantener el proyecto activo.</p>
 
-            <p>
-                Las donaciones ayudan a mantener el proyecto activo.
-            </p>
+            <button class="unlock-btn" onclick="unlockPremium()">
+                Simular acceso de colaborador
+            </button>
         </div>
 
         <br>
 
         <div id="premiumContent" class="grid premium-locked">
-
             <div class="card">
                 <h3>🧪 Beta Testing</h3>
                 <p>Acceso anticipado a nuevas funciones.</p>
@@ -432,9 +398,7 @@ footer{
                 <h3>🎖️ Reconocimiento</h3>
                 <p>Insignia especial de colaborador.</p>
             </div>
-
         </div>
-
     </section>
 
 </div>
@@ -444,9 +408,6 @@ footer{
 </footer>
 
 <script>
-
-// CAMBIAR ENTRE LOGIN Y REGISTRO
-
 function showRegister(){
     document.getElementById('loginBox').classList.add('hidden');
     document.getElementById('registerBox').classList.remove('hidden');
@@ -457,13 +418,10 @@ function showLogin(){
     document.getElementById('loginBox').classList.remove('hidden');
 }
 
-// REGISTRO LOCAL
-
 function register(){
-
-    const user = document.getElementById('registerUser').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
+    const user = document.getElementById('registerUser').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value.trim();
 
     if(!user || !email || !password){
         alert('Completa todos los campos');
@@ -478,70 +436,60 @@ function register(){
 
     localStorage.setItem('abyssus_account', JSON.stringify(account));
 
-    alert('Cuenta creada correctamente');
+    alert('Cuenta creada correctamente. Ahora inicia sesión.');
+
+    document.getElementById('registerUser').value = '';
+    document.getElementById('registerEmail').value = '';
+    document.getElementById('registerPassword').value = '';
 
     showLogin();
 }
 
-// LOGIN LOCAL
-
 function login(){
+    const user = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
 
-    const user = document.getElementById('loginUser').value;
-    const password = document.getElementById('loginPassword').value;
-
-    const account = JSON.parse(
-        localStorage.getItem('abyssus_account')
-    );
+    const account = JSON.parse(localStorage.getItem('abyssus_account'));
 
     if(!account){
-        alert('No existe ninguna cuenta');
+        alert('No existe ninguna cuenta registrada');
         return;
     }
 
-    if(
-        account.user === user &&
-        account.password === password
-    ){
-
+    if(account.user === user && account.password === password){
         localStorage.setItem('abyssus_logged', 'true');
-
+        localStorage.setItem('abyssus_user', account.user);
         loadMembers();
-
     }else{
         alert('Usuario o contraseña incorrectos');
     }
 }
 
-// CARGAR AREA
-
 function loadMembers(){
+    const account = JSON.parse(localStorage.getItem('abyssus_account'));
 
-    document.getElementById('authContainer').style.display='none';
+    if(!account){
+        return;
+    }
 
-    document.getElementById('membersArea').style.display='block';
-
-    const account = JSON.parse(
-        localStorage.getItem('abyssus_account')
-    );
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('membersArea').style.display = 'block';
 
     document.getElementById('welcomeText').textContent =
-        'Bienvenido ' + account.user;
+        'Bienvenido ' + account.user + ' al Área de Miembros de Abyssus.';
 }
-
-// CERRAR SESION
 
 function logout(){
-
     localStorage.removeItem('abyssus_logged');
+    localStorage.removeItem('abyssus_user');
 
-    location.reload();
+    document.getElementById('membersArea').style.display = 'none';
+    document.getElementById('authContainer').style.display = 'flex';
+
+    showLogin();
 }
 
-// PANELES
-
 function showPanel(id, button){
-
     document.querySelectorAll('.panel').forEach(panel=>{
         panel.classList.remove('active');
     });
@@ -555,12 +503,16 @@ function showPanel(id, button){
     button.classList.add('active');
 }
 
-// SESION
-
-if(localStorage.getItem('abyssus_logged')){
-    loadMembers();
+function unlockPremium(){
+    document.getElementById('premiumContent')
+        .classList.remove('premium-locked');
 }
 
+window.onload = () => {
+    if(localStorage.getItem('abyssus_logged') === 'true'){
+        loadMembers();
+    }
+};
 </script>
 
 </body>
